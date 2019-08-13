@@ -23,7 +23,7 @@
 \item Gain some familiarity with some of the key ideas in machine learning.
 \item Review of mathematical concepts we will be using in the beginning part of this course.
 \item Familiarizing yourself with computational toolset
-\item Learn linear regression using a ``top-down approach.''
+\item Learn linear regression using a ``top-down'' approach.
 \ei
 \end{learningobjectives}
 
@@ -37,7 +37,7 @@
 
 
 \begin{recall}[Supervised Learning Problem Setup]
-In the last class we saw the basic supervised learning problem setup.
+In the first class we saw the basic supervised learning problem setup.
 
 Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  In the supervised learning setting, your goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
 
@@ -139,35 +139,65 @@ What's super-duper amazing is that if we compare the receptive fields learned by
 
 \subsection*{Idea 5: Machine Learning Zoomed Out}
 
-Historically, most ML courses have been hyper-focused on the learning about learning algorithms (e.g., neural networks, support vector machines, decision trees, etc.).  The learning algorithms 
+Historically, most ML courses have been laser-focused on the learning about learning algorithms (e.g., neural networks, support vector machines, decision trees, etc.).  In some courses, there would a little bit of emphasis on machine learning applications, which have always been strongly tied to the research in ML algorithms and theory.  The focus on ML algorithms also reflected the positioning of these courses within Computer Science curricula, which approached the field more from a liberal arts perspective rather than an engineering one.
+
+A number of recent trends have made the almost sole focus on learning algorithms insufficient for the those who want either want to use ML in their careers or go into ML as a field.
+\be
+\item The explosion of data has made the skills necessary to collect, wrangle, explore, and clean data very relevant.
+\item Improvements in the accuracy of ML algorithms coupled with the ability to deploy ML systems to a wide variety of devices (e.g., mobile phones) means that it is increasingly important to consider how ML systems will behave in real world, highly complex settings.
+\ee
+
+The first point identified above ties into a set of skills sometimes grouped under ``Data Science.''  While we will have a comparatively lesser focus on this skillset than in our dedicated Data Science course, we will be learning some of these skills.  The second point identified above corresponds to ML systems as embedded in larger and more complex contexts.  As you've seen from some of the examples earlier in this document, unexpected things can happen when ML algorithms meet messy and/or biased real world data (take for example the automated job applicant identifier).  In light of this, we think that, again, the traditional focus on ML algorithms is not adequate for a modern class on ML.
+
 
 \begin{center}
 \includegraphics[width=.6\linewidth]{figures/MlSystem}
 \end{center}
+In the figure above, the box labeled \emph{ML Code} is the actual learning algorithm.  But in modern systems, this is but a small fraction of all of the tools needed to deploy a real world ML system.  This is not to say that we will be spending a lot of time learning about each of these other boxes (we will learn about some of them), but it helps to have a sense of the software echo system in which your ML model would be deployed.
 
+\begin{quotation}
 Also include the Alexa figure that Sam Daitzman found.
+\end{quotation}
 
-Also link to papers (e.g., \href{https://link.springer.com/article/10.1007/s11023-017-9417-6}{this} or \href{https://dl.acm.org/citation.cfm?id=3287598}{this}) on the socio-technical view of AI.
+While it is helpful to remember that there are lots of other things in an ML system than just the core learning code, it is even more important to realize the \href{https://en.wikipedia.org/wiki/Sociotechnical_system}{socio-technical context} in which your system is deployed.  The figure above places the Amazon Echo within a larger environmental, social, and political context.  When designing and deploying systems, it will be necessary to consider the ways in which a developed solution might impact the world along these dimensions.
+
+We'll be digging into some of these resources later in the course, but here are two papers that argue for the need to consider the development of ML systems from a socio-technical point of view.
+\bi
+\item \href{https://link.springer.com/article/10.1007/s11023-017-9417-6}{Reframing AI Discourse}
+\item \href{https://dl.acm.org/citation.cfm?id=3287598}{Fairness and Abstraction in Sociotechnical Systems}
+\ei
 
 
 \subsection*{Idea 6: It's Not All Doom and Gloom}
-While we'll be talking a lot about how ML can go wrong, unleashing unexpected consequences, we'll also be talking about the positive things that ML can do.  TODO: write this.
+While we'll be talking a lot about how ML can go wrong, unleashing unexpected consequences, we'll also be talking about the positive things that ML can do.  Here are just a couple of resources that discuss such systems (not to say that these systems don't have the potential to for things to go wrong).  We'll leave this list deliberately short to give you a chance to find your own example in the exercise below.
+
+\bi
+\item \href{https://www.springboard.com/blog/ai-for-good/}{AI for social good: 7 inspiring examples}
+\item \href{https://medium.com/myplanet-musings/making-the-web-more-accessible-using-machine-learning-8a32eaafdb3a}{Machine Learning for Web Accessibility}
+\ei
 
 
-\begin{exercise}
-t
+\marginnote{The \faShareAlt~icon means that will be submitting your response to this exercise with your assignment.  By default responses to exercises do not need to be submitted}
+
+\begin{exercise}[\faShareAlt~(30 minutes)]
+Now, we want to hear from you!  
+\bes
+\item Choose one of the big ideas above and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  As a rough guide, you should aim for a response of a 1-2 paragraphs.
+\item Idea 6 talks about the idea of ML for positive impact.  What is one example of an ML application (real or imagined) that you think would have the largest (or most unambiguously) positive impact on the world?  Why?  Alternatively, what is an example of an ML application (real or imagined) that no matter how you carefully the designers approach it, should just not exist due to the harm it would cause the world?  Why?
+\ees
 \end{exercise}
 
 \section{Mathematical Background}
 
 
 \begin{notice}
-For the purposes of this class, we will be consistent with the notation we use.  Of course, when we link to other resources, they may use other notation.  If notation is different in a way that causes confusion, we will try to point out pitfalls you should watch out for.  A guide to our notation conventions can be found on Canvas.\marginnote{link out when we have this posted}
+For the purposes of this class, we will be consistent with the notation we use.  Of course, when we link to other resources, they may use other notation.  If notation is different in a way that causes confusion, we will try to point out pitfalls you should watch out for.  A guide to our notation conventions can be found on Canvas.  TODO: link out when we have this posted.
 \end{notice}
 
+\begin{externalresources}[(60 minutes)]
 In order to engage with this assignment, you'll want to make sure you are familiar with the following concepts (links to resources embedded below):
 \bi
-\item vector-vector multiplication
+\item Vector-vector multiplication
 \bi
 \item Section 2.1 of \href{https://see.stanford.edu/materials/aimlcs229/cs229-linalg.pdf}{Zico Kolter's Linear Algebra Review and Reference}
 \ei
@@ -176,12 +206,28 @@ In order to engage with this assignment, you'll want to make sure you are famili
 \item Section 2.2 of \href{https://see.stanford.edu/materials/aimlcs229/cs229-linalg.pdf}{Zico Kolter's Linear Algebra Review and Reference}
 \item The first bits of the Khan academy video on \href{https://www.khanacademy.org/math/linear-algebra/matrix-transformations/linear-transformations/v/matrix-vector-products-as-linear-transformations}{Linear Transformations}
 \ei
-\item partial derivatives and gradients
+\item Partial derivatives and gradients
 \bi
 \item Khan Academy videos on partial derivatives: \href{https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivatives/v/partial-derivatives-introduction}{intro}, \href{https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivatives/v/partial-derivatives-and-graphs}{graphical understanding}, and \href{https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivatives/v/formal-definition-of-partial-derivatives}{formal definition}
 \item \href{https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/gradient-and-directional-derivatives/v/gradient}{Khan Academy video on Gradient}
 \ei
 \ei
+\end{externalresources}
+
+\begin{exercise}[(20 minutes)]
+Here are some diagnostic problems to test some basic understanding of the concepts above.
+\bes
+\item Suppose $f(x, y) = 2x \sin{y} + y^2 x$.  Calculate $\frac{\partial{f}}{\partial{x}}$, $\frac{\partial{f}}{\partial{x}}$, and $\nabla f$.
+\item Suppose $\mlvec{x} = \begin{bmatrix} 3 \\ -1 \\ 4 \end{bmatrix}$ and $\mlvec{y} = \begin{bmatrix} 2 \\  7 \\ 4 \end{bmatrix}$.  Calculate $\mlvec{x} \cdot \mlvec{y}$, $\mlvec{x}^\top \mlvec{y}$, and $\mlvec{x} \mlvec{y}^\top$.
+\item Let $\mlmat{A} = \begin{bmatrix} \mlvec{col_1} & \mlvec{col_2} & \ldots & \mlvec{col_n} \end{bmatrix} = \begin{bmatrix} \mlvec{row_1}^\top \\ \mlvec{row_2}^\top \\ \vdots \\ \mlvec{row}_m^\top \end{bmatrix}$
+
+(that is, the matrix $\mlmat{A}$ can either be thought of as consisting of the columns $\mlvec{col_1}, \ldots, \mlvec{col_n}$ or the rows $\mlvec{row_1}^\top, \ldots, \mlvec{row_m}^\top$).
+
+Compute $\mlmat{A}\mlvec{v}$ in terms of $\mlvec{col_1}, \ldots, \mlvec{col_n}$.
+
+Compute $\mlmat{A} \mlvec{v}$ in terms of the rows of $\mlvec{row_1}, \ldots, \mlvec{row_m}$.
+\ees
+\end{exercise}
 
 \section{Linear Regression from the Top-Down}
 
@@ -211,7 +257,7 @@ Therefore, the OLS algorithm will use the training data to select the optimal va
 While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of a later part of this assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new testing point, $\mlvec{x}$, by predicting that the corresponding (unknown) label, $y$, as $\hat{y} = \mlvec{w}^\top \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data points, which is the hallmark of supervised machine learning!
 
 \begin{exercise}
-Todo: Some conceptual questions to check understanding
+Draw a scatter plot in 2D (the x-axis is the independent variable and the y-axis is the dependent variable).  Fill in a few datapoints and draw a potential line of best fit.  On the plot identify the differences between the data points and the line (these differences are the residuals).  Draw a second potential line of best fit and mark the residuals.  From the point of view of ordinary least-squares, which of these lines is better.
 \end{exercise}
 
 \section{Getting a Feel for Linear Regression}
@@ -219,168 +265,27 @@ In this class we'll be learning about algorithms using both a top-down and a bot
 
 
 \subsection{Linear Regression with One Input Variable: Line of Best Fit}
+If any of what we've said so far sounds familiar, it is likely because you have seen the idea of a line of best fit in some previous class.  To understand more intuitively what the OLS algorithm is doing, we want you to investigate its behavior when there is a single input variable (i.e., you are computing a line of best fit).  
 
-If any of what we've said so far sounds familiar, it is likely because you have seen the idea of a line of best fit in some previous class.  To understand more intuitively what the OLS algorithm is doing, we want you to investigate its behavior when there is a single input variable (i.e., you are computing a line of best fit).  Use the \href{http://www.shodor.org/interactivate/activities/Regression/}{line of best fit online app} to create some datasets, guess the line of best fit, and then compare the results to the OLS solution.
-
-\todo{It would have been cool to find something that visualized linear regression with two input variables, but I couldn't find it easily.  At a minimum we need to actually write down the formula we are fitting.}
+\begin{externalresources}
+Use the \href{http://www.shodor.org/interactivate/activities/Regression/}{line of best fit online app} to create some datasets, guess the line of best fit, and then compare the results to the OLS solution.
 
 \begin{exercise}
-Todo: Some conceptual questions to check understanding of what happened here.
+\bes
+\item Examine the role that outliers play in determining the line of best fit.  Does OLS seem sensitive or insensitive to the presence of outliers in the data?
+\item Were there any times when the line of best fit didn't seem to really be ``best'' (e.g., it didn't seem to capture the linear trends in the data)?
+\ees
 \end{exercise}
+
+\end{externalresources}
 
 
 
 \subsection{Linear Regression with Multiple Input Variables: Explorations in Python}
+\begin{externalresources}[(90 minutes)]
 Work through the \href{https://colab.research.google.com/drive/12pLbQkhrPoI-22FVV6gZNObi1IJCW-mF}{Assignment 1 Companion Notebook} to get some practice with {\tt numpy} and explore linear regression using a top-down approach.  You can place your answers directly in the Jupyter notebook so that you have them for your records.
 
-\section{Linear Regression from the Bottom-up}
-
-Now that you have some idea of how the algorithm behaves, let's figure out how to implement it.  That is, how do we find the vector $\mlvec{w}$ that best fits a dataset?
-
-\subsection{Linear regression with one variable}
-
-Before handling the case where each $\mlvec{x}$ is a d-dimensional vector, we'll derive the algorithm for the simple case where $\mlvec{x}$ is a scalar (i.e., $d=1$).
-
-\begin{exercise}
-\bes
-\item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$, write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-e(w) &= \sum_{i=1}^n \left (  w x_i - y_i \right)^2
-\end{align}
-\end{boxedsolution}
-\fi
-
-\item Compute the derivative the error function you found in part (a).
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-\frac{de}{dw} &= \sum_{i=1}^n 2 \left (  w x_i - y_i \right)x_i \\
-&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i
-\end{align}
-\end{boxedsolution}
-\fi
-
-\item Set the derivative to 0, and solve for $w^\star$.  $w^\star$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this is critical point corresponds to a global minimum.  In other words, this value of $w$ is guaranteed to drive the sum of squared errors as low as possible.
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-\frac{de}{dw} &= 0 \\
-&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i \\
-\sum_{i=1}^n 2 x_i y_i  &= w \sum_{i=1}^n 2 x_i^2 \\
-w^\star &=\frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
-\end{align}
-\end{boxedsolution}
-\fi
-
-\ees
-
-
-\end{exercise}
-We can start here and then motivate the mathematical tricks.
-
-\subsection{Building our bag of mathematical tricks}
-
-\begin{exercise}[30 minutes]
-\bes
-\item Quadratic forms \href{https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/quadratic-approximations/v/expressing-a-quadratic-form-with-a-matrix}{really nice Khan Academy video showing this}
-\item FOIL method for matrix multiplication
-
-\item Using the definition of the gradient, show that $\nabla \mlvec{c}^\top \mlvec{x} = \mlvec{c}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlvec{c}$ is a vector of constants.
-
-\iftoggleverb{solutions}
-
-\begin{boxedsolution}
-
-\begin{align}
-\mlvec{c}^\top \mlvec{x} &= \sum_{i=1}^d c_i x_i \\
-\frac{\partial  \sum_{i=1}^d c_i x_i }{\partial x_i} &= c_i  \\
-\nabla \mlvec{c}^\top \mlvec{x} &= \mlvec{c}
-\end{align}
-
-\end{boxedsolution}
-
-\fi
-
-
-\item Using the definition of the gradient, show that the $\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} = 2 \mlmat{A} \mlvec{x}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlmat{A}$ is a \emph{symmetric} $dxd$ matrix of constants.  If you'd like, you can utilize the fact (without deriving it yourself) that $\mlvec{x}^\top \mlmat{A} \mlvec{x} = \sum_{i=1}^d\sum_{j=1}^d x_i x_j a_{i, j}$.%  \todo{this might be too hard... Can we make this optional with appropriate sign-posting.... you can prove this is true, but you do not need to do so in order to make progress.  It can also be made easier if you assume $A$ is symmetric.}
-\ees
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-
-\begin{align}
-\mlvec{x}^\top \mlmat{A} \mlvec{x} &= \begin{bmatrix} x_1 \\ \vdots \\ x_d \end{bmatrix}^\top \begin{bmatrix} a_{1,1} & \ldots &  a_{1,d} \\
-\vdots &  \ddots &  \vdots \\
-a_{d,1} & \ldots & a_{d,d}
-\end{bmatrix} \begin{bmatrix}x_1 \\ \vdots \\ x_d \end{bmatrix} \\
-&= \begin{bmatrix} x_1 \\ \vdots \\ x_d \end{bmatrix}^\top\sum_{i=1}^d x_i \begin{bmatrix} a_{i, 1} \\ \vdots \\ a_{i,d} \end{bmatrix} \\
-&= \sum_{i=1}^d x_i \sum_{j=1}^d x_j  a_{i, j} \\
-&= \sum_{i=1}^d\sum_{j=1}^d   x_i  x_j  a_{i, j} \\
-\frac{\partial (\mlvec{x}^\top \mlmat{A} \mlvec{x})}{\partial x_i} &= \sum_{j=1}^d x_j a_{i,j} + \sum_{j=1}^d x_j a_{j, i} \\
-&= \left ( \mlmat{A} \mlvec{x} \right)_i + \left ( \mlmat{A}^\top \mlvec{x} \right)_i \\
-&= 2\left ( \mlmat{A} \mlvec{x} \right)_i \\
-\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} &= 2 \mlmat{A}\mlvec{x}
-\end{align}
-
-\end{boxedsolution}
-
-\fi
-
-\end{exercise}
-
-\section{Linear Regression with Multiple Variables}
-\textbf{We might need to choose between this and a reading. If we do the reading, this will be done in class.}
-Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ is a d-dimensional input vectors each $y_i$ is a scalar representing a target output.
-\begin{exercise}[60 minutes]
-Next, let's consider the more general case where $\mlvec{w}$ is a d-dimensional vector.  In order to solve this problem, you'll be leveraging some of the new mathematical tricks you picked up earlier in the assignment.  As you go through the problem, try as much as possible to treat vectors as first-class objects (e.g., work with the gradient instead of the individual partial derivatives).
-\bes
-\item Given $\mlvec{w}$, write an expression for the sum of squared errors between each prediction $\hat{f}(\mlvec{x})$ and training output $y_i$.  If your expression initially contains a summation, rewrite it as the inner product between some vector $\mlvec{v}$ and itself (i.e. $\mlvec{v}^\top \mlvec{v}$).  In rewriting your expression as an inner-product, you may find it useful to refer to the matrix that contains all of your training data $\mlmat{X} = \begin{bmatrix} \mlvec{x}_1^\top \\ \mlvec{x}_2^\top \\ \vdots \\ \mlvec{x}_n^\top \end{bmatrix}$.  You may also want to expand your inner product using the FOIL method for matrices that we learned about earlier.
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-e(\mlvec{w}) &= \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right)^\top  \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right) \\
-&= \mlvec{w}^\top \mlmat{X}^\top \mlmat{X} \mlvec{w} - 2 \mlvec{w}^\top \mlmat{X}^\top \mlvec{y} + \mlvec{y}^\top \mlvec{y}
-\end{align}
-\end{boxedsolution}
-\fi
-
-\item Compute the gradient of the sum of squared errors that you found in part (a).
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-\nabla e(\mlvec{w})  &= 2 \mlvec{X}^\top \mlvec{X} \mlvec{w} - 2 \mlmat{X}^\top \mlvec{y}
-\end{align}
-\end{boxedsolution}
-\fi
-
-\item Set the gradient to 0, and solve for $\mlvec{w}$.  This value of $\mlvec{w}$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this is critical point corresponds to a global minimum.  In other words, this value of $\mlvec{w}$ is guaranteed to drive the sum of squared errors as low as possible (note: you can assume that $\mlmat{X}^\top \mlmat{X}$ is invertible).
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-\nabla e(\mlvec{w})  &= 0 \\
-&= 2 \mlvec{X}^\top \mlvec{X} \mlvec{w} - 2 \mlmat{X}^\top \mlvec{y}\\
-\mlvec{w} &= \left ( \mlmat{X}^\top \mlmat{X} \right )^{-1} \mlmat{X}^\top \mlmat{y}
-\end{align}
-\end{boxedsolution}
-\fi
-
-\ees
-\end{exercise}
-%
-%\section{Connecting Bottom-up and Top-down}
-%\textbf{Won't have time for this, maybe we do this in-class}Revisit earlier problem using the math that you just learned?  Could also do something more interesting (e.g., bump detection dataset from Comprobo).
-
-
-
-\section{Context and Ethics Reading}
-What's the best thing to give here?  Should it be a reading about FAT in ML?  My other thought would be on \href{https://statisticsbyjim.com/regression/confounding-variables-bias/}{confounding variable bias}
+\end{externalresources}
 
 
 
