@@ -51,28 +51,37 @@ We typically also assume that there is some loss function, $\ell$, that determin
 
 
 \section{Six Big Ideas in Machine Learning}
-Before diving into the specifics of our first machine learning algorithm, let's examine some of the most important ideas in machine learning.  Why six ideas instead of seven?  if Rob Martello has taught us anything, it's that all good things come in sixes.  For this set of six big ideas, we'll pay special attention to those that are most relevant to the module at hand (computer vision).
+Before diving into the specifics of our first machine learning algorithm, let's examine some important ideas in machine learning.  Why six instead of seven?  if Rob Martello has taught us anything, it's that all good things come in sixes.%  For this set of six big ideas, we'll pay special attention to those that are most relevant to the module at hand (computer vision).
 
 
 \subsection*{Idea 1: Correlations for the Win?}
-ML algorithms learn to exploit correlations in data in order to make predictions.  For instance, if one was using a machine learning approach to learn to recognize smiles, the algorithm might determine that bright pixels around the mouth area of a face are correlated with smiling faces (e.g., they indicate that a person's teeth are showing).  This correlation would likely be useful for determining whether a new image of a face was a smile or not.  Unfortunately, while exploiting correlations is one of the most powerful aspects of ML systems, it is also one of the most potentially problematic aspects.
+ML algorithms learn to exploit correlations in data in order to make predictions.  For instance, if one was using a machine learning approach to learn to recognize smiles from images, the algorithm might determine that bright pixels around the mouth area of a face are correlated with smiling faces (e.g., they indicate that a person's teeth are showing).  This correlation would likely be useful for determining whether a new image of a face was a smile or not.  Unfortunately, while exploiting correlations is one of the most powerful aspects of ML systems, it is also one of the most potentially problematic aspects.
 
 
 \bi
 
 \item \emph{Example 1: Reinforcing Hiring Biases}
+You likely heard the news that \href{https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G}{Amazon scrapped a secret AI recruiting tool that showed bias against women}.  More specifically, the tool performed automatic keyword analysis of job applications to predict whether or not the the applicant was worth forwarding on to a human evaluator for a closer look.  Early in the development of this system, researchers discovered that the model the system had learned placed a negative weight on words such as ``women's'' as well as the names of some women's colleges.  While there is of course no causal link between these words appearing in a job application and the suitability of the candidate for the job, there was a \emph{correlation} in the training set that was used to build the system between the presence of words such as ``women's'' and the candidates not being invited for interviews.
 
-Todo: write surrounding text.
-\href{https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G}{Amazon scraps secret AI recruiting tool that showed bias against women}
-
-Unfortunately, simple measures to try to make models agnostic to things like sex or race can sometimes be circumvented by clever algorithms (e.g., finding other features that serve as a proxy for the omitted, demographic feature).
+Why might such a correlation exist in the training set?  There are many different possible explanations for this correlation, ranging from overt or unconscious bias in the applicant evaluators whose judgments helped form the training data to systemic discrimination that denies women equal access to educational opportunities in STEM.  The important thing to take away from this is not that why there was a correlation, but that since the correlation existed in the training data the model learned to utilize that in order to evaluate new data.  Amazon realized that this was suboptimal and decided to take steps to address the problem (they say they never used the system to make actual job-screening decisions).  Despite efforts to prevent the algorithm for exploiting such correlations, the group determined that they couldn't fully guarantee that the algorithm had not found another way to achieve the same discriminatory outcome and terminated the project.
 
 
 \item \emph{Example 2: Adversarial Machine Learning}
 
-Todo: write surrounding text.
+A second example of an ML algorithm exploiting correlations in training data in unexpected ways can be found in the field of of computer vision methods for object detection.  Identifying salient visual objects such as road signs and pedestrians is an important building block for applications such as autonomous driving.  A popular algorithm for this task, \href{https://pjreddie.com/darknet/yolo/}{YOLO} (You Only Look Once)\footnote{\href{https://www.youtube.com/watch?time_continue=77&v=MPU2HistivI}{Cool video of YOLO version 3}, \href{https://www.youtube.com/watch?v=Cgxsv1riJhI}{TED talk from the YOLO head researcher}}, can identify and localize objects in images with surprisingly good accuracy.  For instance, in the image below you can see how YOLO can be used to detect stop signs in an image.
+\begin{center}
+\includegraphics[width=0.6\linewidth]{figures/stopsignyolo}
+\end{center}
 
-\href{https://iotsecurity.engin.umich.edu/physical-adversarial-examples-for-object-detectors/}{Physical Adversarial Examples for Object Detectors}
+While this all seems great, and YOLO achieves high accuracy at tasks such as this, there is a catch.  It is very difficult to understand \emph{how} YOLO is making these predictions.  That is, what is it about this image that causes the YOLO algorithm to be able to tell that it is a stop sign?  Perhaps it is the white text on the red background.  Perhaps it is the actual word ``STOP.''  The fact is that the network that makes this prediction is so complex, that is impossible for us to say definitively exactly how it makes its decision.
+
+\begin{marginfigure}
+\includegraphics[width=1.6in]{figures/yolofooled}
+\caption{A stop sign with a specially crafted sticker that causes a neural network to fail to identify it as as top sign.}\label{fig:yolofooled}
+\end{marginfigure}
+The complexity of the model makes it vulnerable to bad actors (or adversaries).  Researchers at University of Michigan used a form of ML known as \emph{adversarial machine learning} to \href{https://iotsecurity.engin.umich.edu/physical-adversarial-examples-for-object-detectors/}{create a specially crafted sticker that could be attached to a stop sign that would make it invisible to the YOLO model} (that is YOLO would not identify it as a stop sign).  Clearly, this has major implications for the safety of using a model such as this in an application like a self-driving car.   An example of the attach is shown in Figure~\ref{fig:yolofooled}.
+
+
 \ei
 
 \subsection*{Idea 2: There's No Such Thing as a Free Lunch}
@@ -83,24 +92,54 @@ Todo: write surrounding text.
 --- George Box
 \end{quotation}
 
-At the beginning of this document we have a reminder of the basic supervised machine learning setup.  At the most basic level, we try generalize from a set of training data to construct a function $\hat{f}^\star$ that best predicts the corresponding output data for unseen input data (e.g., predicting the facial expression of a face that was not in the training set based on a training set of sample faces and their corresponding expressions).  In the previous big idea, we discussed how machine learning could go wrong when there are correlations in the data that seen useful to the ML algorithm, but are ultimately counterproductive to how we'd like the system to make decisions.  It turns out that even before your choose the data you are going to give to your algorithm, you must provide what's known as an \href{https://en.wikipedia.org/wiki/Inductive_bias}{inductive bias} to constrain the space of possible models you might fit.  Examples of common inductive biases include the following (the previously linked article has some more).
+At the beginning of this document we have a reminder of the basic supervised machine learning setup.  At the most basic level, we try generalize from a set of training data to construct a function $\hat{f}^\star$ that best predicts the corresponding output data for unseen input data (e.g., predicting the facial expression of a face that was not in the training set based on a training set of sample faces and their corresponding expressions).  In the previous big idea, we discussed how machine learning could go wrong when there are correlations in the data that seem useful to the ML algorithm, but are ultimately counterproductive to how we'd like the system to make decisions.  It turns out that even before you choose the training for your algorithm, you must provide an \href{https://en.wikipedia.org/wiki/Inductive_bias}{inductive bias} to constrain the space of possible models you might fit.  Examples of common inductive biases include the following (the previously linked article has some more).
 \be
 \item The prediction function $\hat{f}^\star$ should smoothly change as you vary the input $\mlvec{x}$.
 \item The prediction function has a particular form (e.g., linear).
 \item The prediction function is sparse in that it ignores the majority of the inputs.
 \ee
 
-In fact, there are a whole class of theorems called \href{https://en.wikipedia.org/wiki/No_free_lunch_theorem}{NFL (No-Free-Lunch) theorems} that state that without inductive biases (such as the ones stated above), learning from data is essentially impossible.  This connects us back to the quote from George Box.  While choosing encoding an inductive bias will never be a 100\% accurate representation of reality, it is necessary in order for our model to do the useful work of enabling us to make predictions.  What's important for us as machine learning scientists and practitioners is to be explicit about the biases we are introducing when settling on a particular model so that we can best evaluate our results and predict the limitations of our systems.
+In fact, there are a whole class of theorems called \href{https://en.wikipedia.org/wiki/No_free_lunch_theorem}{No-Free-Lunch (NFL) theorems} that state that without inductive biases (such as the ones stated above), learning from data is essentially impossible.  This connects us back to the quote from George Box.  While the inductive bias we encode into our model will never be a fully represent reality, having this bias is necessary to allow the model to do the useful work of making predictions.  What's important for us as machine learning scientists and practitioners is to be explicit about the biases we are introducing when settling on a particular model so that we can best evaluate our results and predict the limitations of our systems.
 
-\subsection*{Idea 3: Garbage in Garbage Out}
+\subsection*{Idea 3: It's All About How You Frame the Problem}
+Using Machine Learning algorithms can be a bit disorienting for someone used to the typical engineering workflow.  A cartoon picture of the engineering workflow is that you are given a problem (perhaps it is initially difficult to solve or ambiguous), you might reframe the problem to make it easier to solve, and then you work to devise a solution to the reframed problem.  In machine learning, the last step is automated!  Your job as an ML practitioner is to reframe the original problem so that the ML algorithm can compute a solution.  If you've done the reframing properly, the solution to the reframed problem will also be a good solution to the original problem.
 
-\subsection*{Idea 4: ML Systems Can Learn Intermediate Representations of Images}
+As an example, consider the use of a machine learning algorithm to teach a virtual character to walk in a simulated environment.  You might reframe this problem for the ML algorithm as tasking it with computing a controller for the virtual character that moves the character's center of mass forward as fast as possible.  The ML algorithm can now search over a vast space of possible control strategies to learn the one that most quickly propels the center of mass.  However, it doesn't necessarily follow that this controller will result in the character walking using a normal bipedal gait.
 
-\subsection*{Idea 5: It's Not All About Big Data}
-What to do with medium data
+\begin{center}
+\includegraphics[width=.6\linewidth]{figures/fallingbot}
+\end{center}
+
+The notion that the solution an algorithm finds might be unpredictable to the designer is known as ``emergence.''  Some cool examples of this played out in actual experiments in evolving virtual creatures are summarized in the paper \href{https://arxiv.org/pdf/1803.03453.pdf}{The Surprising Creativity of Digital Evolution}.  For instance, a virtual character learned that falling down, see picture above, and getting up was more efficient for locomotion than constantly hopping (which is what the designer had intended the system to learn).
+
+For more examples of this sort of thing, consider checking out \href{https://www.youtube.com/watch?v=bBt0imn77Zg}{Karl Sims: Evolved Virtual Creatures} or the short article \href{https://aiweirdness.com/post/172894792687/when-algorithms-surprise-us}{When AI Surprises Us}.  This also connects back to the age-old debate over whether \href{https://www.youtube.com/watch?v=8M_1GAX3WcI}{falling with style can be considered flying}.
 
 
-\subsection*{Idea 6: Machine Learning Zoomed Out}
+\subsection*{Idea 4: ML Systems Can Learn Intermediate Representations}
+
+In the next few weeks we'll learn about artificial neural networks (ANNs).  ANNs are biologically inspired algorithms since their functioning, at an abstract level, is modeled on the functioning of biological neurons (e.g., in the brain).
+
+\begin{marginfigure}
+\includegraphics[width=1.8in]{figures/Colored_neural_network}
+\caption{An artificial neural network with a single hidden layer.}\label{fig:ann}
+\end{marginfigure}
+ANNs accept input patterns at an array of virtual neurons called the input layer (see Figure~\ref{fig:ann}).  The neurons in the input layer are connected to other neurons via virtual axons that control to what extent a particular input neuron activates a downstream neuron.  The second set of neurons, called the ``hidden layer'' (shown in blue in the figure), is responsible for computing intermediate, hidden representations of the input data.  This process continues as activations propagate through the network until activations are generated at the output layer (shown in green). These outputs could correspond to any salient properties of the input (e.g., if the input is an image, the output might encode the objects in the image).
+
+What's amazing about ANNs is that there are learning algorithms for setting the connections strengths between these virtual neurons (the black arrows in the figure) based on training data (input / output pairs).  These learning algorithms tune the connections strengths (also called ``weights'') such that for the provided training data, the network produces the appropriate training outputs (e.g., if you show the network a training set of images of cats or dogs, over time the network will adjust its weights so that the output says ``cat'' when presented an image of a cat and ``dog'' if presented an image of a dog).  The algorithms used to tune the network weights are only concerned with reproducing the output patterns, the network is free to choose how it represents information within the network (i.e., at the hidden layer).
+
+\begin{marginfigure}
+
+\caption{12x12 receptive fields learned from an neural network trained to optimally compress images}
+\includegraphics[width=1.5in]{figures/learned_receptive_fields}\label{fig:learnedfields}
+\end{marginfigure}
+What's super amazing is that we can actually examine the internal representations of a neural network to understand how it's performing the computation from input to output. For instance, Figure~\ref{fig:learnedfields}\footnote{From \href{http://www.cnbc.cmu.edu/~tai/nc19journalclubs/Olshausen-Field-CON-2004-1.pdf}{Sparse coding of sensory inputs}} shows a visualization of the internal representations learned by a network trained to best compress a training set of images (these sorts of networks are called ``auto-encoders'').  The receptive fields of each of the hidden units in the network and can be understood as specifying how each input pixel activates a particular hidden unit (gray corresponds to no activation, black to negative activation, and white to positive activation).  It's remarkable that these receptive fields have coherent structure: they are localized in space, tuned to a particular orientation, and tuned to features at a particular scale.  You can think of these as oriented edge detectors that the network learned completely on its own (it was never told to try and extract edges from the images in the training set).
+
+What's super-duper amazing is that if we compare the receptive fields learned by the artificial neural network to the \href{https://en.wikipedia.org/wiki/Simple_cell}{simple cells} in the primary visual cortex of a cat, there are a number of striking similarities.  Just as in the ANN, the biological neural network responds to edges at particular orientations and scales.  The scientists Hubel and Wiesel performed the pioneering work in neuroscience to establish the properties of receptive fields in the primary visual cortex.  Consider watching \href{https://www.youtube.com/watch?v=8VdFf3egwfg}{a video of their experiment} that eventually garnered a Nobel prize (note that in the video the static sound corresponds to the measurement of spikes in activity of an individual neuron in the brain of an anesthetized cat.\footnote{There are a variety of opinions on the \href{https://en.wikipedia.org/wiki/Animal_testing\#Ethics}{ethics of performing research on animals}}
+
+
+\subsection*{Idea 5: Machine Learning Zoomed Out}
+
+Historically, most ML courses have been hyper-focused on the learning about learning algorithms (e.g., neural networks, support vector machines, decision trees, etc.).  The learning algorithms 
 
 \begin{center}
 \includegraphics[width=.6\linewidth]{figures/MlSystem}
@@ -108,8 +147,16 @@ What to do with medium data
 
 Also include the Alexa figure that Sam Daitzman found.
 
+Also link to papers (e.g., \href{https://link.springer.com/article/10.1007/s11023-017-9417-6}{this} or \href{https://dl.acm.org/citation.cfm?id=3287598}{this}) on the socio-technical view of AI.
 
-It's a socio-technical problem
+
+\subsection*{Idea 6: It's Not All Doom and Gloom}
+While we'll be talking a lot about how ML can go wrong, unleashing unexpected consequences, we'll also be talking about the positive things that ML can do.  TODO: write this.
+
+
+\begin{exercise}
+t
+\end{exercise}
 
 \section{Mathematical Background}
 
