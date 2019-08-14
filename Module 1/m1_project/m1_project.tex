@@ -1,0 +1,350 @@
+
+\documentclass{tufte-handout}
+\usepackage{../../CommonLatexPackages/machine_learning_preamble_1.0}
+
+\fancypagestyle{firstpage}
+
+{\rhead{Module 1 Project\linebreak \textit{Version: \today}}}
+
+\title{Module 1 Project: TBD}
+\author{Machine Learning}
+\date{Fall 2019}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{firstpage}
+
+\begin{learningobjectives}
+\bi
+\item Learn about the uses and limitations of linear regression.
+\item Learn how numerical optimization can be used to learn from data.
+\item Learn some useful mathematical tricks.
+\item Deepen understanding of basic machine learning terminology.
+\ei
+\end{learningobjectives}
+
+\section*{Motivation}
+
+let's get motivated!!
+
+\section{Goal-Setting and Customization}
+
+TODO: Connect back to semester-long goal-setting assignment (assuming we do that).
+
+\section{Project Options}
+\bi
+\item The default: select a computer vision dataset and a hypothesized application, analyze potential impacts of the application from a number of perspectives, implement several models, compare results on the dataset and on a separate dataset or sample of data (if applicable).
+\item Find a pretrained model and evaluate it in a rigorous way.  Sample projects could include vetting it for a particular application, testing on a new dataset, etc.  Examples of pretrained models will be posted.
+\item Transfer learning.  Collect a small dataset of your own and try to use transfer learning to get good performance using the weights of a pretrained model.
+\ei
+
+\section{Instructions for Choosing Projects that Are Not the Default Option}
+
+
+\section{Default (more scaffolded) Option Detailed Description}
+
+\subsection*{Project Structure}
+\bi
+\item TODO
+\ei
+
+\href{https://www.notion.so/Entry-Level-Computer-Vision-Datasets-cc6fb53f51324779b29e26337642a649}{source}
+
+Probably want to factor this out as a link so it is a living document and doesn't take up too much space.
+
+
+\section*{Appendix: Computer Vision Datasets}
+\subsection*{PyTorch built-in datasets}\label{pytorch-built-in-datasets}
+
+\bi
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#torchvision.datasets.CIFAR10}{CIFAR-10}:
+  60,000 labeled 32x32 color images of 10 classes of objects
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#torchvision.datasets.CIFAR100}{CIFAR-100}:
+  60,000 labeled 32x32 color images of 100 fine classes of objects, also
+  grouped into 20 course superclasses
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#emnist}{EMNIST}:
+  800,000 labeled 28x28 grayscale images of handwritten digits and
+  letters (uppercase and lowercase) that expand the MNIST dataset
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#fashion-mnist}{Fashion-MNIST}:
+  70,000 labeled 28x28 grayscale images of 10 classes of clothing
+  articles
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#imagenet}{ImageNet
+  2012}: 1,331,167 labeled color images of tens of thousands of classes
+  of nouns in the WordNet hierarchy
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#kmnist}{KMNIST}:
+  70,000 labeled 28x28 grayscale images of 10 classes of handwritten
+  Japanese Hiragana characters
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#lsun}{LSUN}:
+  708,564 labeled large-scale color images of 10 classes of
+  scenes/settings
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#mnist}{MNIST}:
+  70,000 labeled 28x28 grayscale images of 10 classes of handwritten
+  digits
+\item
+  \href{https://pytorch.org/docs/stable/torchvision/datasets.html\#svhn}{SVHN}:
+  Color images of house numbers (addresses) obtained from Google Street
+  View w/ labeled bounding boxes around individual digits
+\ei
+
+\subsection*{TensorFlow built-in}\label{tensorflow-built-in-datasets}
+
+\bi
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#cats_vs_dogs}{Cats
+  and Dogs}: 25,000 labeled images of cats and dogs
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#celeb_a}{CelebA}:
+  202,599 total face images of 10,177 identities w/ facial landmarks,
+  aligned \& cropped images, bounding boxes, and binary attribute labels
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#cifar10}{CIFAR-10}:
+  60,000 labeled 32x32 color images of 10 classes of objects
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#cifar100}{CIFAR-100}:
+  60,000 labeled 32x32 color images of 100 fine classes, also grouped
+  into 20 course superclasses
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#cifar10_corrupted}{CIFAR-10-C}:
+  Images from CIFAR-10 manipulated using 15 common corruptions at 5
+  levels of severity each
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#colorectal_histology}{Colorectal
+  Histology}: 5,000 labeled 150x150 color histological images of 8
+  tissue types of human colorectal cancer
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#curated_breast_imaging_ddsm}{CBIS-DDSM}:
+  2,620 labeled scanned film mammography studies of normal, benign, and
+  malignant cases of human breast cancer
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#diabetic_retinopathy_detection}{Diabetic
+  Retinopathy Detection}: 88,712 labeled images of eyes with diabetic
+  retinopathy at none, mild, moderate, severe, and proliferative levels
+  of severity
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#emnist}{EMNIST}:
+  800,000 labeled 28x28 grayscale images of handwritten digits and
+  letters (uppercase and lowercase) that expand the MNIST dataset
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#fashion_mnist}{Fashion-MNIST}:
+  70,000 labeled 28x28 grayscale images of 10 classes of clothing
+  articles
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#horses_or_humans}{Horses
+  or Humans}: 1,283 labeled 300x300 color images of cgi humans and
+  horses
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#imagenet2012}{ImageNet
+  2012}: 1,331,167 labeled color images of tens of thousands of classes
+  of nouns in the WordNet hierarchy
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#imagenet2012_corrupted}{ImageNet-C
+  2012}: Images from ImageNet 2012 manipulated using 12 common
+  corruptions at 5 levels of severity each
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#kmnist}{KMNIST}:
+  70,000 labeled 28x28 grayscale images of 10 classes of handwritten
+  Japanese Hiragana characters
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#lsun}{LSUN}:
+  708,564 labeled large-scale color images of 10 classes of
+  scenes/settings
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#mnist}{MNIST}:
+  70,000 labeled 28x28 grayscale images of 10 classes of handwritten
+  digits
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#mnist_corrupted}{MNIST-C}:
+  Images from MNIST manipulated using 15 common corruptions at 5 levels
+  of severity each
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#omniglot}{Omniglot}:
+  38,300 labeled grayscale images of 1,623 classes of handwritten
+  characters from 50 alphabets w/ stroke data in {[}x,y,t{]} coordinates
+  where time (t) is in milliseconds
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#oxford_flowers102}{Oxford
+  Flowers}: 8,189 labeled color images of 102 classes of flowers
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#oxford_iiit_pet}{Oxford-IIIT
+  Pet}: 7,349 labeled color images of 37 classes of pet breeds w/ tight
+  bounding boxes around the heads and pixel-level
+  foreground-background-boundary segmentation
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#patch_camelyon}{PatchCamelyon}:
+  327,680 labeled 96x96 color images of histopathologic lymph node scans
+  where metastatic tissue is either present or absent
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#pet_finder}{PetFinder}:
+  72,776 color images of dogs and cats w/ many attribute labels
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#quickdraw_bitmap}{Quick,
+  Draw! Bitmap}: 50,426,266 labeled 28x28 grayscale images of 345
+  classes of drawn objects contributed by Quick, Draw! players
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#resisc45}{NWPU-RESISC45}:
+  31,500 labeled 256x256 color images of 45 classes of scenes/settings
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#rock_paper_scissors}{Rock
+  Paper Scissors}: 2,892 labeled 300x300 color images of cgi hands in
+  rock, paper, and scissors gestures
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#smallnorb}{small
+  NORB}: 48,600 labeled 96x96 color images of 5 classes of toys
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#sun397}{Sun397}:
+  108,753 labeled color images of 397 classes of scene/settings
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#svhn_cropped}{SVHN-cropped}:
+  600,000 labeled 32x32 color images of digits of house numbers
+  (addresses) obtained from Google Street View
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#tf_flowers}{TF
+  Flowers}: 3,670 labeled color images of 5 classes of flowers
+\item
+  \href{https://github.com/tensorflow/datasets/blob/master/docs/datasets.md\#uc_merced}{UC
+  Merced Land Use}: 2,100 labeled 256x256 color aerial images of 21
+  classes of land uses collected from USGS National Map Urban Area
+  Imagery
+\ei
+
+\subsection*{Other datasets}\label{other-datasets}
+
+\bi
+\item
+  \href{http://eidolon.univ-lyon2.fr/~remi1/Bark-101/}{Bark-101}: 2,594
+  labeled color images of 101 classes of tree bark
+\item
+  \href{http://www.vision.caltech.edu/Image_Datasets/Caltech101/}{Caltech
+  101}: 9,146 labeled color images of 101 classes of objects
+\item
+  \href{http://www.vision.caltech.edu/Image_Datasets/Caltech256/}{Caltech
+  256}: 30,607 labeled color images of 256 classes of objects
+\item
+  \href{https://dataturks.com/projects/dominique.paul.info/cars2}{CARS}:
+  604 labeled color images with either cars or no cars
+\item
+  \href{http://www.jdl.ac.cn/peal/index.html}{CAS-PEAL-R1}: 30,900
+  labeled grayscale images of 1,040 faces (exclusively Chinese)
+\item
+  \href{https://github.com/detectRecog/CCPD}{CCPD}: 300,000 labeled
+  color images of license plates w/ bounding boxes, license plate
+  numbers, and several dimension labels
+\item
+  \href{https://github.com/BayesWatch/cinic-10}{CINIC-10}: A drop-in
+  replacement for CIFAR-10 with 270,000 images collected by downsampling
+  images from ImageNet
+\item
+  \href{https://dataturks.com/projects/miaozh17/Crack\%20Classification}{CRACK}:
+  1,428 labeled 299x299 color images with either cracks or no cracks
+\item
+  \href{https://cyberextruder.com/face-matching-data-set-download/}{CyberExtruder
+  Ultimate Face Matching Dataset}: 10,205 labeled 600x600 color images
+  of 1000 faces scraped from the internet
+\item
+  \href{http://iab-rubric.org/resources/dfw.html}{DFW}: 11,157 labeled
+  color images of 1000 subjects' faces, including examples of that
+  subject attempting to obfuscate their face and of other individuals
+  attempting to impersonate that subject
+\item
+  \href{https://www.research.ibm.com/artificial-intelligence/trusted-ai/diversity-in-faces}{DiF}:
+  1,000,000 color images of diverse faces w/ dimension labels for
+  objective physical properties
+\item
+  \href{https://www.nist.gov/itl/iad/image-group/color-feret-database}{FERET}:
+  14,126 labeled 384x286 color images of 1,119 faces
+\item
+  \href{https://www.vision.ee.ethz.ch/datasets_extra/food-101/}{Food-101}:
+  101,000 labeled 512x512 color images of 101 classes of food
+\item
+  \href{http://www.ivl.disco.unimib.it/activities/food475db/}{Food-475}:
+  247,636 labeled color images of 475 classes of food
+\item
+  \href{http://www.ivl.disco.unimib.it/activities/food524db/}{Food-524}:
+  247,636 labeled color images of 524 classes of food
+\item
+  \href{http://eidolon.univ-lyon2.fr/~remi1/HistAerialDataset/}{HistAerial}:
+  4,900,000 labeled grayscale aerial images of 7 classes of ground use
+\item
+  \href{https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/}{IMDb}:
+  460,723 color images of celebrities w/ bounding boxes around faces and
+  attribute labels including DOB, name, binary gender (literally)
+\item
+  \href{https://github.com/xpwu95/IP102}{IP102}: 75,000 labeled color
+  images of 102 classes of insects
+\item
+  \href{https://github.com/smilell/AG-CNN}{LAG}: 11,760 labeled color
+  images of suspicious or negative glaucoma samples
+\item
+  \href{http://vis-www.cs.umass.edu/lfw/index.html}{LFW}: 13,233 labeled
+  250x250 color images of 5,749 faces
+\item
+  \href{https://talhassner.github.io/home/projects/lfwa/index.html}{LFW-a}:
+  Images from LFW that have been aligned using a commercial face
+  alignment software
+\item
+  \href{http://conradsanderson.id.au/lfwcrop/}{LFWcrop}: Images from LFW
+  that have been cropped to only include the contents of facial bounding
+  boxes
+\item
+  \href{https://github.com/Tencent/tencent-ml-images}{ML-Images}:
+  17,698,491 labeled color images of 11,166 classes of objects
+\item
+  \href{http://www.cs.cmu.edu/afs/cs/project/PIE/MultiPie/Multi-Pie/Home.html}{Multi-PIE}:
+  750,000 labeled color images of 337 faces
+\item
+  \href{https://www.ri.cmu.edu/project/pie-database/}{PIE}: 41,368
+  labeled color images of 68 faces
+\item
+  \href{https://github.com/facebookresearch/qmnist}{QMNIST}: An
+  extension of the MNIST data set to include 50,000 additional test
+  images
+\item
+  \href{https://stevewongv.github.io/derain-project.html}{Real Rain}:
+  29,500 labeled color image pairs, one with and one without rain
+\item
+  \href{https://dataturks.com/projects/sheerun/rooms}{ROOMS}: 10,029
+  labeled (out of 20,001 total) color images of 6 classes of room types
+\item
+  \href{http://www.scface.org/}{SCface}: 4,160 labeled color images of
+  130 faces taken from 6 security cameras of varying quality in either
+  visible light or infrared mode
+\item
+  \href{https://sites.google.com/view/sof-dataset}{SoF}: 42,592 labeled
+  color images of 112 faces (exclusively glasses-wearing)
+\item
+  \href{http://vision.stanford.edu/aditya86/ImageNetDogs/}{Stanford
+  Dogs}: 20,580 labeled color images of 120 breeds of dogs w/ bounding
+  boxes
+\item
+  \href{https://github.com/PKU-IMRE/VERI-Wild}{VERI-Wild}: 416,314
+  labeled color images of 40,671 vehicles
+\ei
+
+
+
+\section*{Preflection}
+\href{https://www.notion.so/ANN-Project-Framing-76e1b6af347f475a983487996ac9760d}{source}
+\bi
+\item What do you want your model to be able to do?
+\item How can you imagine your model (or an extension of it) being used in the real world? Feel free to get creative.
+\item If those ideas came true, who might they affect? In what ways?
+\item What measures would your model's real-world implementers need to take to ensure its effects live up to your intentions?
+\item What pitfalls might your model fall into, and what could you quantitively measure to avoid those?
+\item Why was the dataset you used to train your model created?
+\item In what other ways could the same data be used? How do you feel about those possibilities?
+\item How was that dataset assembled? From where was the data sourced? Who or what labeled it? If there are any elements of this process you think were either particularly well done or problematic, how so?
+\item If your dataset contains information about people, to what degree did those people have agency over their inclusion? Do you feel that matters in this case? Why or why not?
+\item Skimming through your dataset, does anything stand out to you about representation in its contents? // DO MORE QUANTITATIVELY W/ TOOLS
+\item Do you feel the potential use cases for this dataset justify it being created and published? Why or why not?
+\ei
+
+\end{document}
