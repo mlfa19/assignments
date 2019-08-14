@@ -26,6 +26,8 @@
 \usepackage{bm}
 \usepackage[many]{tcolorbox}
 
+\usepackage{environ}
+
 \setcounter{secnumdepth}{2}
 
 %%
@@ -127,7 +129,8 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax,}
 
 
 
-\newenvironment{boxedsolution}{%
+\NewEnviron{boxedsolution}{%
+\iftoggleverb{solutions}
 \mdfsetup{%
 frametitle={%
 \tikz[baseline=(current bounding box.east),outer sep=0pt]
@@ -136,9 +139,10 @@ frametitle={%
 \mdfsetup{innertopmargin=10pt,linecolor=green!30,%
 linewidth=2pt,topline=true,
 frametitleaboveskip=\dimexpr-\ht\strutbox\relax,}
-\begin{mdframed}[]\relax%
-}{\end{mdframed}}
-
+\begin{mdframed}[]\relax
+\BODY
+\end{mdframed}
+\fi}
 
 \newenvironment{priorknowledge}{%
 \mdfsetup{%

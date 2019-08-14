@@ -98,28 +98,23 @@ Before handling the case where each $\mlvec{x}$ is a d-dimensional vector, we'll
 \bes
 \item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$, write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.
 
-\iftoggleverb{solutions}
 \begin{boxedsolution}
 \begin{align}
 e(w) &= \sum_{i=1}^n \left (  w x_i - y_i \right)^2
 \end{align}
 \end{boxedsolution}
-\fi
 
 \item Compute the derivative the error function you found in part (a).
 
-\iftoggleverb{solutions}
 \begin{boxedsolution}
 \begin{align}
 \frac{de}{dw} &= \sum_{i=1}^n 2 \left (  w x_i - y_i \right)x_i \\
 &= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i
 \end{align}
 \end{boxedsolution}
-\fi
 
 \item Set the derivative to 0, and solve for $w^\star$.  $w^\star$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this is critical point corresponds to a global minimum.  In other words, this value of $w$ is guaranteed to drive the sum of squared errors as low as possible.
 
-\iftoggleverb{solutions}
 \begin{boxedsolution}
 \begin{align}
 \frac{de}{dw} &= 0 \\
@@ -128,7 +123,6 @@ e(w) &= \sum_{i=1}^n \left (  w x_i - y_i \right)^2
 w^\star &=\frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
 \end{align}
 \end{boxedsolution}
-\fi
 
 \ees
 
@@ -145,8 +139,6 @@ We can start here and then motivate the mathematical tricks.
 
 \item Using the definition of the gradient, show that $\nabla \mlvec{c}^\top \mlvec{x} = \mlvec{c}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlvec{c}$ is a vector of constants.
 
-\iftoggleverb{solutions}
-
 \begin{boxedsolution}
 
 \begin{align}
@@ -157,13 +149,10 @@ We can start here and then motivate the mathematical tricks.
 
 \end{boxedsolution}
 
-\fi
-
 
 \item Using the definition of the gradient, show that the $\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} = 2 \mlmat{A} \mlvec{x}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlmat{A}$ is a \emph{symmetric} $dxd$ matrix of constants.  If you'd like, you can utilize the fact (without deriving it yourself) that $\mlvec{x}^\top \mlmat{A} \mlvec{x} = \sum_{i=1}^d\sum_{j=1}^d x_i x_j a_{i, j}$.%  \todo{this might be too hard... Can we make this optional with appropriate sign-posting.... you can prove this is true, but you do not need to do so in order to make progress.  It can also be made easier if you assume $A$ is symmetric.}
 \ees
 
-\iftoggleverb{solutions}
 \begin{boxedsolution}
 
 \begin{align}
@@ -182,8 +171,6 @@ a_{d,1} & \ldots & a_{d,d}
 
 \end{boxedsolution}
 
-\fi
-
 \end{exercise}
 
 \section{Linear Regression with Multiple Variables}
@@ -194,27 +181,22 @@ Next, let's consider the more general case where $\mlvec{w}$ is a d-dimensional 
 \bes
 \item Given $\mlvec{w}$, write an expression for the sum of squared errors between each prediction $\hat{f}(\mlvec{x})$ and training output $y_i$.  If your expression initially contains a summation, rewrite it as the inner product between some vector $\mlvec{v}$ and itself (i.e. $\mlvec{v}^\top \mlvec{v}$).  In rewriting your expression as an inner-product, you may find it useful to refer to the matrix that contains all of your training data $\mlmat{X} = \begin{bmatrix} \mlvec{x}_1^\top \\ \mlvec{x}_2^\top \\ \vdots \\ \mlvec{x}_n^\top \end{bmatrix}$.  You may also want to expand your inner product using the FOIL method for matrices that we learned about earlier.
 
-\iftoggleverb{solutions}
 \begin{boxedsolution}
 \begin{align}
 e(\mlvec{w}) &= \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right)^\top  \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right) \\
 &= \mlvec{w}^\top \mlmat{X}^\top \mlmat{X} \mlvec{w} - 2 \mlvec{w}^\top \mlmat{X}^\top \mlvec{y} + \mlvec{y}^\top \mlvec{y}
 \end{align}
 \end{boxedsolution}
-\fi
 
 \item Compute the gradient of the sum of squared errors that you found in part (a).
-\iftoggleverb{solutions}
 \begin{boxedsolution}
 \begin{align}
 \nabla e(\mlvec{w})  &= 2 \mlvec{X}^\top \mlvec{X} \mlvec{w} - 2 \mlmat{X}^\top \mlvec{y}
 \end{align}
 \end{boxedsolution}
-\fi
 
 \item Set the gradient to 0, and solve for $\mlvec{w}$.  This value of $\mlvec{w}$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this is critical point corresponds to a global minimum.  In other words, this value of $\mlvec{w}$ is guaranteed to drive the sum of squared errors as low as possible (note: you can assume that $\mlmat{X}^\top \mlmat{X}$ is invertible).
 
-\iftoggleverb{solutions}
 \begin{boxedsolution}
 \begin{align}
 \nabla e(\mlvec{w})  &= 0 \\
@@ -222,7 +204,6 @@ e(\mlvec{w}) &= \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right)^\top  \left ( \m
 \mlvec{w} &= \left ( \mlmat{X}^\top \mlmat{X} \right )^{-1} \mlmat{X}^\top \mlmat{y}
 \end{align}
 \end{boxedsolution}
-\fi
 
 \ees
 \end{exercise}
