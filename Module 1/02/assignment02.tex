@@ -1,8 +1,8 @@
 \documentclass[assignment02_Solutions]{subfiles}
 
-\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
 
-%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
 
@@ -25,7 +25,6 @@
 \item Partial derivatives and gradients, matrix-vector multiplication, and vector-vector multiplication
 \ei
 \end{priorknowledge}
-
 
 \begin{learningobjectives}
 \bi
@@ -129,7 +128,7 @@ w^\star &=\frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
 
 \end{exercise}
 We can start here and then motivate the mathematical tricks.
-
+asdf
 \subsection{Building our bag of mathematical tricks}
 
 \begin{exercise}[30 minutes]
@@ -176,7 +175,7 @@ a_{d,1} & \ldots & a_{d,d}
 \section{Linear Regression with Multiple Variables}
 \textbf{We might need to choose between this and a reading. If we do the reading, this will be done in class.}
 Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ is a d-dimensional input vectors each $y_i$ is a scalar representing a target output.
-\begin{exercise}[60 minutes]
+\begin{exercise}[(60 minutes)]
 Next, let's consider the more general case where $\mlvec{w}$ is a d-dimensional vector.  In order to solve this problem, you'll be leveraging some of the new mathematical tricks you picked up earlier in the assignment.  As you go through the problem, try as much as possible to treat vectors as first-class objects (e.g., work with the gradient instead of the individual partial derivatives).
 \bes
 \item Given $\mlvec{w}$, write an expression for the sum of squared errors between each prediction $\hat{f}(\mlvec{x})$ and training output $y_i$.  If your expression initially contains a summation, rewrite it as the inner product between some vector $\mlvec{v}$ and itself (i.e. $\mlvec{v}^\top \mlvec{v}$).  In rewriting your expression as an inner-product, you may find it useful to refer to the matrix that contains all of your training data $\mlmat{X} = \begin{bmatrix} \mlvec{x}_1^\top \\ \mlvec{x}_2^\top \\ \vdots \\ \mlvec{x}_n^\top \end{bmatrix}$.  You may also want to expand your inner product using the FOIL method for matrices that we learned about earlier.
