@@ -49,7 +49,7 @@ We typically also assume that there is some loss function, $\ell$, that determin
 
 
 \section{Six Big Ideas in Machine Learning}
-Before diving into the specifics of our first machine learning algorithm, let's examine some important ideas in machine learning.  Why six big ideas?  if Rob Martello has taught us anything, it's that all good things come in sixes.
+Before diving into the specifics of our first machine learning algorithm, let's examine some important ideas in machine learning.  Why six big ideas?  If Rob Martello has taught us anything, it's that all good things come in sixes.
 
 
 \subsection*{Idea 1: Correlations for the Win?}
@@ -75,7 +75,7 @@ While this all seems great, and YOLO achieves high accuracy at tasks such as thi
 
 \begin{marginfigure}
 \includegraphics[width=1.6in]{figures/yolofooled}
-\caption{A stop sign with a specially crafted sticker that causes a neural network to fail to identify it as as top sign.}\label{fig:yolofooled}
+\caption{A stop sign with a specially crafted sticker that causes a neural network to fail to identify it as as stop sign.}\label{fig:yolofooled}
 \end{marginfigure}
 The complexity of the model makes it vulnerable to bad actors (or adversaries).  Researchers at University of Michigan used a form of ML known as \emph{adversarial machine learning} to \href{https://iotsecurity.engin.umich.edu/physical-adversarial-examples-for-object-detectors/}{create a specially crafted sticker that could be attached to a stop sign that would make it invisible to the YOLO model} (that is YOLO would not identify it as a stop sign).  Clearly, this has major implications for the safety of using a model such as this in an application like a self-driving car.   An example of the attack is shown in Figure~\ref{fig:yolofooled}.
 
@@ -100,6 +100,7 @@ At the beginning of this document we have a reminder of the basic supervised mac
 In fact, there are a whole class of theorems called \href{https://en.wikipedia.org/wiki/No_free_lunch_theorem}{No-Free-Lunch (NFL) theorems} that state that without inductive biases (such as the ones stated above), learning from data is essentially impossible.  This connects us back to the quote from George Box.  While the inductive bias we encode into our model will never fully represent reality, having this bias is necessary to allow the model to do the useful work of making predictions.  What's important for us as machine learning scientists and practitioners is to be explicit about the biases we are introducing when settling on a particular model so that we can best evaluate our results and predict the limitations of our systems.
 
 \subsection*{Idea 3: It's All About How You Frame the Problem}
+
 Using Machine Learning algorithms can be a bit disorienting for someone used to the typical engineering workflow.  A cartoon picture of the engineering workflow is that you are given a problem (perhaps it is initially difficult to solve or ambiguous), you might reframe the problem to make it easier to solve, and then you work to devise a solution to the reframed problem.  In machine learning, the last step is replaced by providing examples of how you'd like your system to work (i.e., input / output pairs), and then the creation of the actual system is automated by the ML algorithm!  Your job as an ML practitioner is to reframe the original problem (both by specifying the form of the model and giving appropriate training data) so that the ML algorithm can compute a solution.  If you've done the reframing properly, the solution to the reframed problem will also be a good solution to the original problem.
 
 As an example of when a solution to the reframed problem would not be desirable, consider the use of a machine learning algorithm to teach a virtual character to walk in a simulated environment.  You might reframe this problem for the ML algorithm as tasking it with computing a controller for the virtual character that moves the character's center of mass forward as fast as possible.  The ML algorithm can now search over a vast space of possible control strategies to learn the one that most quickly propels the center of mass.  However, it doesn't necessarily follow that this controller will result in the character walking using a normal bipedal gait.
@@ -123,7 +124,7 @@ In the next few weeks we'll learn about artificial neural networks (ANNs).  ANNs
 \end{marginfigure}
 ANNs accept input patterns at an array of virtual neurons called the input layer (see Figure~\ref{fig:ann}).  The neurons in the input layer are connected to other neurons via virtual \href{https://en.wikipedia.org/wiki/Axon}{axons} that control to what extent a particular input neuron activates a downstream neuron.  The second set of neurons, called the ``hidden layer'' (shown in blue in the figure), is responsible for computing intermediate, hidden representations of the input data.  This process continues as activations propagate through the network until activations are generated at the output layer (shown in green). These outputs could correspond to any salient properties of the input (e.g., if the input is an image, the output might encode the objects in the image).
 
-What's amazing about ANNs is that there are learning algorithms for setting the connection strengths between these virtual neurons (the black arrows in the figure) based on training data (input / output pairs).  These learning algorithms tune the connections strengths (also called ``weights'') such that for the provided training data the network produces the appropriate training outputs (e.g., if you show the network a training set of images of cats or dogs, over time the network will adjust its weights so that the output is ``cat'' when the network is presented an image of a cat and ``dog'' if presented an image of a dog).  The algorithms used to tune the network weights are only concerned with reproducing the output patterns, the network is free to choose how it represents information within the network (i.e., at the hidden layer).
+What's amazing about ANNs is that there are learning algorithms for setting the connection strengths between these virtual neurons (the black arrows in Figure~\ref{fig:ann}) based on training data (input / output pairs).  These learning algorithms tune the connections strengths (also called ``weights'') such that for the provided training data the network produces the appropriate training outputs (e.g., if you show the network a training set of images of cats or dogs, over time the network will adjust its weights so that the output is ``cat'' when the network is presented an image of a cat and ``dog'' if presented an image of a dog).  The algorithms used to tune the network weights are only concerned with reproducing the output patterns, the network is free to choose how it represents information within the network (i.e., at the hidden layer).
 
 \begin{marginfigure}
 
@@ -182,7 +183,7 @@ While we'll be talking a lot about how ML can go wrong, unleashing unexpected co
 Now, we want to hear from you!  
 \bes
 \item Choose one of the big ideas above and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  As a rough guide, you should aim for a response of a 1-2 paragraphs.
-\item Idea 6 talks about the idea of ML for positive impact.  What is one example of an ML application (real or imagined) that you think would have the largest (or most unambiguously) positive impact on the world?  Why?  Alternatively, what is an example of an ML application (real or imagined) that no matter how you carefully the designers approach it, should just not exist due to the harm it would cause the world?  Why?
+\item Idea 6 talks about the idea of ML for positive impact.  What is one example of an ML application (real or imagined) that you think would have the largest (or most unambiguously) positive impact on the world?  Why?  Alternatively, what is an example of an ML application (real or imagined) that no matter how carefully the designers approach it, should just not exist due to the harm it would cause the world?  Why?
 \ees
 \end{exercise}
 
