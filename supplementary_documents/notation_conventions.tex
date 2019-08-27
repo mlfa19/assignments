@@ -30,6 +30,13 @@ We will use lower-case, bolded letters to refer to vector quantities.  For examp
 \mlvec{v}
 \end{align}
 
+\paragraph{Vector Indexing}
+We will use the notation $v_i$ to refer to the $i$th element of the vector $\mlvec{v}$.
+
+\paragraph{Row Versus Column Vectors}
+When we talk about a vector, we will \emph{always} be referring to a column vector (i.e., a matrix with shape $d \times 1$).
+
+
 \subsection{Matrices}
 
 We will use upper-case, bolded letters to refer to matrix quantities.  For example, we would refer to the matrix quantity A using the following notation.
@@ -37,6 +44,14 @@ We will use upper-case, bolded letters to refer to matrix quantities.  For examp
 \begin{align}
 \mlmat{A}
 \end{align}
+
+\paragraph{Matrix Indexing}
+\be
+\item We will refer to the $i$th column of the matrix $\mlmat{A}$ as $\mlvec{a}_i$ (we don't have a shorthand for referring to rows of a matrix)
+\item We will refer to the element at row $i$, column $j$ of matrix $\mlmat{A}$ as $a_{i, j}$.
+\ee
+
+
 
 \subsection{Independent versus Dependent variables}
 We will use `x' to refer to independent (i.e., input) variables and `y' to refer to dependent (i.e., output) variables.  For instance, when describing training data, we will always use `x' to refer to the input variables and `y' to refer to the output variable.
