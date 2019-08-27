@@ -79,7 +79,6 @@ While this all seems great, there is a catch.  It is very difficult to understan
 \end{marginfigure}
 The complexity of the model makes it vulnerable to bad actors (or adversaries).  Researchers at University of Michigan used a form of ML known as \emph{adversarial machine learning} to \href{https://iotsecurity.engin.umich.edu/physical-adversarial-examples-for-object-detectors/}{create a specially crafted sticker that could be attached to a stop sign that would make it invisible to the YOLO model} (that is YOLO would not identify it as a stop sign).  Clearly, this has major implications for the safety of using a model such as this in an application like a self-driving car.   An example of the attack is shown in Figure~\ref{fig:yolofooled}.
 
-
 \ei
 
 \subsection*{Idea 2: There's No Such Thing as a Free Lunch}
@@ -119,7 +118,7 @@ For more examples of this sort of thing, consider checking out \href{https://www
 In the next few weeks we'll learn about artificial neural networks (ANNs).  ANNs are biologically inspired algorithms since their functioning, at an abstract level, is modeled on the functioning of biological neurons (e.g., in the brain).
 
 \begin{marginfigure}
-\includegraphics[width=1.8in]{figures/Colored_neural_network}
+\includegraphics[width=\linewidth]{figures/Colored_neural_network}
 \caption{An artificial neural network with a single hidden layer.}\label{fig:ann}
 \end{marginfigure}
 ANNs accept input patterns at an array of virtual neurons called the input layer (see Figure~\ref{fig:ann}).  The neurons in the input layer are connected to other neurons via virtual \href{https://en.wikipedia.org/wiki/Axon}{axons} that control to what extent a particular input neuron activates a downstream neuron.  The second set of neurons, called the ``hidden layer'' (shown in blue in the middle of the figure), is responsible for computing intermediate, hidden representations of the input data.  This process continues as activations propagate through the network until activations are generated at the output layer (shown in green on the right of the figure). These outputs could correspond to any salient properties of the input (e.g., if the input is an image, the output might encode the objects in the image).
@@ -129,7 +128,7 @@ What's amazing about ANNs is that there are learning algorithms for setting the 
 \begin{marginfigure}
 
 \caption{12x12 receptive fields learned from an neural network trained to optimally compress images}
-\includegraphics[width=1.5in]{figures/learned_receptive_fields}\label{fig:learnedfields}
+\includegraphics[width=\linewidth]{figures/learned_receptive_fields}\label{fig:learnedfields}
 \end{marginfigure}
 What's super amazing is that we can actually examine the internal representations of a neural network to understand how it's performing the computation from input to output. For instance, Figure~\ref{fig:learnedfields}\footnote{From \href{http://www.cnbc.cmu.edu/~tai/nc19journalclubs/Olshausen-Field-CON-2004-1.pdf}{Sparse coding of sensory inputs}} shows a visualization of the internal representations learned by a network trained to best compress a training set of images (these sorts of networks are called ``auto-encoders'').  The receptive fields of each of the hidden units in the network and can be understood as specifying how each input pixel activates a particular hidden unit (gray corresponds to no activation, black to negative activation, and white to positive activation).  It's remarkable that these receptive fields have coherent structure: they are localized in space, tuned to particular orientations, and tuned to features at a particular scale.  You can think of these as oriented edge detectors that the network learned completely on its own (it was never told to extract edges from the images in the training set).
 
@@ -305,10 +304,14 @@ Digesting mathematical equations like this can be daunting, but your understandi
 While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of the next assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new testing point, $\mlvec{x}$, by predicting the corresponding (unknown) label, $y$, as $\hat{y} = \mlvec{w^\star} \cdot \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data points, which is the hallmark of supervised machine learning!
 
 \begin{exercise}
-Draw a scatter plot in 2D (the x-axis is the independent variable and the y-axis is the dependent variable).  Fill in a few datapoints and draw a potential line of best fit.  On the plot identify the differences between the data points and the line (these differences are the residuals).  Draw a second potential line of best fit and mark the residuals.  From the point of view of ordinary least-squares, which of these lines is better?
+Draw a scatter plot in 2D (the x-axis is the independent variable and the y-axis is the dependent variable).  Fill in a few datapoints and draw a potential line of best fit.  On the plot identify the vertical differences between the data points and the line (these differences are the residuals).  Draw a second potential line of best fit and mark the residuals.  From the point of view of ordinary least-squares, which of these lines is better?
 
 \begin{boxedsolution}
-TODO still need to do this one
+\begin{center}
+\includegraphics[width=0.8\linewidth]{figures/exercise3solution}
+\end{center}
+
+The red line (line 1) would be better since the residuals are generally smaller.  Line 2 also has several large residuals, which when squared will cause a large penalty for line 2.
 \end{boxedsolution}
 \end{exercise}
 
