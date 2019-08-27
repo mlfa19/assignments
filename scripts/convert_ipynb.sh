@@ -7,6 +7,6 @@ do
   base=${f%.*}
   jupyter nbconvert --execute --to html --output ${base}_Solutions "$f" 
   wkhtmltopdf "${base}_Solutions.html" "${base}_Solutions.pdf"
-  jupyter nbconvert --execute --TagRemovePreprocessor.enabled=True  Assignment_01_Companion.ipynb --TagRemovePreprocessor.remove_cell_tags="['solution']" --to html "$f" 
+  jupyter nbconvert --execute --RegexRemovePreprocessor.patterns="['.*Notebook Exercise .* Solution.*']" ${base}.ipynb --to html "$f" 
   wkhtmltopdf "${base}.html" "${base}.pdf"
 done
