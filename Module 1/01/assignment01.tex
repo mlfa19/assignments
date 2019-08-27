@@ -59,23 +59,23 @@ ML algorithms learn to exploit correlations in data in order to make predictions
 \bi
 
 \item \emph{Example 1: Reinforcing Hiring Biases}
-You may have heard that \href{https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G}{Amazon scrapped a secret AI recruiting tool that showed bias against women}.  More specifically, the tool performed automatic keyword analysis of job applications to predict whether or not the the applicant was worth forwarding on to a human for further evaluation.  Early in the development of this system, researchers discovered that the model the system had learned placed a negative weight on words such as ``women's'' as well as the names of some women's colleges.  While there is of course no causal link between these words appearing in a job application and the suitability of the candidate for the job, there was a \emph{correlation} in the training set between the presence of words such as ``women's'' and the candidates not being invited for interviews.
+You may have heard that \href{https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G}{Amazon scrapped a secret AI recruiting tool that showed bias against women}.  More specifically, the tool performed automatic keyword analysis of job applications to predict whether or not the the applicant was worth forwarding on to a human for further evaluation.  Early in the development of this system researchers discovered that the model the system had learned placed a negative weight on words such as ``women's'' as well as the names of some women's colleges.  While there is of course no causal link between these words appearing in a job application and the suitability of the candidate for the job, there was a \emph{correlation} in the training set between the presence of words such as ``women's'' and the candidates not being invited for interviews.
 
 Why might such a correlation exist in the training set?  There are many different possible explanations for this correlation, ranging from overt or unconscious bias in the applicant evaluators whose judgments helped form the training data to systemic discrimination that denies women equal access to educational opportunities in STEM.  The important thing to take away from this is not \emph{why} there was a correlation, but that the existence of the correlation in the training data caused the model to utilize the correlation in order to evaluate new data.  Amazon realized that this was very bad and decided to take steps to address the problem (they say they never used the system to make actual job-screening decisions).  Despite efforts to prevent the algorithm for exploiting such correlations, the group determined that they couldn't fully guarantee that the algorithm had not found another way to achieve the same discriminatory outcome and terminated the project.
 
 
 \item \emph{Example 2: Adversarial Machine Learning}
 
-A second example of an ML algorithm exploiting correlations in training data in unexpected ways can be found in computer vision methods for object detection.  Identifying salient visual objects such as road signs and pedestrians is an important building block for applications such as autonomous cars.  A popular algorithm for this task, \href{https://pjreddie.com/darknet/yolo/}{YOLO} (You Only Look Once)\footnote{\href{https://www.youtube.com/watch?time_continue=77&v=MPU2HistivI}{Cool video of YOLO version 3}, \href{https://www.youtube.com/watch?v=Cgxsv1riJhI}{TED talk from the YOLO head researcher}}, can identify and localize objects in images with surprising accuracy.  For instance, in the image below YOLO identified the stop sign in the image successfully.
+A second example of an ML algorithm exploiting correlations in training data in unexpected ways can be found in computer vision methods for object detection.  Identifying salient visual objects such as road signs and pedestrians is an important building block for applications such as autonomous cars.  A popular algorithm for this task, \href{https://pjreddie.com/darknet/yolo/}{YOLO} (You Only Look Once)\footnote{\href{https://www.youtube.com/watch?time_continue=77&v=MPU2HistivI}{Cool video of YOLO version 3}, \href{https://www.youtube.com/watch?v=Cgxsv1riJhI}{TED talk from the head YOLO researcher}}, can identify and localize objects in images with surprising accuracy.  For instance, in the image below YOLO identified the stop sign in the image successfully.
 \begin{center}
 \includegraphics[width=0.6\linewidth]{figures/stopsignyolo}
 \end{center}
 
-While this all seems great, and YOLO achieves high accuracy at tasks such as this, there is a catch.  It is very difficult to understand \emph{how} YOLO is making these predictions.  That is, what is it about this image that causes the YOLO algorithm to be able to tell that it is a stop sign?  Perhaps it is the white text on the red background.  Perhaps it is the word ``STOP.''  The fact is that the network that makes this prediction is so complex, that is impossible for us to say definitively exactly how it makes its decision.  What we do know is that the model exploits correlations in the training data between input features, pixels, and outputs, object locations, in potentially unpredictable ways.
+While this all seems great, there is a catch.  It is very difficult to understand \emph{how} YOLO is making these predictions.  That is, what is it about this image that causes the YOLO algorithm to be able to tell that it is a stop sign?  Perhaps it is the white text on the red background.  Perhaps it is the word ``STOP.''  In fact, the network that makes this prediction is so complex, that it is impossible for us to say definitively exactly how it makes its decision.  What we do know is that the model exploits correlations in the training data between input features (pixels) and outputs (object locations) in potentially unpredictable ways.
 
 \begin{marginfigure}
 \includegraphics[width=1.6in]{figures/yolofooled}
-\caption{A stop sign with a specially crafted sticker that causes a neural network to fail to identify it as as stop sign.}\label{fig:yolofooled}
+\caption{A stop sign with a specially crafted sticker that causes a neural network to fail to identify it as a stop sign.}\label{fig:yolofooled}
 \end{marginfigure}
 The complexity of the model makes it vulnerable to bad actors (or adversaries).  Researchers at University of Michigan used a form of ML known as \emph{adversarial machine learning} to \href{https://iotsecurity.engin.umich.edu/physical-adversarial-examples-for-object-detectors/}{create a specially crafted sticker that could be attached to a stop sign that would make it invisible to the YOLO model} (that is YOLO would not identify it as a stop sign).  Clearly, this has major implications for the safety of using a model such as this in an application like a self-driving car.   An example of the attack is shown in Figure~\ref{fig:yolofooled}.
 
@@ -90,7 +90,7 @@ The complexity of the model makes it vulnerable to bad actors (or adversaries). 
 --- George Box
 \end{quotation}
 
-At the beginning of this document we have a reminder of the basic supervised machine learning setup.  A one sentence statement of the setup is that we try generalize from a set of training data to construct a function $\hat{f}^\star$ that best predicts the corresponding output data for unseen input data (e.g., predicting the facial expression of a face that was not in the training set based on a training set of sample faces).  In the previous big idea, we discussed how machine learning could go wrong when there are correlations in the data that seem useful to the ML algorithm but are ultimately counterproductive to how we'd like the system to make decisions.  It turns out that even before you choose the training data for your algorithm, you must provide an \href{https://en.wikipedia.org/wiki/Inductive_bias}{inductive bias} to constrain the space of possible models you might fit.  Examples of common inductive biases include the following (the previously linked article has some more).
+At the beginning of this document we have a reminder of the basic supervised machine learning setup.  A one sentence statement of the setup is that we try to generalize from a set of training data to construct a function $\hat{f}^\star$ that best predicts the corresponding output data for unseen input data (e.g., predicting the facial expression of a face that was not in the training set based on a training set of sample faces).  In the previous big idea, we discussed how machine learning could go wrong when there are correlations in the data that seem useful to the ML algorithm but are ultimately counterproductive to how we'd like the system to make decisions.  It turns out that even before you choose the training data for your algorithm, you must provide an \href{https://en.wikipedia.org/wiki/Inductive_bias}{inductive bias} to constrain the space of possible models you might fit.  Examples of common inductive biases include the following (the previously linked article has some more).
 \be
 \item The prediction function $\hat{f}^\star$ should change smoothly as you vary the input $\mlvec{x}$.
 \item The prediction function has a particular form (e.g., linear).
@@ -122,7 +122,7 @@ In the next few weeks we'll learn about artificial neural networks (ANNs).  ANNs
 \includegraphics[width=1.8in]{figures/Colored_neural_network}
 \caption{An artificial neural network with a single hidden layer.}\label{fig:ann}
 \end{marginfigure}
-ANNs accept input patterns at an array of virtual neurons called the input layer (see Figure~\ref{fig:ann}).  The neurons in the input layer are connected to other neurons via virtual \href{https://en.wikipedia.org/wiki/Axon}{axons} that control to what extent a particular input neuron activates a downstream neuron.  The second set of neurons, called the ``hidden layer'' (shown in blue in the figure), is responsible for computing intermediate, hidden representations of the input data.  This process continues as activations propagate through the network until activations are generated at the output layer (shown in green). These outputs could correspond to any salient properties of the input (e.g., if the input is an image, the output might encode the objects in the image).
+ANNs accept input patterns at an array of virtual neurons called the input layer (see Figure~\ref{fig:ann}).  The neurons in the input layer are connected to other neurons via virtual \href{https://en.wikipedia.org/wiki/Axon}{axons} that control to what extent a particular input neuron activates a downstream neuron.  The second set of neurons, called the ``hidden layer'' (shown in blue in the middle of the figure), is responsible for computing intermediate, hidden representations of the input data.  This process continues as activations propagate through the network until activations are generated at the output layer (shown in green on the right of the figure). These outputs could correspond to any salient properties of the input (e.g., if the input is an image, the output might encode the objects in the image).
 
 What's amazing about ANNs is that there are learning algorithms for setting the connection strengths between these virtual neurons (the black arrows in Figure~\ref{fig:ann}) based on training data (input / output pairs).  These learning algorithms tune the connections strengths (also called ``weights'') such that for the provided training data the network produces the appropriate training outputs (e.g., if you show the network a training set of images of cats or dogs, over time the network will adjust its weights so that the output is ``cat'' when the network is presented an image of a cat and ``dog'' if presented an image of a dog).  The algorithms used to tune the network weights are only concerned with reproducing the output patterns, the network is free to choose how it represents information within the network (i.e., at the hidden layer).
 
@@ -133,12 +133,12 @@ What's amazing about ANNs is that there are learning algorithms for setting the 
 \end{marginfigure}
 What's super amazing is that we can actually examine the internal representations of a neural network to understand how it's performing the computation from input to output. For instance, Figure~\ref{fig:learnedfields}\footnote{From \href{http://www.cnbc.cmu.edu/~tai/nc19journalclubs/Olshausen-Field-CON-2004-1.pdf}{Sparse coding of sensory inputs}} shows a visualization of the internal representations learned by a network trained to best compress a training set of images (these sorts of networks are called ``auto-encoders'').  The receptive fields of each of the hidden units in the network and can be understood as specifying how each input pixel activates a particular hidden unit (gray corresponds to no activation, black to negative activation, and white to positive activation).  It's remarkable that these receptive fields have coherent structure: they are localized in space, tuned to particular orientations, and tuned to features at a particular scale.  You can think of these as oriented edge detectors that the network learned completely on its own (it was never told to extract edges from the images in the training set).
 
-What's super-duper amazing is that if we compare the receptive fields learned by the artificial neural network to the \href{https://en.wikipedia.org/wiki/Simple_cell}{simple cells} in the primary visual cortex of a cat, there are a number of striking similarities.  Just as in the ANN, the biological neural network responds to edges at particular orientations and scales.  The scientists Hubel and Wiesel performed the pioneering work in neuroscience to establish the properties of receptive fields in the primary visual cortex.  Consider watching \href{https://www.youtube.com/watch?v=8VdFf3egwfg}{a video of their experiment} that eventually garnered a Nobel prize (note that in the video the static sound corresponds to the measurement of spikes in activity of an individual neuron in the brain of an anesthetized cat).\footnote{There are a variety of opinions on the \href{https://en.wikipedia.org/wiki/Animal_testing\#Ethics}{ethics of performing research on animals}}
+What's super-duper amazing is that if we compare the receptive fields learned by the artificial neural network to the \href{https://en.wikipedia.org/wiki/Simple_cell}{simple cells} in the primary visual cortex of a cat, there are a number of striking similarities.  Just as in the ANN, the biological neural network responds to edges at particular orientations and scales.  The scientists Hubel and Wiesel performed the pioneering work in neuroscience to establish the properties of receptive fields in the primary visual cortex.  Consider watching \href{https://www.youtube.com/watch?v=8VdFf3egwfg}{a video of their experiment} that eventually garnered a Nobel prize (note that in the video the static sound corresponds to the measurement of spikes in activity of an individual neuron in the brain of an anesthetized cat).\footnote{There are a variety of opinions on the \href{https://en.wikipedia.org/wiki/Animal_testing\#Ethics}{ethics of performing research on animals}}. The implication of the similarity between the receptive fields of the neurons in the cat brain and the virtual neurons in the ANN is that they are similar because they are fundamentally solving the same problem (i.e., efficiently representing visual information).  In this light, that they should find similar solutions to this problem is not as surprising as it may first seem.
 
 
 \subsection*{Idea 5: Machine Learning Zoomed Out}
 
-Historically, most ML courses have been laser-focused on learning about learning algorithms (e.g., neural networks, support vector machines, decision trees, etc.).  In some courses there would a little bit of emphasis on machine learning applications, which have always been strongly tied to the research in ML algorithms and theory.  The focus on ML algorithms also reflected the positioning of these courses within Computer Science curricula, which approached the field more from a liberal arts perspective rather than an engineering one.
+Historically, most ML courses have been laser-focused on learning about learning algorithms (e.g., neural networks, support vector machines, decision trees, etc.).  In some courses there would be a little bit of emphasis on machine learning applications, which have always been strongly tied to the research in ML algorithms and theory.  The focus on ML algorithms also reflected the positioning of these courses within Computer Science curricula, which approached the field more from a liberal arts perspective rather than an engineering one.
 
 A number of recent trends have made the almost sole focus on learning algorithms insufficient for those who want to either use ML in their careers or go into ML as a field.
 \be
@@ -158,7 +158,7 @@ In the figure above, the box labeled \emph{ML Code} is the actual learning algor
 \includegraphics[width=\linewidth]{figures/sociotechnical}
 \end{center}
 
-In addition to understanding how ML code is situated within larger software ecosystems, it is even more important to realize the \href{https://en.wikipedia.org/wiki/Sociotechnical_system}{socio-technical context} in which an ML system is deployed.  The figure above shows a socio-technical analysis of a technology.  The figure highlights the need to consider contextual factors such as user impacts, culture, and regulations when considering the analyzing technologies.
+In addition to understanding how ML code is situated within larger software ecosystems, it is even more important to realize the \href{https://en.wikipedia.org/wiki/Sociotechnical_system}{socio-technical context} in which an ML system is deployed.  The figure above shows a socio-technical analysis of a technology.  The figure highlights the need to consider contextual factors such as user impacts, culture, and regulations when analyzing technologies.
 
 Using the tools of socio-technical systems analysis is becoming increasingly popular for analyzing machine learning systems.  We'll be digging into some of these resources later in the course, but here are two papers in this spirit.
 \bi
@@ -179,11 +179,21 @@ While we'll be talking a lot about how ML can go wrong, unleashing unexpected co
 
 \marginnote{The \faShareAlt~icon means that you will be submitting your response to this exercise with your assignment.  By default responses to exercises do not need to be submitted.}
 
-\begin{exercise}[\faShareAlt~(30 minutes)]
+\begin{exercise}[\faShareAlt~(60 minutes)]
 Now, we want to hear from you!  
 \bes
 \item Choose one of the big ideas above and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  As a rough guide, you should aim for a response of a 1-2 paragraphs.
+
+\begin{boxedsolution}
+There's no one right answer here!
+\end{boxedsolution}
+
 \item Idea 6 talks about the idea of ML for positive impact.  What is one example of an ML application (real or imagined) that you think would have the largest (or most unambiguously) positive impact on the world?  Why?  Alternatively, what is an example of an ML application (real or imagined) that no matter how carefully the designers approach it, should just not exist due to the harm it would cause the world?  Why?
+
+\begin{boxedsolution}
+There's no one right answer here!
+\end{boxedsolution}
+
 \ees
 \end{exercise}
 
@@ -217,15 +227,49 @@ In order to engage with this assignment, you'll want to make sure you are famili
 \begin{exercise}[(20 minutes)]
 Here are some diagnostic problems to test some basic understanding of the concepts above.
 \bes
-\item Suppose $f(x, y) = 2x \sin{y} + y^2 x$.  Calculate $\frac{\partial{f}}{\partial{x}}$, $\frac{\partial{f}}{\partial{x}}$, and $\nabla f$.
+\item Suppose $f(x, y) = 2x \sin{y} + y^2 x^3$.  Calculate $\frac{\partial{f}}{\partial{x}}$, $\frac{\partial{f}}{\partial{x}}$, and $\nabla f$.
+
+
+\begin{boxedsolution}
+\begin{align}
+\frac{\partial{f}}{\partial{x}} &= 2 \sin y + 3 y^2 x^2 \\
+\frac{\partial{f}}{\partial{y}} &= 2x \cos y + 2 y x^3 \\ 
+\nabla f &= \begin{bmatrix} 2 \sin y + 3 y^2 x^2 \\ 2x \cos y + 2 y x^3  \end{bmatrix}
+\end{align}
+\end{boxedsolution}
+
 \item Suppose $\mlvec{x} = \begin{bmatrix} 3 \\ -1 \\ 4 \end{bmatrix}$ and $\mlvec{y} = \begin{bmatrix} 2 \\  7 \\ 4 \end{bmatrix}$.  Calculate $\mlvec{x} \cdot \mlvec{y}$, $\mlvec{x}^\top \mlvec{y}$, and $\mlvec{x} \mlvec{y}^\top$.
-\item Let $\mlmat{A} = \begin{bmatrix} \mlvec{col_1} & \mlvec{col_2} & \ldots & \mlvec{col_n} \end{bmatrix} = \begin{bmatrix} \mlvec{row_1}^\top \\ \mlvec{row_2}^\top \\ \vdots \\ \mlvec{row}_m^\top \end{bmatrix}$
 
-(that is, the matrix $\mlmat{A}$ can either be thought of as consisting of the columns $\mlvec{col_1}, \ldots, \mlvec{col_n}$ or the rows $\mlvec{row_1}^\top, \ldots, \mlvec{row_m}^\top$).
 
-Compute $\mlmat{A}\mlvec{v}$ in terms of $\mlvec{col_1}, \ldots, \mlvec{col_n}$.
+\begin{boxedsolution}
+\begin{align}
+\mlvec{x} \cdot \mlvec{y} &= 3 \times 2 + -1 \times 7 + 4 \times 4 = 15 \\
+\mlvec{x}^\top \mlvec{y} &= \mlvec{x} \cdot \mlvec{y} = 15 \\
+\mlvec{x} \mlvec{y}^\top &= \begin{bmatrix} 3 \times 2 & 3 \times 7 & 3 \times 4 \\ -1 \times 2 & -1 \times 7 & -1 \times 4 \\ 4 \times 2 & 4 \times 7 & 4 \times 4 \end{bmatrix} \\
+&= \begin{bmatrix} 6 & 21 & 12 \\ -2 & -7 & -4 \\ 8 & 28 & 16 \end{bmatrix}
+\end{align}
+\end{boxedsolution}
+
+\item Let $\mlmat{A} = \begin{bmatrix} \mlvec{a_1} & \mlvec{a_2} & \ldots & \mlvec{a_n} \end{bmatrix} = \begin{bmatrix} \mlvec{row_1}^\top \\ \mlvec{row_2}^\top \\ \vdots \\ \mlvec{row}_m^\top \end{bmatrix}$
+
+(that is, the matrix $\mlmat{A}$ can either be thought of as consisting of the columns $\mlvec{a_1}, \ldots, \mlvec{a_n}$ or the rows $\mlvec{row_1}^\top, \ldots, \mlvec{row_m}^\top$).  Let $\mlvec{v}$ be an arbitrary $n$-dimensional vector.
+
+Compute $\mlmat{A}\mlvec{v}$ in terms of $\mlvec{a_1}, \ldots, \mlvec{a_n}$.
+
+\begin{boxedsolution}
+\begin{align}
+\mlmat{A} \mlvec{v} &= \mlvec{v}_1 \mlvec{a}_1 + \mlvec{v}_2 \mlvec{a}_2 + \ldots + \mlvec{v}_n \mlvec{a}_n
+\end{align}
+\end{boxedsolution}
 
 Compute $\mlmat{A} \mlvec{v}$ in terms of the rows of $\mlvec{row_1}, \ldots, \mlvec{row_m}$.
+
+\begin{boxedsolution}
+\begin{align}
+\mlmat{A} \mlvec{v} &= \begin{bmatrix} \mlvec{v} \cdot \mlvec{row}_1 \\   \mlvec{v} \cdot \mlvec{row}_2 \\ \vdots \\ \mlvec{v} \cdot \mlvec{row}_m \end{bmatrix}
+\end{align}
+\end{boxedsolution}
+
 \ees
 \end{exercise}
 
@@ -241,9 +285,9 @@ Before we jump into the \emph{what} of linear regression, let's spend a little b
 \ei
 
 
-For linear regression we assume that our input points, $\mlvec{x_i}$, are d-dimensional vectors (each entry of these vectors can be though of as a feature), that our output points, $y_i$, are scalars, and that our prediction functions $\hat{f}$ are all of the form $\hat{f}(\mlvec{x}) = \mlvec{w}^\top \mlvec{x} = \sum_{i=1}^d w_i x_i$ for some vector of weights $\mlvec{w}$ (you could think of $\hat{f}$ as also taking $\mlvec{w}$ as an input, e.g., writing $\hat{f}(\mlvec{x}, \mlvec{w}$).  When it's obvious what the value of $\mlvec{w}$ is, we'll leave it as an implicit input instead, e.g., writing $\hat{f}(\mlvec{x})$).
+For linear regression we assume that our input points, $\mlvec{x_i}$, are d-dimensional vectors (each entry of these vectors can be though of as a feature), that our output points, $y_i$, are scalars, and that our prediction functions $\hat{f}$ are all of the form $\hat{f}(\mlvec{x}) =\mlvec{w} \cdot \mlvec{x} = \mlvec{w}^\top \mlvec{x} = \sum_{i=1}^d w_i x_i$ for some vector of weights $\mlvec{w}$ (you could think of $\hat{f}$ as also taking $\mlvec{w}$ as an input, e.g., writing $\hat{f}(\mlvec{x}, \mlvec{w}$).  When it's obvious what the value of $\mlvec{w}$ is, we'll leave it as an implicit input instead, e.g., writing $\hat{f}(\mlvec{x})$).
 
-In the function, $\hat{f}$, the elements of the vector $\mlvec{w}$ represent weights that multiply various entries of the input.  For instance, if an element of $\mlvec{w}$ is high, that means that as the corresponding element of $\mlvec{x}$ increases, the prediction that $\hat{f}$ generates for $\mlvec{x}$ would also increase (you may want to mentally think through other cases, e.g., what would happen is the element of $\mlvec{x}$ decreases, or what would happen if the entry of $\mlvec{w}$ was large and negative).  The products of the weights and the features are then summed to arrive at an overall prediction.
+In the function, $\hat{f}$, the elements of the vector $\mlvec{w}$ represent weights that multiply various dimensions of the input.  For instance, if an element of $\mlvec{w}$ is high, that means that as the corresponding element of $\mlvec{x}$ increases, the prediction that $\hat{f}$ generates would also increase (you may want to mentally think through other cases, e.g., what would happen is the element of $\mlvec{x}$ decreases, or what would happen if the entry of $\mlvec{w}$ was large and negative).  The products of the weights and the features are then summed to arrive at an overall prediction.
 
 Given this model, we can now define our very first machine learning algorithm: \href{https://en.wikipedia.org/wiki/Ordinary_least_squares}{ordinary least squares} (OLS)!  In the ordinary least squares algorithm, we use our training set to select the $\mlvec{w}$ that minimizes the sum of squared differences between the model's predictions and the training outputs.  Thinking back to the supervised learning problem setup, this corresponds to choosing $\ell(y, \hat{y}) = (y - \hat{y})^2$.
 Therefore, the OLS algorithm will use the training data to select the optimal value of $\mlvec{w}$ (called $\mlvec{w}^\star$), which minimizes the sum of squared differences between the model's predictions and the training outputs.
@@ -254,10 +298,18 @@ Therefore, the OLS algorithm will use the training data to select the optimal va
 &= \arg\min_{\mlvec{w}} \sum_{i=1}^n \left ( \mlvec{w}^\top \mlvec{x_i} - y_i \right)^2
 \end{align}
 
-While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of the next assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new testing point, $\mlvec{x}$, by predicting the corresponding (unknown) label, $y$, as $\hat{y} = \mlvec{w^\star}^\top \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data points, which is the hallmark of supervised machine learning!
+\begin{notice}
+Digesting mathematical equations like this can be daunting, but your understanding will be increased by unpacking them carefully.  Make sure you understand what was substituted and why in each of these lines.  Make sure you understand what each symbol represents.  If you are confused, ask for help (e.g., post a question on NB).
+\end{notice}
+
+While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of the next assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new testing point, $\mlvec{x}$, by predicting the corresponding (unknown) label, $y$, as $\hat{y} = \mlvec{w^\star} \cdot \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data points, which is the hallmark of supervised machine learning!
 
 \begin{exercise}
 Draw a scatter plot in 2D (the x-axis is the independent variable and the y-axis is the dependent variable).  Fill in a few datapoints and draw a potential line of best fit.  On the plot identify the differences between the data points and the line (these differences are the residuals).  Draw a second potential line of best fit and mark the residuals.  From the point of view of ordinary least-squares, which of these lines is better?
+
+\begin{boxedsolution}
+TODO still need to do this one
+\end{boxedsolution}
 \end{exercise}
 
 \section{Getting a Feel for Linear Regression}
@@ -273,7 +325,20 @@ Use the \href{http://www.shodor.org/interactivate/activities/Regression/}{line o
 \begin{exercise}
 \bes
 \item Examine the role that outliers play in determining the line of best fit.  Does OLS seem sensitive or insensitive to the presence of outliers in the data?
-\item Were there any times when the line of best fit didn't seem to really be ``best'' (e.g., it didn't seem to capture the linear trends in the data)?
+\begin{boxedsolution}
+OLS is very sensitive to outliers.  A single outlier can change the slope of the line of best fit dramatically.  Here is an example of this phenomenon.
+
+\begin{center}
+\includegraphics[width=.6\linewidth]{figures/outlier}
+\end{center}
+
+\end{boxedsolution}
+
+\item Were there any times when the line of best fit didn't seem to really be ``best'' (e.g., it didn't seem to capture the trends in the data)?
+\begin{boxedsolution}
+This could happen for many reasons.  If the dataset is pieceweise linear (e.g., composed of multiple line segments), if it has some other non-linear form (e.g., if it is quadratic), or if there are outliers.
+\end{boxedsolution}
+
 \ees
 \end{exercise}
 
