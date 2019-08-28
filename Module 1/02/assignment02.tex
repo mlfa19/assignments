@@ -1,8 +1,9 @@
 \documentclass[assignment02_Solutions]{subfiles}
 
-%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
-\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+\invalidatemargin
 
 \fancypagestyle{firstpage}
 
@@ -17,24 +18,117 @@
 \maketitle
 \thispagestyle{firstpage}
 
-\begin{priorknowledge}
 
+
+\begin{learningobjectives}
+\bi
+\item Learn mathematical tricks for manipulating matrices and vectors.
+\item Derive the linear regression algorithm
+\item Implement linear regression in Python
+\item Learn about the issue of confounding variables
+\ei
+\end{learningobjectives}
+
+\begin{priorknowledge}
 \bi
 \item Basic machine learning terminology
 \item Supervised learning problem framing
+\item Setup for the linear regression problem
 \item Partial derivatives and gradients, matrix-vector multiplication, and vector-vector multiplication
 \ei
 \end{priorknowledge}
 
-\begin{learningobjectives}
-\bi
-\item Learn about the uses and limitations of linear regression.
-\item Learn how numerical optimization can be used to learn from data.
-\item Learn some useful mathematical tricks.
-\item Deepen understanding of basic machine learning terminology.
-\ei
-\end{learningobjectives}
 
+\section{A Quick Refresher on Linear Regression}
+
+In the last assignment you worked with the linear regression (ordinary least-squares) algorithm from a top-down perspective.  We focused on what problem the algorithm is trying to solve (minimizing squared error) and then showed some of the algorithm's behavior when applied to both toy and real problems.
+
+In this assignment we are going to focus on linear regression from the bottom up.  We will be working through the mathematics (and eventually the implementation in code) of the solution to the linear regression problem.  Before diving in, we thought it would be helpful to include some reminders of the setup for the generic supervised learning problem and the setup for linear regression.  If you already feel good about these topics, you can safely skip to the next section.
+
+\vspace{1em}
+
+\begin{recall}[Supervised Learning Problem Setup]
+We are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  Our goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
+
+We assume there is a loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  The best possible model, $\hat{f}^\star$, is the one that minimizes these losses over the training set.  This notion can be expressed with the following equation.
+\begin{align}
+\hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}), y_i \right )
+\end{align} 
+
+\end{recall}
+
+\vspace{1em}
+
+
+\begin{recall}[The Linear Regression Model]
+
+Our input points, $\mlvec{x_i}$, are d-dimensional vectors (each entry of these vectors can be thought of as a feature), our output points, $y_i$, are scalars, and our prediction functions, $\hat{f}$, are all of the form $\hat{f}(\mlvec{x}) = \mlvec{w}^\top \mlvec{x} = \sum_{i=1}^d w_i x_i$ for some weights $\mlvec{w}$.
+
+In the function, $\hat{f}$, the elements of the vector $\mlvec{w}$ represent weights that multiply various entries of the input.  For instance, if an element of $\mlvec{w}$ is high, that means that as the corresponding element of $\mlvec{x}$ increases, the prediction that $\hat{f}$ generates for $\mlvec{x}$ would also increase.  The products of the weights and the features are then summed to arrive at an overall prediction.
+
+Given this model, we can now define the \href{https://en.wikipedia.org/wiki/Ordinary_least_squares}{ordinary least squares} (OLS) algorithm!  In the ordinary least squares algorithm, we use our training set to select the $\mlvec{w}$ that minimizes the sum of squared differences between the model's predictions and the training outputs.  This corresponds to choosing $\ell(y, \hat{y}) = (y - \hat{y})^2$.
+
+\begin{align}
+\mlvec{w}^\star &= \argmin_{\mlvec{w}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}, \mlvec{w}) , y_i \right) \\
+&= \argmin_{\mlvec{w}} \sum_{i=1}^n \left ( \hat{f}(\mlvec{x_i}, \mlvec{w}) - y_i \right)^2 \\
+&= \argmin_{\mlvec{w}} \sum_{i=1}^n \left ( \mlvec{w}^\top \mlvec{x_i} - y_i \right)^2
+\end{align}
+
+Once we have $\mlvec{w}^\star$, we can predict a value for a new input point, $\mlvec{x}$, by predicting the corresponding (unknown) output, $y$, as $\hat{y} = \mlvec{w^\star}^\top \mlvec{x}$.
+\end{recall}
+
+\section{Linear Regression from the Bottom-up}
+
+Now that we've refreshed ourselves on the basic framing of linear regression, we'll be diving into the mathematics of how to find the vector $\mlvec{w}^\star$ that best fits a particular training set.  The outline of steps we are going to take are:
+
+\be
+\item Solve the special case of linear regression with a single input ($d=1$).
+\item Learn some mathematical tricks for manipulating matrices and vectors and computing gradients of functions involving matrices and vectors (these will be useful for solving the general case of linear regression).
+\item Solve the general case of linear regression (where $d$ can be any positive, integer value).
+\ee
+
+\subsection{Linear regression with one variable}
+
+\begin{exercise}[(10 minutes)]
+\bes
+\item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$, write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.
+
+\begin{boxedsolution}
+\begin{align}
+e(w) &= \sum_{i=1}^n \left (  w x_i - y_i \right)^2
+\end{align}
+\end{boxedsolution}
+
+\item Compute the derivative the error function you found in part (a).
+
+\begin{boxedsolution}
+\begin{align}
+\frac{de}{dw} &= \sum_{i=1}^n 2 \left (  w x_i - y_i \right)x_i \\
+&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i
+\end{align}
+\end{boxedsolution}
+
+\item Set the derivative to 0, and solve for $w^\star$.  $w^\star$ corresponds to a critical point of your sum of squared errors function.  Is this critical point a minima, maxima, or neither? (here is a refresher on \href{http://homes.sice.indiana.edu/donbyrd/Teach/M119WebPage/Finding+ClassifyingCriticalPoints.pdf}{classifying critical points}).
+ 
+\begin{boxedsolution}
+\begin{align}
+\frac{de}{dw} &= 0 \\
+&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i \\
+\sum_{i=1}^n 2 x_i y_i  &= w \sum_{i=1}^n 2 x_i^2 \\
+w^\star &=\frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
+\end{align}
+\end{boxedsolution}
+
+\ees
+
+
+\end{exercise}
+
+\subsection{Reminder of mathematical ideas from the last assignment}
+
+In the previous assignment, we asked you to solidify your knowledge of three different mathematical concepts.  The box below summarizes what you were supposed to learn and provides the resources we provided to help you.
+
+\vspace{1em}
 \begin{recall}[Mathematical background]
 In order to engage with this assignment, you'll want to make sure you are familiar with the following concepts (links to resources embedded below):
 \bi
@@ -54,88 +148,58 @@ In order to engage with this assignment, you'll want to make sure you are famili
 \ei
 \ei
 \end{recall}
-\begin{recall}[Supervised Learning Problem Setup]
-In the last class we saw the basic supervised learning problem setup.
 
-Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  In the supervised learning setting, your goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
 
-We typically also assume that there is some loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  We can define the best possible model, $\hat{f}^\star$ as the one that minimizes these losses over the training set.  This notion can be expressed with the following equation  (note: that $\argmin$ in the equation below just means the value that minimizes the expression inside of the $\argmin$, e.g., $\argmin_{x} (x - 2)^2 = 2$, whereas $\min_{x} (x-2)^2 = 0$).
-\begin{align}
-\hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}), y_i \right )
-\end{align} 
+\subsection{Building our bag of mathematical tricks}
 
-\end{recall}
+The derivation of linear regression for the single variable case made use of your background from single variable calculus, and you used some of the rules for manipulating such functions.  When approaching linear regression with multiple variables, you have one of two choices.  You can apply the same bag of tricks you used for the single variable problem and only at the end convert things (necessarily) to a multivariable representation.  Alternatively, you can approach the whole problem from a multivariable perspective.  This second approach requires that you learn some additional mathematical tricks, but once you learn these tricks the derivation of linear regression is very straightforward.  The secondary benefit of this approach is that the new mathematical tricks you learn will apply to all sorts of other problems.
 
-\begin{recall}[The Linear Regression Model]
+\begin{exercise}[(15 minutes)]
+A quadratic form is an expression that has the form $\mlvec{x}^\top \mlmat{A} \mlvec{x}$.  Written this way, it looks a little bit mysterious. It turns out that quadratic forms show up in all sorts of places in machine learning.   To get a better understanding on what the quadratic form \emph{is} (we'll see what it's good for later), watch this \href{https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/quadratic-approximations/v/expressing-a-quadratic-form-with-a-matrix}{Khan Academy video}.
 
-For linear regression we assume that our input points, $\mlvec{x_i}$, are d-dimensional vectors (each entry of these vectors can be though of as a feature), that our output points, $y_i$, are scalars, and that our prediction functions $\hat{f}$ are all of the form $\hat{f}(\mlvec{x}) = \mlvec{w}^\top \mlvec{x} = \sum_{i=1}^d w_i x_i$ for some vector of weights $\mlvec{w}$ (you could think of $\hat{f}$ as also taking $\mlvec{w}$ as an input, e.g., writing $\hat{f}(\mlvec{x}, \mlvec{w}$).  When it's obvious what the value of $\mlvec{w}$ is, we'll leave it as an implicit input instead, e.g., writing $\hat{f}(\mlvec{x})$).
+After you've watched the Khan academy video, answer these questions.
 
-In the function, $\hat{f}$, the elements of the vector $\mlvec{w}$ represent weights that multiply various entries of the input.  For instance, if an element of $\mlvec{w}$ is high, that means that as the corresponding element of $\mlvec{x}$ increases, the prediction that $\hat{f}$ generates for $\mlvec{x}$ would also increase (you may want to mentally think through other cases, e.g., what would happen is the element of $\mlvec{x}$ decreases, or what would happen if the entry of $\mlvec{w}$ was large and negative).  The products of the weights and the features are then summed to arrive at an overall prediction.
-
-Given this model, we can now define our very first machine learning algorithm: \href{https://en.wikipedia.org/wiki/Ordinary_least_squares}{ordinary least squares} (OLS)!  In the ordinary least squares algorithm, we use our training set to select the $\mlvec{w}$ that minimizes the sum of squared differences between the model's predictions and the training outputs.  Thinking back to the supervised learning problem setup, this corresponds to choosing $\ell(y, \hat{y}) = (y - \hat{y})^2$.
-Therefore, the OLS algorithm will use the training data to select the optimal value of $\mlvec{w}$ (called $\mlvec{w}^\star$), which minimizes the sum of squared differences between the model's predictions and the training outputs.
-
-\begin{align}
-\mlvec{w}^\star &= \argmin_{\mlvec{w}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}, \mlvec{w}) , y_i \right) \\
-\mlvec{w}^\star &= \argmin_{\mlvec{w}} \sum_{i=1}^n \left ( \hat{f}(\mlvec{x_i}, \mlvec{w}) - y_i \right)^2 \\
-&= \arg\min_{\mlvec{w}} \sum_{i=1}^n \left ( \mlvec{w}^\top \mlvec{x_i} - y_i \right)^2
-\end{align}
-
-While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of a later part of this assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new testing point, $\mlvec{x}$, by predicting that the corresponding (unknown) label, $y$, as $\hat{y} = \mlvec{w}^\top \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data points, which is the hallmark of supervised machine learning!
-
-\end{recall}
-
-\section{Linear Regression from the Bottom-up}
-
-Now that you have some idea of how the algorithm behaves, let's figure out how to implement it.  That is, how do we find the vector $\mlvec{w}$ that best fits a dataset?
-
-\subsection{Linear regression with one variable}
-
-Before handling the case where each $\mlvec{x}$ is a d-dimensional vector, we'll derive the algorithm for the simple case where $\mlvec{x}$ is a scalar (i.e., $d=1$).
-
-\begin{exercise}
 \bes
-\item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$, write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.
+\item Multiply out the expression $\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}^\top \begin{bmatrix} a_{1,1} & a_{1,2} & a_{1,3} \\ a_{2,1} & a_{2,2} & a_{2,3} \\ a_{3,1} & a_{3,2} & a_{3,3} \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}$.
 
 \begin{boxedsolution}
 \begin{align}
-e(w) &= \sum_{i=1}^n \left (  w x_i - y_i \right)^2
+\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}^\top \begin{bmatrix} a_{1,1} & a_{1,2} & a_{1,3} \\ a_{2,1} & a_{2,2} & a_{2,3} \\ a_{3,1} & a_{3,2} & a_{3,3} \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} =&  \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}^\top \begin{bmatrix} a_{1,1} x_1 + a_{1,2} x_2 + a_{1,3} x_3 \\ a_{2,1} x_1 + a_{2,2} x_2 + a_{2,3} x_3 \\ a_{3,1} x_1 + a_{3,2} x_2 + a_{3,3} x_3 \end{bmatrix} \\
+=& a_{1,1} x_1^2 + a_{1,2}x_1x_2 + a_{1,3} x_1 x_3 + a_{2,1}x_1 x_2 + a_{2,2} x_2^2  \nonumber \\
+&+ a_{2,3} x_2 x_3 + a_{3,1} x_3 x_1 + a_{3,2} x_3 x_2 + a_{3,3} x_3^2
 \end{align}
 \end{boxedsolution}
 
-\item Compute the derivative the error function you found in part (a).
+\item Complete the following expression by filling in the part on the righthand side inside the nested summation.
+
+$\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_d \end{bmatrix}^\top \begin{bmatrix} a_{1,1} & a_{1,2} & \ldots & a_{1,d} \\ a_{2,1} & a_{2,2} & \ldots & a_{2,d} \\ \vdots & \vdots & \ddots & \vdots \\ a_{d,1} & a_{d,2} & \ldots & a_{d,d} \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_d \end{bmatrix} = \sum_{i=1}^d \sum_{j=1}^d \left (\mbox{your answer here} \right )$
+
+Spoiler alert: Exercise 4 provides you with this result (or, as always, you can check the solutions).
 
 \begin{boxedsolution}
 \begin{align}
-\frac{de}{dw} &= \sum_{i=1}^n 2 \left (  w x_i - y_i \right)x_i \\
-&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i
-\end{align}
-\end{boxedsolution}
-
-\item Set the derivative to 0, and solve for $w^\star$.  $w^\star$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this is critical point corresponds to a global minimum.  In other words, this value of $w$ is guaranteed to drive the sum of squared errors as low as possible.
-
-\begin{boxedsolution}
-\begin{align}
-\frac{de}{dw} &= 0 \\
-&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i \\
-\sum_{i=1}^n 2 x_i y_i  &= w \sum_{i=1}^n 2 x_i^2 \\
-w^\star &=\frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
+\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_d \end{bmatrix}^\top \begin{bmatrix} a_{1,1} & a_{1,2} & \ldots & a_{1,d} \\ a_{2,1} & a_{2,2} & \ldots & a_{2,d} \\ \vdots & \vdots & \ddots & \vdots \\ a_{d,1} & a_{d,2} & \ldots & a_{d,d} \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_d \end{bmatrix} &= \begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_d \end{bmatrix}^\top \begin{bmatrix} \sum_{j=1}^d a_{1,j} x_j \\ \sum_{j=1}^d a_{2,j} x_j  \\ \vdots \\ \sum_{j=1}^d a_{d,j} x_j \end{bmatrix}\\
+&= \sum_{i=1}^d \sum_{j=1}^d a_{i,j}  x_i x_j
 \end{align}
 \end{boxedsolution}
 
 \ees
 
+\end{exercise}
+
+\begin{exercise}[(5 minutes)]
+Matrix multiplication distributes over addition.  That is, $(\mlmat{A} + \mlmat{B}) (\mlmat{C} + \mlmat{D}) = \mlmat{A}\mlmat{C} + \mlmat{A}\mlmat{D} + \mlmat{B} \mlmat{C} + \mlmat{B} \mlmat{D}$.  Use this fact coupled with the fact that $\left(\mlmat{A} \mlmat{B} \right)^\top = \mlmat{B}^\top \mlmat{A}^\top$ to expand out the following expression.
+
+$$\left ( \mlmat{A} \mlmat{x}  + \mlmat{y} \right )^\top \left (\mlmat{v} + \mlmat{u} \right)$$
+
+\begin{boxedsolution}
+$$\left ( \mlmat{A} \mlmat{x}  + \mlmat{y} \right )^\top \left (\mlmat{v} + \mlmat{u} \right) = \mlmat{x}^\top \mlmat{A}^\top \mlmat{v} + \mlmat{x}^\top \mlmat{A}^\top \mlmat{u} + \mlvec{y}^\top \mlvec{v} + \mlvec{y}^\top \mlvec{u}$$
+\end{boxedsolution}
 
 \end{exercise}
-We can start here and then motivate the mathematical tricks.
-asdf
-\subsection{Building our bag of mathematical tricks}
 
-\begin{exercise}[30 minutes]
+\begin{exercise}[(25 minutes)]
 \bes
-\item Quadratic forms \href{https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/quadratic-approximations/v/expressing-a-quadratic-form-with-a-matrix}{really nice Khan Academy video showing this}
-\item FOIL method for matrix multiplication
-
 \item Using the definition of the gradient, show that $\nabla \mlvec{c}^\top \mlvec{x} = \mlvec{c}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlvec{c}$ is a vector of constants.
 
 \begin{boxedsolution}
@@ -149,22 +213,15 @@ asdf
 \end{boxedsolution}
 
 
-\item Using the definition of the gradient, show that the $\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} = 2 \mlmat{A} \mlvec{x}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlmat{A}$ is a \emph{symmetric} $dxd$ matrix of constants.  If you'd like, you can utilize the fact (without deriving it yourself) that $\mlvec{x}^\top \mlmat{A} \mlvec{x} = \sum_{i=1}^d\sum_{j=1}^d x_i x_j a_{i, j}$.%  \todo{this might be too hard... Can we make this optional with appropriate sign-posting.... you can prove this is true, but you do not need to do so in order to make progress.  It can also be made easier if you assume $A$ is symmetric.}
+\item Using the definition of the gradient, show that the $\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} = 2 \mlmat{A} \mlvec{x}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlmat{A}$ is a \emph{symmetric} $dxd$ matrix of constants.  Hint: utilize the fact that $\mlvec{x}^\top \mlmat{A} \mlvec{x} = \sum_{i=1}^d\sum_{j=1}^d x_i x_j a_{i, j}$.%  \todo{this might be too hard... Can we make this optional with appropriate sign-posting.... you can prove this is true, but you do not need to do so in order to make progress.  It can also be made easier if you assume $A$ is symmetric.}
 \ees
 
 \begin{boxedsolution}
 
 \begin{align}
-\mlvec{x}^\top \mlmat{A} \mlvec{x} &= \begin{bmatrix} x_1 \\ \vdots \\ x_d \end{bmatrix}^\top \begin{bmatrix} a_{1,1} & \ldots &  a_{1,d} \\
-\vdots &  \ddots &  \vdots \\
-a_{d,1} & \ldots & a_{d,d}
-\end{bmatrix} \begin{bmatrix}x_1 \\ \vdots \\ x_d \end{bmatrix} \\
-&= \begin{bmatrix} x_1 \\ \vdots \\ x_d \end{bmatrix}^\top\sum_{i=1}^d x_i \begin{bmatrix} a_{i, 1} \\ \vdots \\ a_{i,d} \end{bmatrix} \\
-&= \sum_{i=1}^d x_i \sum_{j=1}^d x_j  a_{i, j} \\
-&= \sum_{i=1}^d\sum_{j=1}^d   x_i  x_j  a_{i, j} \\
+\mlvec{x}^\top \mlmat{A} \mlvec{x} &= \sum_{i=1}^d\sum_{j=1}^d   x_i  x_j  a_{i, j} \\
 \frac{\partial (\mlvec{x}^\top \mlmat{A} \mlvec{x})}{\partial x_i} &= \sum_{j=1}^d x_j a_{i,j} + \sum_{j=1}^d x_j a_{j, i} \\
-&= \left ( \mlmat{A} \mlvec{x} \right)_i + \left ( \mlmat{A}^\top \mlvec{x} \right)_i \\
-&= 2\left ( \mlmat{A} \mlvec{x} \right)_i \\
+&= 2  \sum_{j=1}^d x_j a_{i,j} \\
 \nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} &= 2 \mlmat{A}\mlvec{x}
 \end{align}
 
@@ -173,32 +230,40 @@ a_{d,1} & \ldots & a_{d,d}
 \end{exercise}
 
 \section{Linear Regression with Multiple Variables}
-\textbf{We might need to choose between this and a reading. If we do the reading, this will be done in class.}
-Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ is a d-dimensional input vectors each $y_i$ is a scalar representing a target output.
-\begin{exercise}[(60 minutes)]
-Next, let's consider the more general case where $\mlvec{w}$ is a d-dimensional vector.  In order to solve this problem, you'll be leveraging some of the new mathematical tricks you picked up earlier in the assignment.  As you go through the problem, try as much as possible to treat vectors as first-class objects (e.g., work with the gradient instead of the individual partial derivatives).
+\begin{exercise}[(40 minutes)]
+Consider the case where $\mlvec{w}$ is a $d$-dimensional vector.  In this case, it is convenient to represent our $n$ training inputs as a $n \times d$ matrix $\mlmat{X} = \begin{bmatrix} \mlvec{x}_1^\top \\ \mlvec{x}_2^\top \\ \vdots \\ \mlvec{x}_n^\top \end{bmatrix}$ and our $n$ training outputs as an $n$-dimensional vector $\mlvec{y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}$.
+
+In order to solve this problem, you'll be leveraging some of the new mathematical tricks you picked up in the previous problem.  As you go through the derivation, make sure to treat vectors as first-class objects (e.g., work with the gradient instead of the individual partial derivatives).
 \bes
-\item Given $\mlvec{w}$, write an expression for the sum of squared errors between each prediction $\hat{f}(\mlvec{x})$ and training output $y_i$.  If your expression initially contains a summation, rewrite it as the inner product between some vector $\mlvec{v}$ and itself (i.e. $\mlvec{v}^\top \mlvec{v}$).  In rewriting your expression as an inner-product, you may find it useful to refer to the matrix that contains all of your training data $\mlmat{X} = \begin{bmatrix} \mlvec{x}_1^\top \\ \mlvec{x}_2^\top \\ \vdots \\ \mlvec{x}_n^\top \end{bmatrix}$.  You may also want to expand your inner product using the FOIL method for matrices that we learned about earlier.
+
+\item Given $\mlvec{w}$, write an expression for the vector of predictions $\mlmat{\hat{y}} = \begin{bmatrix} \hat{f}(\mlmat{x}_1) \\  \hat{f}(\mlmat{x}_2) \\  \vdots \\  \hat{f}(\mlmat{x}_n)\end{bmatrix}$ in terms of the training input matrix $\mlmat{X}$ (Hint: you should come up with something very simple).
 
 \begin{boxedsolution}
+$$\mlvec{\hat{y}} = \begin{bmatrix} \mlvec{x_1}^\top  \mlvec{w} \\ \mlvec{x_2}^\top \mlvec{w} \\ \vdots \\ \mlvec{x_n}^\top \mlvec{w} \end{bmatrix} = \mlmat{X} \mlvec{w}$$
+\end{boxedsolution}
+
+\item Write an expression for the sum of squared errors for the vector $\mlvec{w}$ on the training set in terms of $\mlmat{X}$, $\mlmat{y}$, and $\mlvec{w}$.  Hint: you will want to use the fact that $\sum_{i=1} v_i^2 = \mlvec{v} \cdot \mlvec{v} = \mlvec{v}^\top \mlvec{v}$.  Simplify your expression by distributing matrix multiplication over addition (don't leave terms such as $\left (\mlvec{u} +\mlvec{v}  \right ) \left ( \mlvec{d} + \mlvec{c} \right)$ in your answer).
+\begin{boxedsolution}
 \begin{align}
-e(\mlvec{w}) &= \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right)^\top  \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right) \\
+\mbox{Sum of Squared Errors} &= \sum_{i=1}^n \left ( \hat{y}_i - y_i \right)^2 \\
+&= \left (\mlvec{\hat y} - \mlvec{y} \right)^\top  \left (\mlvec{\hat y} - \mlvec{y} \right) \\
+&=\left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right)^\top  \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right) \\
 &= \mlvec{w}^\top \mlmat{X}^\top \mlmat{X} \mlvec{w} - 2 \mlvec{w}^\top \mlmat{X}^\top \mlvec{y} + \mlvec{y}^\top \mlvec{y}
 \end{align}
 \end{boxedsolution}
 
-\item Compute the gradient of the sum of squared errors that you found in part (a).
+\item Compute the gradient of the sum of squared errors that you found in part (b) with respect to $\mlvec{w}$.  Make sure to use the results from the previous exercises to compute the gradients.
 \begin{boxedsolution}
 \begin{align}
-\nabla e(\mlvec{w})  &= 2 \mlvec{X}^\top \mlvec{X} \mlvec{w} - 2 \mlmat{X}^\top \mlvec{y}
+\nabla \mbox{Sum of Squared Errors}  &= 2 \mlvec{X}^\top \mlvec{X} \mlvec{w} - 2 \mlmat{X}^\top \mlvec{y}
 \end{align}
 \end{boxedsolution}
 
-\item Set the gradient to 0, and solve for $\mlvec{w}$.  This value of $\mlvec{w}$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this is critical point corresponds to a global minimum.  In other words, this value of $\mlvec{w}$ is guaranteed to drive the sum of squared errors as low as possible (note: you can assume that $\mlmat{X}^\top \mlmat{X}$ is invertible).
+\item Set the gradient to 0, and solve for $\mlvec{w}$ (note: you can assume that $\mlmat{X}^\top \mlmat{X}$ is invertible).  This value of $\mlvec{w}$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this critical point corresponds to a global minimum.  In other words, this value of $\mlvec{w}$ is guaranteed to drive the sum of squared errors as low as possible.
 
 \begin{boxedsolution}
 \begin{align}
-\nabla e(\mlvec{w})  &= 0 \\
+\nabla \mbox{Sum of Squared Errors}  &= 0 \\
 &= 2 \mlvec{X}^\top \mlvec{X} \mlvec{w} - 2 \mlmat{X}^\top \mlvec{y}\\
 \mlvec{w} &= \left ( \mlmat{X}^\top \mlmat{X} \right )^{-1} \mlmat{X}^\top \mlmat{y}
 \end{align}
@@ -206,13 +271,14 @@ e(\mlvec{w}) &= \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right)^\top  \left ( \m
 
 \ees
 \end{exercise}
-%
-%\section{Connecting Bottom-up and Top-down}
-%\textbf{Won't have time for this, maybe we do this in-class}Revisit earlier problem using the math that you just learned?  Could also do something more interesting (e.g., bump detection dataset from Comprobo).
 
 \section{Implementation}
 
-TODO implement in Python through a guided notebook.
+Hopefully that wasn't too painful and you learned a few useful tricks along the way.  One thing that we can say is that the math you just utilized will come up repeatedly in the rest of this module.  Even very complex machine learning techniques wind up boiling down to following recipes that look very much like what you just did.
+
+At this point, we'll be taking the derivation of linear regression that we just worked out and using it to implement the linear regression algorithm from scratch (well, we will be using {\tt numpy}) in Python.  Along the way we'll show you some sanity checks that you can perform to verify that your implementation is correct and help solidify your understanding of the math you just went through.
+
+Without further ado, let's transition over to the Assignment 2 Companion Notebook.
 
 \subsection{Sanity Checking}
 \be
@@ -221,16 +287,17 @@ TODO implement in Python through a guided notebook.
 \item compare to known working solution
 \ee
 
-\section{Experimenting with Data}
+\subsection{Interpreting Weights}
+Checking for scale (recentering things), etc.
 
-Apply your code to smile detection (or some other task).  This will start to get at the ML workflow.
 
-
-\section{Extensions}
+\subsection{Extensions}
 Regularization.
 
-\section{C+E}
-Todo this should show up somewhere.
 
+\section{Confounding Variables}
+The \href{https://statisticsbyjim.com/regression/confounding-variables-bias/}{regression by Jim page} is the best I've found so far.
+
+Thought exercise: given a dataset what is a confounding variable that is not in that dataset.  Predict how its absence would affect the results of the analysis of the data.
 
 \end{document}
