@@ -26,28 +26,6 @@
 \end{learningobjectives}
 
 
-\begin{priorknowledge}
-\bi
-\item Basic machine learning terminology
-\item Supervised learning problem framing
-\ei
-\end{priorknowledge}
-
-
-\begin{recall}[Supervised Learning Problem Setup]
-In the first class we saw the basic supervised learning problem setup.
-
-Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  In the supervised learning setting, your goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
-
-We typically also assume that there is some loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  We can define the best possible model, $\hat{f}^\star$ as the one that minimizes these losses over the training set.  This notion can be expressed with the following equation  (note: that $\argmin$ in the equation below just means the value that minimizes the expression inside of the $\argmin$, e.g., $\argmin_{x} (x - 2)^2 = 2$, whereas $\min_{x} (x-2)^2 = 0$).
-\begin{align}
-\hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}), y_i \right )
-\end{align} 
-
-\end{recall}
-
-
-
 \section{Six Big Ideas in Machine Learning}
 Before diving into the specifics of our first machine learning algorithm, let's examine some important ideas in machine learning.  Why six big ideas?  If Rob Martello has taught us anything, it's that all good things come in sixes.
 
@@ -59,7 +37,7 @@ ML algorithms learn to exploit correlations in data in order to make predictions
 \bi
 
 \item \emph{Example 1: Reinforcing Hiring Biases}
-You may have heard that \href{https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G}{Amazon scrapped a secret AI recruiting tool that showed bias against women}.  More specifically, the tool performed automatic keyword analysis of job applications to predict whether or not the the applicant was worth forwarding on to a human for further evaluation.  Early in the development of this system researchers discovered that the model the system had learned placed a negative weight on words such as ``women's'' as well as the names of some women's colleges.  While there is of course no causal link between these words appearing in a job application and the suitability of the candidate for the job, there was a \emph{correlation} in the training set between the presence of words such as ``women's'' and the candidates not being invited for interviews.
+You may have heard that \href{https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G}{Amazon scrapped a secret AI recruiting tool that showed bias against women}.  More specifically, the tool performed automatic keyword analysis of job applications to predict whether or not the applicant was worth forwarding on to a human for further evaluation.  Early in the development of this system researchers discovered that the model the system had learned placed a negative weight on words such as ``women's'' as well as the names of some women's colleges.  While there is of course no causal link between these words appearing in a job application and the suitability of the candidate for the job, there was a \emph{correlation} in the training set between the presence of words such as ``women's'' and the candidates not being invited for interviews.
 
 Why might such a correlation exist in the training set?  There are many different possible explanations for this correlation, ranging from overt or unconscious bias in the applicant evaluators whose judgments helped form the training data to systemic discrimination that denies women equal access to educational opportunities in STEM.  The important thing to take away from this is not \emph{why} there was a correlation, but that the existence of the correlation in the training data caused the model to utilize the correlation in order to evaluate new data.  Amazon realized that this was very bad and decided to take steps to address the problem (they say they never used the system to make actual job-screening decisions).  Despite efforts to prevent the algorithm for exploiting such correlations, the group determined that they couldn't fully guarantee that the algorithm had not found another way to achieve the same discriminatory outcome and terminated the project.
 
@@ -226,7 +204,7 @@ In order to engage with this assignment, you'll want to make sure you are famili
 \begin{exercise}[(20 minutes)]
 Here are some diagnostic problems to test some basic understanding of the concepts above.
 \bes
-\item Suppose $f(x, y) = 2x \sin{y} + y^2 x^3$.  Calculate $\frac{\partial{f}}{\partial{x}}$, $\frac{\partial{f}}{\partial{x}}$, and $\nabla f$.
+\item Suppose $f(x, y) = 2x \sin{y} + y^2 x^3$.  Calculate $\frac{\partial{f}}{\partial{x}}$, $\frac{\partial{f}}{\partial{y}}$, and $\nabla f$.
 
 
 \begin{boxedsolution}
@@ -271,6 +249,15 @@ Compute $\mlmat{A} \mlvec{v}$ in terms of the rows of $\mlvec{row_1}, \ldots, \m
 
 \ees
 \end{exercise}
+
+
+\section{Supervised Learning Problem Setup}
+Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  In the supervised learning setting, your goal is to determine a function $\hat{f}$ that maps from the input space to the output space.  For example, if we provide an input $\mlvec{x}$ to $\hat{f}$ it would generate the predicted output $\hat{y} = \hat{f}(\mlvec{x})$.
+
+We typically also assume that there is some loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  We can define the best possible model, $\hat{f}^\star$ as the one that minimizes these losses over the training set.  This notion can be expressed with the following equation  (note: that $\argmin$ in the equation below just means the value that minimizes the expression inside of the $\argmin$, e.g., $\argmin_{x} (x - 2)^2 = 2$, whereas $\min_{x} (x-2)^2 = 0$).
+\begin{align}
+\hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}), y_i \right )
+\end{align} 
 
 \section{Linear Regression from the Top-Down}
 
