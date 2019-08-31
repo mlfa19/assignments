@@ -74,12 +74,12 @@ Given this model, we can now define the \href{https://en.wikipedia.org/wiki/Ordi
 &= \argmin_{\mlvec{w}} \sum_{i=1}^n \left ( \mlvec{w}^\top \mlvec{x_i} - y_i \right)^2
 \end{align}
 
-Once we have $\mlvec{w}^\star$, we can predict a value for a new input point, $\mlvec{x}$, by predicting the corresponding (unknown) output, $y$, as $\hat{y} = \mlvec{w^\star}^\top \mlvec{x}$.
+Once we have $\mlvec{w}^\star$, we can predict the unknown output, $y$, for a new input point, $\mlvec{x}$, as $\hat{y} = \mlvec{w^\star}^\top \mlvec{x}$.
 \end{recall}
 
 \section{Linear Regression from the Bottom-up}
 
-Now that we've refreshed ourselves on the basic framing of linear regression, we'll be diving into the mathematics of how to find the vector $\mlvec{w}^\star$ that best fits a particular training set.  The outline of steps we are going to take are:
+Now that we've refreshed ourselves on the basic framing of linear regression, we'll be diving into the mathematics of how to find the vector $\mlvec{w}^\star$ that best fits a particular training set.  The outline of the steps we are going to take to learn this are:
 
 \be
 \item Solve the special case of linear regression with a single input ($d=1$).
@@ -91,19 +91,19 @@ Now that we've refreshed ourselves on the basic framing of linear regression, we
 
 \begin{exercise}[(10 minutes)]
 \bes
-\item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$, write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.
+\item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$ (note that $w$ is a scalar in the case where $d=1$), write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.
 
 \begin{boxedsolution}
 \begin{align}
-e(w) &= \sum_{i=1}^n \left (  w x_i - y_i \right)^2
+\mbox{Sum of Squared Errors} &= e(w) = \sum_{i=1}^n \left (  w x_i - y_i \right)^2~~\mbox{(note: we define error $e(w)$ for convenience)}
 \end{align}
 \end{boxedsolution}
 
-\item Compute the derivative the error function you found in part (a).
+\item Compute the derivative of the expression for the sum of squared errors from part (a).
 
 \begin{boxedsolution}
 \begin{align}
-\frac{de}{dw} &= \sum_{i=1}^n 2 \left (  w x_i - y_i \right)x_i \\
+\frac{de}{dw} & = \sum_{i=1}^n 2 \left (  w x_i - y_i \right)x_i  \\
 &= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i
 \end{align}
 \end{boxedsolution}
@@ -113,8 +113,8 @@ e(w) &= \sum_{i=1}^n \left (  w x_i - y_i \right)^2
 \begin{boxedsolution}
 \begin{align}
 \frac{de}{dw} &= 0 \\
-&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i \\
-\sum_{i=1}^n 2 x_i y_i  &= w \sum_{i=1}^n 2 x_i^2 \\
+&= w^\star \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i \\
+\sum_{i=1}^n 2 x_i y_i  &= w^\star \sum_{i=1}^n 2 x_i^2 \\
 w^\star &=\frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
 \end{align}
 \end{boxedsolution}
@@ -152,10 +152,16 @@ In order to engage with this assignment, you'll want to make sure you are famili
 
 \subsection{Building our bag of mathematical tricks}
 
-The derivation of linear regression for the single variable case made use of your background from single variable calculus, and you used some of the rules for manipulating such functions.  When approaching linear regression with multiple variables, you have one of two choices.  You can apply the same bag of tricks you used for the single variable problem and only at the end convert things (necessarily) to a multivariable representation.  Alternatively, you can approach the whole problem from a multivariable perspective.  This second approach requires that you learn some additional mathematical tricks, but once you learn these tricks the derivation of linear regression is very straightforward.  The secondary benefit of this approach is that the new mathematical tricks you learn will apply to all sorts of other problems.
+The derivation of linear regression for the single variable case made use of your background from single variable calculus, and you used some rules for manipulating such functions.  When approaching linear regression with multiple variables, you have two choices.
+\be
+\item You can apply the same bag of tricks you used for the single variable problem and only at the end convert things (necessarily) to a multivariable representation.  
+\item You can approach the whole problem from a multivariable perspective.
+\ee
+
+This second approach requires that you learn some additional mathematical tricks, but once you learn these tricks, the derivation of linear regression is very straightforward.  The secondary benefit of this approach is that the new mathematical tricks you learn will apply to all sorts of other problems.
 
 \begin{exercise}[(15 minutes)]
-A quadratic form is an expression that has the form $\mlvec{x}^\top \mlmat{A} \mlvec{x}$.  Written this way, it looks a little bit mysterious. It turns out that quadratic forms show up in all sorts of places in machine learning.   To get a better understanding on what the quadratic form \emph{is} (we'll see what it's good for later), watch this \href{https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/quadratic-approximations/v/expressing-a-quadratic-form-with-a-matrix}{Khan Academy video}.
+A quadratic form can be expressed in matrix-vector form as $\mlvec{x}^\top \mlmat{A} \mlvec{x}$.  Written this way, it looks very mysterious, but in this exercise you'll build some intuition about what the expression represents. Further, It turns out that expressions like this show up in all sorts of places in machine learning.   To get a better understanding of what a quadratic form \emph{is} (we'll see what it's good for later), watch this \href{https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/quadratic-approximations/v/expressing-a-quadratic-form-with-a-matrix}{Khan Academy video}.
 
 After you've watched the Khan academy video, answer these questions.
 
@@ -231,9 +237,9 @@ $$\left ( \mlmat{A} \mlmat{x}  + \mlmat{y} \right )^\top \left (\mlmat{v} + \mlm
 
 \section{Linear Regression with Multiple Variables}
 \begin{exercise}[(40 minutes)]
-Consider the case where $\mlvec{w}$ is a $d$-dimensional vector.  In this case, it is convenient to represent our $n$ training inputs as a $n \times d$ matrix $\mlmat{X} = \begin{bmatrix} \mlvec{x}_1^\top \\ \mlvec{x}_2^\top \\ \vdots \\ \mlvec{x}_n^\top \end{bmatrix}$ and our $n$ training outputs as an $n$-dimensional vector $\mlvec{y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}$.
+Consider the case where $\mlvec{w}$ is a $d$-dimensional vector.  In this case, it is convenient to represent our $n$ training inputs as an $n \times d$ matrix $\mlmat{X} = \begin{bmatrix} \mlvec{x}_1^\top \\ \mlvec{x}_2^\top \\ \vdots \\ \mlvec{x}_n^\top \end{bmatrix}$ and our $n$ training outputs as an $n$-dimensional vector $\mlvec{y} = \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}$.
 
-In order to solve this problem, you'll be leveraging some of the new mathematical tricks you picked up in the previous problem.  As you go through the derivation, make sure to treat vectors as first-class objects (e.g., work with the gradient instead of the individual partial derivatives).
+In order to solve this problem, you'll be leveraging some of the new mathematical tricks you picked up early in this assignment.  As you go through the derivation, make sure to treat vectors as first-class objects (e.g., work with the gradient instead of the individual partial derivatives).
 \bes
 
 \item Given $\mlvec{w}$, write an expression for the vector of predictions $\mlmat{\hat{y}} = \begin{bmatrix} \hat{f}(\mlmat{x}_1) \\  \hat{f}(\mlmat{x}_2) \\  \vdots \\  \hat{f}(\mlmat{x}_n)\end{bmatrix}$ in terms of the training input matrix $\mlmat{X}$ (Hint: you should come up with something very simple).
@@ -272,32 +278,36 @@ $$\mlvec{\hat{y}} = \begin{bmatrix} \mlvec{x_1}^\top  \mlvec{w} \\ \mlvec{x_2}^\
 \ees
 \end{exercise}
 
+
+\section{Regularization}
+
+This will be important for applying this to image datasets (which I propose we do in the next class).
+
+
 \section{Implementation}
 
 Hopefully that wasn't too painful and you learned a few useful tricks along the way.  One thing that we can say is that the math you just utilized will come up repeatedly in the rest of this module.  Even very complex machine learning techniques wind up boiling down to following recipes that look very much like what you just did.
 
-At this point, we'll be taking the derivation of linear regression that we just worked out and using it to implement the linear regression algorithm from scratch (well, we will be using {\tt numpy}) in Python.  Along the way we'll show you some sanity checks that you can perform to verify that your implementation is correct and help solidify your understanding of the math you just went through.
+At this point, we'll be taking the derivation of linear regression that we just worked out and using it to implement the linear regression algorithm from scratch (well, we will be using {\tt numpy}) in Python.  Along the way we'll show you some sanity checks that you can perform to verify that your implementation is correct and help solidify your understanding of the math that you just went through.
 
 Without further ado, let's transition over to the Assignment 2 Companion Notebook.
 
-\subsection{Sanity Checking}
-\be
-\item gradient check
-\item optimality check
-\item compare to known working solution
-\ee
 
-\subsection{Interpreting Weights}
-Checking for scale (recentering things), etc.
+\subsection{Application}
+Train / test split.  Use it on a real dataset.  Interpret the results.
 
 
-\subsection{Extensions}
-Regularization.
 
 
-\section{Confounding Variables}
-The \href{https://statisticsbyjim.com/regression/confounding-variables-bias/}{regression by Jim page} is the best I've found so far.
+\section{This is in class now Confounding Variables}
 
-Thought exercise: given a dataset what is a confounding variable that is not in that dataset.  Predict how its absence would affect the results of the analysis of the data.
+The topic of confounding variables is a crucial topic in statistics and machine learning.  A very nice, conceptual writeup of the topic is \href{https://statisticsbyjim.com/regression/confounding-variables-bias/}{Statistics By Jim Confounding Variable Bias}.  Read this document and answer the following questions.
+
+\begin{exercise}
+\bes
+\item Something in the checking understanding space (e.g., predicting how omitting a variable would impact the weight estimated for another variable).
+\item Something in the context and ethics space (fairly open-ended probably asking them to reflect on the potential impacts of this sort of bias).  If we wanted to be more directive we could provide ethically charged contexts to consider confounding variables.
+\ees
+\end{exercise}
 
 \end{document}
