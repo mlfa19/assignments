@@ -252,7 +252,7 @@ Compute $\mlmat{A} \mlvec{v}$ in terms of the rows of $\mlvec{row_1}, \ldots, \m
 
 
 \section{Supervised Learning Problem Setup}
-Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  In the supervised learning setting, your goal is to determine a function $\hat{f}$ that maps from the input space to the output space.  For example, if we provide an input $\mlvec{x}$ to $\hat{f}$ it would generate the predicted output $\hat{y} = \hat{f}(\mlvec{x})$.
+Suppose you are given a training set of data points, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  In the supervised learning setting, your goal is to determine a function $\hat{f}$ that maps from the input space to the output space.  For example, if we provide an input $\mlvec{x}$ to $\hat{f}$ it would generate the predicted output $\hat{y} = \hat{f}(\mlvec{x})$.
 
 We typically also assume that there is some loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  We can define the best possible model, $\hat{f}^\star$ as the one that minimizes these losses over the training set.  This notion can be expressed with the following equation  (note: that $\argmin$ in the equation below just means the value that minimizes the expression inside of the $\argmin$, e.g., $\argmin_{x} (x - 2)^2 = 2$, whereas $\min_{x} (x-2)^2 = 0$).
 \begin{align}
@@ -271,7 +271,7 @@ Before we jump into the \emph{what} of linear regression, let's spend a little b
 \ei
 
 
-For linear regression our input points, $\mlvec{x_i}$, are d-dimensional vectors (each entry of these vectors can be thought of as a feature), our output points, $y_i$, are scalars, and our prediction functions, $\hat{f}$, are all of the form $\hat{f}(\mlvec{x}) =\mlvec{w} \cdot \mlvec{x} = \mlvec{w}^\top \mlvec{x} = \sum_{i=1}^d w_i x_i$ for some vector of weights $\mlvec{w}$ (you could think of $\hat{f}$ as also taking $\mlvec{w}$ as an input, e.g., writing $\hat{f}(\mlvec{x}, \mlvec{w}$).  Most of the time we'll leave $\mlvec{w}$ as an implicit input: writing $\hat{f}(\mlvec{x})$).
+For linear regression our input data, $\mlvec{x_i}$, are d-dimensional vectors (each entry of these vectors can be thought of as a feature), our output data, $y_i$, are scalars, and our prediction functions, $\hat{f}$, are all of the form $\hat{f}(\mlvec{x}) =\mlvec{w} \cdot \mlvec{x} = \mlvec{w}^\top \mlvec{x} = \sum_{i=1}^d w_i x_i$ for some vector of weights $\mlvec{w}$ (you could think of $\hat{f}$ as also taking $\mlvec{w}$ as an input, e.g., writing $\hat{f}(\mlvec{x}, \mlvec{w}$).  Most of the time we'll leave $\mlvec{w}$ as an implicit input: writing $\hat{f}(\mlvec{x})$).
 
 In the function, $\hat{f}$, the elements of the vector $\mlvec{w}$ represent weights that multiply various dimensions of the input.  For instance, if an element of $\mlvec{w}$ is high, that means that as the corresponding element of $\mlvec{x}$ increases, the prediction that $\hat{f}$ generates would also increase (you may want to mentally think through other cases, e.g., what would happen is the element of $\mlvec{x}$ decreases, or what would happen if the entry of $\mlvec{w}$ was large and negative).  The products of the weights and the features are then summed to arrive at an overall prediction.
 
@@ -288,10 +288,10 @@ Therefore, the OLS algorithm will use the training data to select the optimal va
 Digesting mathematical equations like this can be daunting, but your understanding will be increased by unpacking them carefully.  Make sure you understand what was substituted and why in each of these lines.  Make sure you understand what each symbol represents.  If you are confused, ask for help (e.g., post on NB).
 \end{notice}
 
-While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of the next assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new input point, $\mlvec{x}$, by predicting the corresponding (unknown) output, $y$, as $\hat{y} = \mlvec{w^\star} \cdot \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data points, which is the hallmark of supervised machine learning!
+While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of the next assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new input point, $\mlvec{x}$, by predicting the corresponding (unknown) output, $y$, as $\hat{y} = \mlvec{w^\star} \cdot \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data, which is the hallmark of supervised machine learning!
 
 \begin{exercise}
-Draw a scatter plot in 2D (the x-axis is the independent variable and the y-axis is the dependent variable).  Fill in a few datapoints and draw a potential line of best fit.  On the plot identify the vertical differences between the data points and the line (these differences are the residuals).  Draw a second potential line of best fit and mark the residuals.  From the point of view of ordinary least-squares, which of these lines is better?
+Draw a scatter plot in 2D (the x-axis is the independent variable and the y-axis is the dependent variable).  Fill in a few data points and draw a potential line of best fit.  On the plot identify the vertical differences between the data points and the line (these differences are the residuals).  Draw a second potential line of best fit and mark the residuals.  From the point of view of ordinary least-squares, which of these lines is better?
 
 \begin{boxedsolution}
 \begin{center}
