@@ -1,6 +1,5 @@
 \documentclass[assignment01_Solutions]{subfiles}
 
-
 \IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
@@ -16,44 +15,151 @@
 \maketitle
 \thispagestyle{firstpage}
 
-\begin{priorknowledge}
-
-\bi
-\item Basic machine learning terminology
-\item Supervised learning problem framing
-\item Partial derivatives and gradients, matrix-vector multiplication, and vector-vector multiplication
-\ei
-\end{priorknowledge}
-
 
 \begin{learningobjectives}
 \bi
-\item Learn about the uses and limitations of linear regression.
-\item Learn how numerical optimization can be used to learn from data.
-\item Learn some useful mathematical tricks.
-\item Deepen understanding of basic machine learning terminology.
+\item Gain some familiarity with some of the key ideas in machine learning.
+\item Review of mathematical concepts we will be using in the beginning part of this course.
+\item Familiarize yourself with computational tools for machine learning.
+\item Learn linear regression using a ``top-down'' approach.
 \ei
 \end{learningobjectives}
 
-\section*{Motivation: Why Learn About Linear Regression?}
 
-Before we jump into the \emph{what} of linear regression, let's spend a little bit of time talking about the \emph{why} of linear regression.  As you'll soon see, linear regression is among the simplest (perhaps \emph{the} simplest) machine learning algorithm.  It has many limitations, which you'll also see, but also a of ton strengths.  \textbf{First, it is a great place to start when learning about machine learning} since the algorithm can be understood and implemented using a relatively small number of mathematical ideas (you'll be reviewing these ideas later in this assignment).  In terms of the algorithm itself, it has the following very nice properties.
+\section{Six Big Ideas in Machine Learning}
+Before diving into the specifics of our first machine learning algorithm, let's examine some important ideas in machine learning.  Why six big ideas?  If Rob Martello has taught us anything, it's that all good things come in sixes.
+
+
+\subsection*{Idea 1: Correlations for the Win?}
+ML algorithms learn to exploit correlations in data in order to make predictions.  For instance, if one was using an ML algorithm to recognize whether someone was smiling in an image, the algorithm might learn that bright pixels around the mouth region are correlated with smiles (e.g., they indicate that a person's teeth are showing).  This correlation would likely be useful for determining whether a new image of a face was a smile or not.  Now suppose you take this model and apply it to a new dataset.  You may find that faces that are angry are mistakenly marked as smiling!  Why?  In the case of angry facial expressions the teeth may also be showing.  Of course you would expect the learning algorithm to be smart enough to realize that just using the presence of teeth is not enough to conclusively determine whether someone is smiling.  Whether or not this actually happens is a function of the training data given to the ML algorithm.  If, for instance, the training set was scraped from profile pictures from a dating website, the training set may not contain pictures of angry faces.  Unfortunately, while exploiting correlations is one of the most powerful aspects of ML systems, it is also one of the most potentially problematic.
+
 
 \bi
-\item \textbf{Transparent:} it's pretty easy to examine the model and understand how it arrives at its predictions.
-\item \textbf{Computational tractable:} linear regression models can be trained efficiently on datasets with large numbers of features and data points.
-\item \textbf{Easy to implement:} linear regression can be implemented using a number of different algorithms (e.g., gradient descent, closed-form solution).  Even if the algorithm is not built into your favorite numerical computation library, the algorithm can be implemented in only a couple of lines of code.
+
+\item \emph{Example 1: Reinforcing Hiring Biases}
+You may have heard that \href{https://www.reuters.com/article/us-amazon-com-jobs-automation-insight/amazon-scraps-secret-ai-recruiting-tool-that-showed-bias-against-women-idUSKCN1MK08G}{Amazon scrapped a secret AI recruiting tool that showed bias against women}.  More specifically, the tool performed automatic keyword analysis of job applications to predict whether or not the applicant was worth forwarding on to a human for further evaluation.  Early in the development of this system researchers discovered that the model the system had learned placed a negative weight on words such as ``women's'' as well as the names of some women's colleges.  While there is of course no causal link between these words appearing in a job application and the suitability of the candidate for the job, there was a \emph{correlation} in the training set between the presence of words such as ``women's'' and the candidates not being invited for interviews.
+
+Why might such a correlation exist in the training set?  There are many different possible explanations for this correlation, ranging from overt or unconscious bias in the applicant evaluators whose judgments helped form the training data to systemic discrimination that denies women equal access to educational opportunities in STEM.  The important thing to take away from this is not \emph{why} there was a correlation, but that the existence of the correlation in the training data caused the model to utilize the correlation in order to evaluate new data.  Amazon realized that this was very bad and decided to take steps to address the problem (they say they never used the system to make actual job-screening decisions).  Despite efforts to prevent the algorithm for exploiting such correlations, the group determined that they couldn't fully guarantee that the algorithm had not found another way to achieve the same discriminatory outcome and terminated the project.
+
+
+\item \emph{Example 2: Adversarial Machine Learning}
+
+A second example of an ML algorithm exploiting correlations in training data in unexpected ways can be found in computer vision methods for object detection.  Identifying salient visual objects such as road signs and pedestrians is an important building block for applications such as autonomous cars.  A popular algorithm for this task, \href{https://pjreddie.com/darknet/yolo/}{YOLO} (You Only Look Once)\footnote{\href{https://www.youtube.com/watch?time_continue=77&v=MPU2HistivI}{Cool video of YOLO version 3}, \href{https://www.youtube.com/watch?v=Cgxsv1riJhI}{TED talk from the head YOLO researcher}}, can identify and localize objects in images with surprising accuracy.  For instance, in the image below YOLO identified the stop sign in the image successfully.
+
+While this all seems great, there is a catch.  It is very difficult to understand \emph{how} YOLO is making these predictions.  That is, what is it about this image that causes the YOLO algorithm to be able to tell that it is a stop sign?  Perhaps it is the white text on the red background.  Perhaps it is the word ``STOP.''  In fact, the network that makes this prediction is so complex, that it is impossible for us to say definitively exactly how it makes its decision.  What we do know is that the model exploits correlations in the training data between input features (pixels) and outputs (object locations) in potentially unpredictable ways.
+
+The complexity of the model makes it vulnerable to bad actors (or adversaries).  Researchers at University of Michigan used a form of ML known as \emph{adversarial machine learning} to \href{https://iotsecurity.engin.umich.edu/physical-adversarial-examples-for-object-detectors/}{create a specially crafted sticker that could be attached to a stop sign that would make it invisible to the YOLO model} (that is YOLO would not identify it as a stop sign).  Clearly, this has major implications for the safety of using a model such as this in an application like a self-driving car.   An example of the attack is shown in Figure~\ref{fig:yolofooled}.
+
+\ei
+
+\subsection*{Idea 2: There's No Such Thing as a Free Lunch}
+
+\begin{quotation}
+\href{https://en.wikipedia.org/wiki/All_models_are_wrong}{``All models are wrong, but some useful.''}
+
+--- George Box
+\end{quotation}
+
+At the beginning of this document we have a reminder of the basic supervised machine learning setup.  A one sentence statement of the setup is that we try to generalize from a set of training data to construct a function $\hat{f}^\star$ that best predicts the corresponding output data for unseen input data (e.g., predicting the facial expression of a face that was not in the training set based on a training set of sample faces).  In the previous big idea, we discussed how machine learning could go wrong when there are correlations in the data that seem useful to the ML algorithm but are ultimately counterproductive to how we'd like the system to make decisions.  It turns out that even before you choose the training data for your algorithm, you must provide an \href{https://en.wikipedia.org/wiki/Inductive_bias}{inductive bias} to constrain the space of possible models you might fit.  Examples of common inductive biases include the following (the previously linked article has some more).
+\be
+\item The prediction function $\hat{f}^\star$ should change smoothly as you vary the input $\mlvec{x}$.
+\item The prediction function has a particular form (e.g., linear).
+\item The prediction function is sparse (it ignores the majority of the inputs).
+\ee
+
+In fact, there are a whole class of theorems called \href{https://en.wikipedia.org/wiki/No_free_lunch_theorem}{No-Free-Lunch (NFL) theorems} that state that without inductive biases (such as the ones stated above), learning from data is essentially impossible.  This connects us back to the quote from George Box.  While the inductive bias we encode into our model will never fully represent reality, having this bias is necessary to allow the model to do the useful work of making predictions.  What's important for us as machine learning scientists and practitioners is to be explicit about the biases we are introducing when settling on a particular model so that we can best evaluate our results and predict the limitations of our systems.
+
+\subsection*{Idea 3: It's All About How You Frame the Problem}
+
+Using Machine Learning algorithms can be a bit disorienting for someone used to the typical engineering workflow.  A cartoon picture of the engineering workflow is that you are given a problem (perhaps it is initially difficult to solve or ambiguous), you might reframe the problem to make it easier to solve, and then you work to devise a solution to the reframed problem.  In machine learning, the last step is replaced by providing examples of how you'd like your system to work (i.e., input / output pairs), and then the creation of the actual system is automated by the ML algorithm!  Your job as an ML practitioner is to reframe the original problem (both by specifying the form of the model and giving appropriate training data) so that the ML algorithm can compute a solution.  If you've done the reframing properly, the solution to the reframed problem will also be a good solution to the original problem.
+
+As an example of when a solution to the reframed problem would not be desirable, consider the use of a machine learning algorithm to teach a virtual character to walk in a simulated environment.  You might reframe this problem for the ML algorithm as tasking it with computing a controller for the virtual character that moves the character's center of mass forward as fast as possible.  The ML algorithm can now search over a vast space of possible control strategies to learn the one that most quickly propels the center of mass.  However, it doesn't necessarily follow that this controller will result in the character walking using a normal bipedal gait.
+
+
+The notion that the solution an algorithm finds might be unpredictable to the designer is known as ``emergence.''  Some cool examples of this played out in actual experiments in evolving virtual creatures, which are summarized in the paper \href{https://arxiv.org/pdf/1803.03453.pdf}{The Surprising Creativity of Digital Evolution}.  For instance, a virtual character learned that falling down, see picture above, and getting up was more efficient for locomotion than constantly hopping (which is what the designer had intended the system to learn).
+
+For more examples of this sort of thing, consider checking out \href{https://www.youtube.com/watch?v=bBt0imn77Zg}{Karl Sims: Evolved Virtual Creatures} or the short article \href{https://aiweirdness.com/post/172894792687/when-algorithms-surprise-us}{When AI Surprises Us}.  This also connects back to the age-old debate over whether \href{https://www.youtube.com/watch?v=8M_1GAX3WcI}{falling with style can be considered flying}.
+
+
+\subsection*{Idea 4: ML Systems Can Learn Intermediate Representations}
+
+In the next few weeks we'll learn about artificial neural networks (ANNs).  ANNs are biologically inspired algorithms since their functioning, at an abstract level, is modeled on the functioning of biological neurons (e.g., in the brain).
+
+ANNs accept input patterns at an array of virtual neurons called the input layer (see Figure~\ref{fig:ann}).  The neurons in the input layer are connected to other neurons via virtual \href{https://en.wikipedia.org/wiki/Axon}{axons} that control to what extent a particular input neuron activates a downstream neuron.  The second set of neurons, called the ``hidden layer'' (shown in blue in the middle of the figure), is responsible for computing intermediate, hidden representations of the input data.  This process continues as activations propagate through the network until activations are generated at the output layer (shown in green on the right of the figure). These outputs could correspond to any salient properties of the input (e.g., if the input is an image, the output might encode the objects in the image).
+
+What's amazing about ANNs is that there are learning algorithms for setting the connection strengths between these virtual neurons (the black arrows in Figure~\ref{fig:ann}) based on training data (input / output pairs).  These learning algorithms tune the connections strengths (also called ``weights'') such that for the provided training data the network produces the appropriate training outputs (e.g., if you show the network a training set of images of cats or dogs, over time the network will adjust its weights so that the output is ``cat'' when the network is presented an image of a cat and ``dog'' if presented an image of a dog).  The algorithms used to tune the network weights are only concerned with reproducing the output patterns, the network is free to choose how it represents information within the network (i.e., at the hidden layer).
+
+What's super amazing is that we can actually examine the internal representations of a neural network to understand how it's performing the computation from input to output. For instance, Figure~\ref{fig:learnedfields}\footnote{From \href{http://www.cnbc.cmu.edu/~tai/nc19journalclubs/Olshausen-Field-CON-2004-1.pdf}{Sparse coding of sensory inputs}} shows a visualization of the internal representations learned by a network trained to best compress a training set of images (these sorts of networks are called ``auto-encoders'').  The receptive fields of each of the hidden units in the network and can be understood as specifying how each input pixel activates a particular hidden unit (gray corresponds to no activation, black to negative activation, and white to positive activation).  It's remarkable that these receptive fields have coherent structure: they are localized in space, tuned to particular orientations, and tuned to features at a particular scale.  You can think of these as oriented edge detectors that the network learned completely on its own (it was never told to extract edges from the images in the training set).
+
+What's super-duper amazing is that if we compare the receptive fields learned by the artificial neural network to the \href{https://en.wikipedia.org/wiki/Simple_cell}{simple cells} in the primary visual cortex of a cat, there are a number of striking similarities.  Just as in the ANN, the biological neural network responds to edges at particular orientations and scales.  The scientists Hubel and Wiesel performed the pioneering work in neuroscience to establish the properties of receptive fields in the primary visual cortex.  Consider watching \href{https://www.youtube.com/watch?v=8VdFf3egwfg}{a video of their experiment} that eventually garnered a Nobel prize (note that in the video the static sound corresponds to the measurement of spikes in activity of an individual neuron in the brain of an anesthetized cat).\footnote{There are a variety of opinions on the \href{https://en.wikipedia.org/wiki/Animal_testing\#Ethics}{ethics of performing research on animals}}. The implication of the similarity between the receptive fields of the neurons in the cat brain and the virtual neurons in the ANN is that they are similar because they are fundamentally solving the same problem (i.e., efficiently representing visual information).  In this light, that they should find similar solutions to this problem is not as surprising as it may first seem.
+
+
+\subsection*{Idea 5: Machine Learning Zoomed Out}
+
+Historically, most ML courses have been laser-focused on learning about learning algorithms (e.g., neural networks, support vector machines, decision trees, etc.).  In some courses there would be a little bit of emphasis on machine learning applications, which have always been strongly tied to the research in ML algorithms and theory.  The focus on ML algorithms also reflected the positioning of these courses within Computer Science curricula, which approached the field more from a liberal arts perspective rather than an engineering one.
+
+A number of recent trends have made the almost sole focus on learning algorithms insufficient for those who want to either use ML in their careers or go into ML as a field.
+\be
+\item The explosion of data has made the skills necessary for collecting, wrangling, exploring, and cleaning data very relevant.
+\item Improvements in the accuracy of ML algorithms coupled with the ability to deploy ML systems to a wide variety of devices (e.g., mobile phones) means that it is increasingly important to consider how ML systems will behave in real-world, highly complex settings.
+\ee
+
+The first point ties into a set of skills sometimes grouped under ``Data Science.''  While we will have a comparatively lesser focus on this skillset than in our dedicated Data Science course, we will be learning some of these skills.  The second point corresponds to ML systems as embedded in larger and more complex contexts.  As you've seen from some of the examples earlier in this document, unexpected things can happen when ML algorithms meet messy and/or biased real world data (take for example the automated job applicant evaluator).  In light of this, again, we think that the traditional focus on ML algorithms is not adequate for a modern class on ML.  Here are two figures to further illustrate this point.
+
+
+In the figure above, the box labeled \emph{ML Code} is the actual learning algorithm.  But in modern systems, this is but a small fraction of all of the tools needed to deploy a real world ML system.  This is not to say that we will be spending a lot of time learning about each of these other boxes (we will learn about some of them), but it helps to have a sense of the software ecosystem in which your ML model would be deployed.
+
+
+In addition to understanding how ML code is situated within larger software ecosystems, it is even more important to realize the \href{https://en.wikipedia.org/wiki/Sociotechnical_system}{socio-technical context} in which an ML system is deployed.  The figure above shows a socio-technical analysis of a technology.  The figure highlights the need to consider contextual factors such as user impacts, culture, and regulations when analyzing technologies.
+
+Using the tools of socio-technical systems analysis is becoming increasingly popular for analyzing machine learning systems.  We'll be digging into some of these resources later in the course, but here are two papers in this spirit.
+\bi
+\item \href{https://link.springer.com/article/10.1007/s11023-017-9417-6}{Reframing AI Discourse}
+\item \href{https://dl.acm.org/citation.cfm?id=3287598}{Fairness and Abstraction in Sociotechnical Systems}
+\ei
+
+\subsection*{Idea 6: It's Not All Doom and Gloom}
+While we'll be talking a lot about how ML can go wrong, unleashing unexpected consequences, we'll also be talking about the positive things that ML can do.  Here are just a couple of resources that discuss such systems (not to say that these systems don't have the potential for things to go wrong!).  We'll leave this list deliberately short to give you a chance to find your own example in the exercise below.
+
+\bi
+\item \href{https://www.springboard.com/blog/ai-for-good/}{AI for social good: 7 inspiring examples}
+\item \href{https://medium.com/myplanet-musings/making-the-web-more-accessible-using-machine-learning-8a32eaafdb3a}{Machine Learning for Web Accessibility}
+\item \href{https://fpf.org/wp-content/uploads/2016/03/Final_19Times-Data_Mar2016-1.pdf}{19 Times Data Analysis Empowered Students and Schools}
+\item This one is kind of cheating.  Austin Vesiliza put together \href{https://www.notion.so/ML-for-Good-c0cc352c88b04e719c187c8e4a6f5887}{a list of links to AI for social good projects} that you might use for inspiration.
 \ei
 
 
+\marginnote{The \faShareAlt~icon means that you will be submitting your response to this exercise with your assignment.  By default responses to exercises do not need to be submitted.}
+
+\begin{exercise}[\faShareAlt~(60 minutes)]
+Now, we want to hear from you!  
+\bes
+\item Choose one of the big ideas above and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  As a rough guide, you should aim for a response of a 1-2 paragraphs.
+
+\begin{boxedsolution}
+There's no one right answer here!
+\end{boxedsolution}
+
+\item Idea 6 talks about the idea of ML for positive impact.  What is one example of an ML application (real or imagined) that you think would have the largest (or most unambiguously) positive impact on the world?  Why?  Alternatively, what is an example of an ML application (real or imagined) that no matter how carefully the designers approach it, should just not exist due to the harm it would cause the world?  Why?
+
+\begin{boxedsolution}
+There's no one right answer here!
+\end{boxedsolution}
+
+\ees
+\end{exercise}
+
+\section{Mathematical Background}
+
+
 \begin{notice}
-For the purposes of this class, we will be consistent with the notation we use.  Of course, when we link to other resources, they may use other notation.  If notation is different in a way that causes confusion, we will try to point out pitfalls you should watch out for.  A guide to our notation conventions can be found on Canvas.
+For the purposes of this class, we will be consistent with the notation we use.  Of course, when we link to other resources, they may use other notation.  If notation is different in a way that causes confusion, we will try to point out pitfalls you should watch out for.  Please use this link to access our guide to \href{https://github.com/mlfa19/assignments/blob/master/supplementary_documents/notation_conventions.pdf}{our notation conventions}.
 \end{notice}
 
-\begin{recall}[Mathematical background]
+\begin{externalresources}[(60 minutes)]
 In order to engage with this assignment, you'll want to make sure you are familiar with the following concepts (links to resources embedded below):
 \bi
-\item vector-vector multiplication
+\item Vector-vector multiplication
 \bi
 \item Section 2.1 of \href{https://see.stanford.edu/materials/aimlcs229/cs229-linalg.pdf}{Zico Kolter's Linear Algebra Review and Reference}
 \ei
@@ -62,30 +168,87 @@ In order to engage with this assignment, you'll want to make sure you are famili
 \item Section 2.2 of \href{https://see.stanford.edu/materials/aimlcs229/cs229-linalg.pdf}{Zico Kolter's Linear Algebra Review and Reference}
 \item The first bits of the Khan academy video on \href{https://www.khanacademy.org/math/linear-algebra/matrix-transformations/linear-transformations/v/matrix-vector-products-as-linear-transformations}{Linear Transformations}
 \ei
-\item partial derivatives and gradients
+\item Partial derivatives and gradients
 \bi
 \item Khan Academy videos on partial derivatives: \href{https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivatives/v/partial-derivatives-introduction}{intro}, \href{https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivatives/v/partial-derivatives-and-graphs}{graphical understanding}, and \href{https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/partial-derivatives/v/formal-definition-of-partial-derivatives}{formal definition}
 \item \href{https://www.khanacademy.org/math/multivariable-calculus/multivariable-derivatives/gradient-and-directional-derivatives/v/gradient}{Khan Academy video on Gradient}
 \ei
 \ei
-\end{recall}
-\begin{recall}[Supervised Learning Problem Setup]
-In the last class we saw the basic supervised learning problem setup.
+\end{externalresources}
 
-Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  In the supervised learning setting, your goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
+\begin{exercise}[(20 minutes)]
+Here are some diagnostic problems to test some basic understanding of the concepts above.
+\bes
+\item Suppose $f(x, y) = 2x \sin{y} + y^2 x^3$.  Calculate $\frac{\partial{f}}{\partial{x}}$, $\frac{\partial{f}}{\partial{y}}$, and $\nabla f$.
+
+
+\begin{boxedsolution}
+\begin{align}
+\frac{\partial{f}}{\partial{x}} &= 2 \sin y + 3 y^2 x^2 \\
+\frac{\partial{f}}{\partial{y}} &= 2x \cos y + 2 y x^3 \\ 
+\nabla f &= \begin{bmatrix} 2 \sin y + 3 y^2 x^2 \\ 2x \cos y + 2 y x^3  \end{bmatrix}
+\end{align}
+\end{boxedsolution}
+
+\item Suppose $\mlvec{x} = \begin{bmatrix} 3 \\ -1 \\ 4 \end{bmatrix}$ and $\mlvec{y} = \begin{bmatrix} 2 \\  7 \\ 4 \end{bmatrix}$.  Calculate $\mlvec{x} \cdot \mlvec{y}$, $\mlvec{x}^\top \mlvec{y}$, and $\mlvec{x} \mlvec{y}^\top$.
+
+
+\begin{boxedsolution}
+\begin{align}
+\mlvec{x} \cdot \mlvec{y} &= 3 \times 2 + -1 \times 7 + 4 \times 4 = 15 \\
+\mlvec{x}^\top \mlvec{y} &= \mlvec{x} \cdot \mlvec{y} = 15 \\
+\mlvec{x} \mlvec{y}^\top &= \begin{bmatrix} 3 \times 2 & 3 \times 7 & 3 \times 4 \\ -1 \times 2 & -1 \times 7 & -1 \times 4 \\ 4 \times 2 & 4 \times 7 & 4 \times 4 \end{bmatrix} \\
+&= \begin{bmatrix} 6 & 21 & 12 \\ -2 & -7 & -4 \\ 8 & 28 & 16 \end{bmatrix}
+\end{align}
+\end{boxedsolution}
+
+\item Let $\mlmat{A} = \begin{bmatrix} \mlvec{a_1} & \mlvec{a_2} & \ldots & \mlvec{a_n} \end{bmatrix} = \begin{bmatrix} \mlvec{row_1}^\top \\ \mlvec{row_2}^\top \\ \vdots \\ \mlvec{row}_m^\top \end{bmatrix}$
+
+(that is, the matrix $\mlmat{A}$ can either be thought of as consisting of the columns $\mlvec{a_1}, \ldots, \mlvec{a_n}$ or the rows $\mlvec{row_1}^\top, \ldots, \mlvec{row_m}^\top$).  Let $\mlvec{v}$ be an arbitrary $n$-dimensional vector.
+
+Compute $\mlmat{A}\mlvec{v}$ in terms of $\mlvec{a_1}, \ldots, \mlvec{a_n}$.
+
+\begin{boxedsolution}
+\begin{align}
+\mlmat{A} \mlvec{v} &= \mlvec{v}_1 \mlvec{a}_1 + \mlvec{v}_2 \mlvec{a}_2 + \ldots + \mlvec{v}_n \mlvec{a}_n
+\end{align}
+\end{boxedsolution}
+
+Compute $\mlmat{A} \mlvec{v}$ in terms of the rows of $\mlvec{row_1}, \ldots, \mlvec{row_m}$.
+
+\begin{boxedsolution}
+\begin{align}
+\mlmat{A} \mlvec{v} &= \begin{bmatrix} \mlvec{v} \cdot \mlvec{row}_1 \\   \mlvec{v} \cdot \mlvec{row}_2 \\ \vdots \\ \mlvec{v} \cdot \mlvec{row}_m \end{bmatrix}
+\end{align}
+\end{boxedsolution}
+
+\ees
+\end{exercise}
+
+
+\section{Supervised Learning Problem Setup}
+Suppose you are given a training set of data points, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  In the supervised learning setting, your goal is to determine a function $\hat{f}$ that maps from the input space to the output space.  For example, if we provide an input $\mlvec{x}$ to $\hat{f}$ it would generate the predicted output $\hat{y} = \hat{f}(\mlvec{x})$.
 
 We typically also assume that there is some loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  We can define the best possible model, $\hat{f}^\star$ as the one that minimizes these losses over the training set.  This notion can be expressed with the following equation  (note: that $\argmin$ in the equation below just means the value that minimizes the expression inside of the $\argmin$, e.g., $\argmin_{x} (x - 2)^2 = 2$, whereas $\min_{x} (x-2)^2 = 0$).
 \begin{align}
 \hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}), y_i \right )
 \end{align} 
 
-\end{recall}
+\section{Linear Regression from the Top-Down}
 
-\section{The Linear Regression Model}
+\subsection*{Motivation: Why Learn About Linear Regression?}
+Before we jump into the \emph{what} of linear regression, let's spend a little bit of time talking about the \emph{why} of linear regression.  As you'll soon see, linear regression is among the simplest (perhaps \emph{the} simplest) machine learning algorithm.  It has many limitations, which you'll also see, but also a of ton strengths.  \textbf{First, it is a great place to start when learning about machine learning} since the algorithm can be understood and implemented using a relatively small number of mathematical ideas (you'll be reviewing these ideas later in this assignment).  In terms of the algorithm itself, it has the following very nice properties.
 
-For linear regression we assume that our input points, $\mlvec{x_i}$, are d-dimensional vectors (each entry of these vectors can be though of as a feature), that our output points, $y_i$, are scalars, and that our prediction functions $\hat{f}$ are all of the form $\hat{f}(\mlvec{x}) = \mlvec{w}^\top \mlvec{x} = \sum_{i=1}^d w_i x_i$ for some vector of weights $\mlvec{w}$ (you could think of $\hat{f}$ as also taking $\mlvec{w}$ as an input, e.g., writing $\hat{f}(\mlvec{x}, \mlvec{w}$).  When it's obvious what the value of $\mlvec{w}$ is, we'll leave it as an implicit input instead, e.g., writing $\hat{f}(\mlvec{x})$).
+\bi
+\item \textbf{Transparent:} it's pretty easy to examine the model and understand how it arrives at its predictions.
+\item \textbf{Computational tractable:} models can be trained efficiently on datasets with large numbers of features and data points.
+\item \textbf{Easy to implement:} linear regression can be implemented using a number of different algorithms (e.g., gradient descent, closed-form solution).  Even if the algorithm is not built into your favorite numerical computation library, the algorithm can be implemented in only a couple of lines of code.
+\ei
 
-In the function, $\hat{f}$, the elements of the vector $\mlvec{w}$ represent weights that multiply various entries of the input.  For instance, if an element of $\mlvec{w}$ is high, that means that as the corresponding element of $\mlvec{x}$ increases, the prediction that $\hat{f}$ generates for $\mlvec{x}$ would also increase (you may want to mentally think through other cases, e.g., what would happen is the element of $\mlvec{x}$ decreases, or what would happen if the entry of $\mlvec{w}$ was large and negative).  The products of the weights and the features are then summed to arrive at an overall prediction.
+
+For linear regression our input data, $\mlvec{x_i}$, are d-dimensional vectors (each entry of these vectors can be thought of as a feature), our output data, $y_i$, are scalars, and our prediction functions, $\hat{f}$, are all of the form $\hat{f}(\mlvec{x}) =\mlvec{w} \cdot \mlvec{x} = \mlvec{w}^\top \mlvec{x} = \sum_{i=1}^d w_i x_i$ for some vector of weights $\mlvec{w}$ (you could think of $\hat{f}$ as also taking $\mlvec{w}$ as an input, e.g., writing $\hat{f}(\mlvec{x}, \mlvec{w}$).  Most of the time we'll leave $\mlvec{w}$ as an implicit input: writing $\hat{f}(\mlvec{x})$).
+
+In the function, $\hat{f}$, the elements of the vector $\mlvec{w}$ represent weights that multiply various dimensions of the input.  For instance, if an element of $\mlvec{w}$ is high, that means that as the corresponding element of $\mlvec{x}$ increases, the prediction that $\hat{f}$ generates would also increase (you may want to mentally think through other cases, e.g., what would happen is the element of $\mlvec{x}$ decreases, or what would happen if the entry of $\mlvec{w}$ was large and negative).  The products of the weights and the features are then summed to arrive at an overall prediction.
 
 Given this model, we can now define our very first machine learning algorithm: \href{https://en.wikipedia.org/wiki/Ordinary_least_squares}{ordinary least squares} (OLS)!  In the ordinary least squares algorithm, we use our training set to select the $\mlvec{w}$ that minimizes the sum of squared differences between the model's predictions and the training outputs.  Thinking back to the supervised learning problem setup, this corresponds to choosing $\ell(y, \hat{y}) = (y - \hat{y})^2$.
 Therefore, the OLS algorithm will use the training data to select the optimal value of $\mlvec{w}$ (called $\mlvec{w}^\star$), which minimizes the sum of squared differences between the model's predictions and the training outputs.
@@ -93,183 +256,57 @@ Therefore, the OLS algorithm will use the training data to select the optimal va
 \begin{align}
 \mlvec{w}^\star &= \argmin_{\mlvec{w}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}, \mlvec{w}) , y_i \right) \\
 \mlvec{w}^\star &= \argmin_{\mlvec{w}} \sum_{i=1}^n \left ( \hat{f}(\mlvec{x_i}, \mlvec{w}) - y_i \right)^2 \\
-&= \arg\min_{\mlvec{w}} \sum_{i=1}^n \left ( \mlvec{w}^\top \mlvec{x_i} - y_i \right)^2
+&= \argmin_{\mlvec{w}} \sum_{i=1}^n \left ( \mlvec{w}^\top \mlvec{x_i} - y_i \right)^2
 \end{align}
 
-While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of a later part of this assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new testing point, $\mlvec{x}$, by predicting that the corresponding (unknown) label, $y$, as $\hat{y} = \mlvec{w}^\top \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data points, which is the hallmark of supervised machine learning!
+\begin{notice}
+Digesting mathematical equations like this can be daunting, but your understanding will be increased by unpacking them carefully.  Make sure you understand what was substituted and why in each of these lines.  Make sure you understand what each symbol represents.  If you are confused, ask for help (e.g., post on NB).
+\end{notice}
+
+While we haven't talked at all about how to find $\mlvec{w}^\star$, that will be the focus of the next assignment, once we have $\mlvec{w}^\star$ we can predict a value for a new input point, $\mlvec{x}$, by predicting the corresponding (unknown) output, $y$, as $\hat{y} = \mlvec{w^\star} \cdot \mlvec{x}$.  In this way, we have used the training data to learn how to make predictions about unseen data, which is the hallmark of supervised machine learning!
 
 \begin{exercise}
-Todo: Some conceptual questions to check understanding
+Draw a scatter plot in 2D (the x-axis is the independent variable and the y-axis is the dependent variable).  Fill in a few data points and draw a potential line of best fit.  On the plot identify the vertical differences between the data points and the line (these differences are the residuals).  Draw a second potential line of best fit and mark the residuals.  From the point of view of ordinary least-squares, which of these lines is better?
+
+\begin{boxedsolution}
+
+The red line (line 1) would be better since the residuals are generally smaller.  Line 2 also has several large residuals, which when squared will cause a large penalty for line 2.
+\end{boxedsolution}
 \end{exercise}
 
 \section{Getting a Feel for Linear Regression}
-In this class we'll be learning about algorithms using both a top-down and a bottom-up approach.  By bottom-up we mean applying various mathematical rules to derive a solution to a problem and only then trying to understand how to apply it and how it well it might work for various problems.  By top-down we mean starting by applying the algorithm to various problems and through these applications gaining a sense of the algorithm's properties before learning how to derive / implement it.  We'll start our investigation of linear regression using a \textbf{top-down approach}.
+In this class we'll be learning about algorithms using both a top-down and a bottom-up approach.  By bottom-up we mean applying various mathematical rules to derive a solution to a problem and only then trying to understand how to apply it and how it well it might work for various problems.  By top-down we mean starting by applying the algorithm to various problems and through these applications gaining a sense of the algorithm's properties.  We'll start our investigation of linear regression using a \textbf{top-down approach}.
 
 
 \subsection{Linear Regression with One Input Variable: Line of Best Fit}
+If any of what we've said so far sounds familiar, it is likely because you have seen the idea of a line of best fit in some previous class.  To understand more intuitively what the OLS algorithm is doing, we want you to investigate its behavior when there is a single input variable (i.e., you are computing a line of best fit).  
 
-If any of what we've said so far sounds familiar, it is likely because you have seen the idea of a line of best fit in some previous class.  To understand more intuitively what the OLS algorithm is doing, we want you to investigate its behavior when there is a single input variable (i.e., you are computing a line of best fit).  Use the \href{http://www.shodor.org/interactivate/activities/Regression/}{line of best fit online app} to create some datasets, guess the line of best fit, and then compare the results to the OLS solution.
-
-\todo{It would have been cool to find something that visualized linear regression with two input variables, but I couldn't find it easily.  At a minimum we need to actually write down the formula we are fitting.}
+\begin{externalresources}
+Use the \href{http://www.shodor.org/interactivate/activities/Regression/}{line of best fit online app} to create some datasets, guess the line of best fit, and then compare the results to the OLS solution (line of best fit).
 
 \begin{exercise}
-Todo: Some conceptual questions to check understanding of what happened here.
+\bes
+\item Examine the role that outliers play in determining the line of best fit.  Does OLS seem sensitive or insensitive to the presence of outliers in the data?
+\begin{boxedsolution}
+OLS is very sensitive to outliers.  A single outlier can change the slope of the line of best fit dramatically.  Here is an example of this phenomenon.
+
+\end{boxedsolution}
+
+\item Were there any times when the line of best fit didn't seem to really be ``best'' (e.g., it didn't seem to capture the trends in the data)?
+\begin{boxedsolution}
+This could happen for many reasons.  If the dataset is pieceweise linear (e.g., composed of multiple line segments), if it has some other non-linear form (e.g., if it is quadratic), or if there are outliers.
+\end{boxedsolution}
+
+\ees
 \end{exercise}
+
+\end{externalresources}
 
 
 
 \subsection{Linear Regression with Multiple Input Variables: Explorations in Python}
+\begin{externalresources}[(90 minutes)]
 Work through the \href{https://colab.research.google.com/drive/12pLbQkhrPoI-22FVV6gZNObi1IJCW-mF}{Assignment 1 Companion Notebook} to get some practice with {\tt numpy} and explore linear regression using a top-down approach.  You can place your answers directly in the Jupyter notebook so that you have them for your records.
-
-\section{Linear Regression from the Bottom-up}
-
-Now that you have some idea of how the algorithm behaves, let's figure out how to implement it.  That is, how do we find the vector $\mlvec{w}$ that best fits a dataset?
-
-\subsection{Linear regression with one variable}
-
-Before handling the case where each $\mlvec{x}$ is a d-dimensional vector, we'll derive the algorithm for the simple case where $\mlvec{x}$ is a scalar (i.e., $d=1$).
-
-\begin{exercise}
-\bes
-\item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$, write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-e(w) &= \sum_{i=1}^n \left (  w x_i - y_i \right)^2
-\end{align}
-\end{boxedsolution}
-\fi
-
-\item Compute the derivative the error function you found in part (a).
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-\frac{de}{dw} &= \sum_{i=1}^n 2 \left (  w x_i - y_i \right)x_i \\
-&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i
-\end{align}
-\end{boxedsolution}
-\fi
-
-\item Set the derivative to 0, and solve for $w^\star$.  $w^\star$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this is critical point corresponds to a global minimum.  In other words, this value of $w$ is guaranteed to drive the sum of squared errors as low as possible.
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-\frac{de}{dw} &= 0 \\
-&= w \sum_{i=1}^n 2 x_i^2 - \sum_{i=1}^n 2 x_i y_i \\
-\sum_{i=1}^n 2 x_i y_i  &= w \sum_{i=1}^n 2 x_i^2 \\
-w^\star &=\frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
-\end{align}
-\end{boxedsolution}
-\fi
-
-\ees
-
-
-\end{exercise}
-We can start here and then motivate the mathematical tricks.
-
-\subsection{Building our bag of mathematical tricks}
-
-\begin{exercise}[30 minutes]
-\bes
-\item Quadratic forms \href{https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/quadratic-approximations/v/expressing-a-quadratic-form-with-a-matrix}{really nice Khan Academy video showing this}
-\item FOIL method for matrix multiplication
-
-\item Using the definition of the gradient, show that $\nabla \mlvec{c}^\top \mlvec{x} = \mlvec{c}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlvec{c}$ is a vector of constants.
-
-\iftoggleverb{solutions}
-
-\begin{boxedsolution}
-
-\begin{align}
-\mlvec{c}^\top \mlvec{x} &= \sum_{i=1}^d c_i x_i \\
-\frac{\partial  \sum_{i=1}^d c_i x_i }{\partial x_i} &= c_i  \\
-\nabla \mlvec{c}^\top \mlvec{x} &= \mlvec{c}
-\end{align}
-
-\end{boxedsolution}
-
-\fi
-
-
-\item Using the definition of the gradient, show that the $\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} = 2 \mlmat{A} \mlvec{x}$ where the gradient is taken with respect to $\mlvec{x}$ and $\mlmat{A}$ is a \emph{symmetric} $dxd$ matrix of constants.  If you'd like, you can utilize the fact (without deriving it yourself) that $\mlvec{x}^\top \mlmat{A} \mlvec{x} = \sum_{i=1}^d\sum_{j=1}^d x_i x_j a_{i, j}$.%  \todo{this might be too hard... Can we make this optional with appropriate sign-posting.... you can prove this is true, but you do not need to do so in order to make progress.  It can also be made easier if you assume $A$ is symmetric.}
-\ees
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-
-\begin{align}
-\mlvec{x}^\top \mlmat{A} \mlvec{x} &= \begin{bmatrix} x_1 \\ \vdots \\ x_d \end{bmatrix}^\top \begin{bmatrix} a_{1,1} & \ldots &  a_{1,d} \\
-\vdots &  \ddots &  \vdots \\
-a_{d,1} & \ldots & a_{d,d}
-\end{bmatrix} \begin{bmatrix}x_1 \\ \vdots \\ x_d \end{bmatrix} \\
-&= \begin{bmatrix} x_1 \\ \vdots \\ x_d \end{bmatrix}^\top\sum_{i=1}^d x_i \begin{bmatrix} a_{i, 1} \\ \vdots \\ a_{i,d} \end{bmatrix} \\
-&= \sum_{i=1}^d x_i \sum_{j=1}^d x_j  a_{i, j} \\
-&= \sum_{i=1}^d\sum_{j=1}^d   x_i  x_j  a_{i, j} \\
-\frac{\partial (\mlvec{x}^\top \mlmat{A} \mlvec{x})}{\partial x_i} &= \sum_{j=1}^d x_j a_{i,j} + \sum_{j=1}^d x_j a_{j, i} \\
-&= \left ( \mlmat{A} \mlvec{x} \right)_i + \left ( \mlmat{A}^\top \mlvec{x} \right)_i \\
-&= 2\left ( \mlmat{A} \mlvec{x} \right)_i \\
-\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} &= 2 \mlmat{A}\mlvec{x}
-\end{align}
-
-\end{boxedsolution}
-
-\fi
-
-\end{exercise}
-
-\section{Linear Regression with Multiple Variables}
-\textbf{We might need to choose between this and a reading. If we do the reading, this will be done in class.}
-Suppose you are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ is a d-dimensional input vectors each $y_i$ is a scalar representing a target output.
-\begin{exercise}[60 minutes]
-Next, let's consider the more general case where $\mlvec{w}$ is a d-dimensional vector.  In order to solve this problem, you'll be leveraging some of the new mathematical tricks you picked up earlier in the assignment.  As you go through the problem, try as much as possible to treat vectors as first-class objects (e.g., work with the gradient instead of the individual partial derivatives).
-\bes
-\item Given $\mlvec{w}$, write an expression for the sum of squared errors between each prediction $\hat{f}(\mlvec{x})$ and training output $y_i$.  If your expression initially contains a summation, rewrite it as the inner product between some vector $\mlvec{v}$ and itself (i.e. $\mlvec{v}^\top \mlvec{v}$).  In rewriting your expression as an inner-product, you may find it useful to refer to the matrix that contains all of your training data $\mlmat{X} = \begin{bmatrix} \mlvec{x}_1^\top \\ \mlvec{x}_2^\top \\ \vdots \\ \mlvec{x}_n^\top \end{bmatrix}$.  You may also want to expand your inner product using the FOIL method for matrices that we learned about earlier.
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-e(\mlvec{w}) &= \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right)^\top  \left ( \mlmat{X} \mlvec{w} - \mlvec{y} \right) \\
-&= \mlvec{w}^\top \mlmat{X}^\top \mlmat{X} \mlvec{w} - 2 \mlvec{w}^\top \mlmat{X}^\top \mlvec{y} + \mlvec{y}^\top \mlvec{y}
-\end{align}
-\end{boxedsolution}
-\fi
-
-\item Compute the gradient of the sum of squared errors that you found in part (a).
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-\nabla e(\mlvec{w})  &= 2 \mlvec{X}^\top \mlvec{X} \mlvec{w} - 2 \mlmat{X}^\top \mlvec{y}
-\end{align}
-\end{boxedsolution}
-\fi
-
-\item Set the gradient to 0, and solve for $\mlvec{w}$.  This value of $\mlvec{w}$ corresponds to a critical point of your sum of squared errors function.  We will show in a later assignment that this is critical point corresponds to a global minimum.  In other words, this value of $\mlvec{w}$ is guaranteed to drive the sum of squared errors as low as possible (note: you can assume that $\mlmat{X}^\top \mlmat{X}$ is invertible).
-
-\iftoggleverb{solutions}
-\begin{boxedsolution}
-\begin{align}
-\nabla e(\mlvec{w})  &= 0 \\
-&= 2 \mlvec{X}^\top \mlvec{X} \mlvec{w} - 2 \mlmat{X}^\top \mlvec{y}\\
-\mlvec{w} &= \left ( \mlmat{X}^\top \mlmat{X} \right )^{-1} \mlmat{X}^\top \mlmat{y}
-\end{align}
-\end{boxedsolution}
-\fi
-
-\ees
-\end{exercise}
-%
-%\section{Connecting Bottom-up and Top-down}
-%\textbf{Won't have time for this, maybe we do this in-class}Revisit earlier problem using the math that you just learned?  Could also do something more interesting (e.g., bump detection dataset from Comprobo).
-
-
-
-\section{Context and Ethics Reading}
-What's the best thing to give here?  Should it be a reading about FAT in ML?  My other thought would be on \href{https://statisticsbyjim.com/regression/confounding-variables-bias/}{confounding variable bias}
-
-
+\end{externalresources}
 
 \end{document}
