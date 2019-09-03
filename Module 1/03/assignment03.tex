@@ -32,9 +32,35 @@
 \ei
 \end{priorknowledge}
 
+\section{The Classification Problem}
 
+\section{Perceptron?}
 
-\section{todo}
-a
+\section{Top-down View of Logistic Regression}
+
+\section{Mathematical Foundations}
+\subsection{Probability}
+
+\subsection{Logistic function}
+
+\subsection{Log-loss}
+
+\subsection{Chain Rule for Gradients}
+
+\section{Gradient Descent}
+
+\subsection{Visualization}
+
+\section{Algorithm Derivation}
+
+Todo: this is easier with the identities of the derivative of a logistic function.
+
+\begin{align}
+\mathbf{w^\star} &= \argmin_{\mathbf{w}} e(\mathbf{w}) \\
+e(\mathbf{w}) &= \sum_{i=1}^n y_i \log \frac{1}{1 + e^{-\mathbf{w}^\top \mathbf{x_i}}} +  (1-y_i) \log \frac{1}{1 + e^{\mathbf{w}^\top \mathbf{x_i}}} \\
+&= \argmin_{\mathbf{w}} \sum_{i=1}^n -y_i \log \left ( 1 + e^{-\mathbf{w}^\top \mathbf{x_i}} \right) -  (1-y_i) \log \left ( 1 + e^{\mathbf{w}^\top \mathbf{x_i}} \right) \\
+\nabla e(\mathbf{w}) &= \sum_{i=1}^n \frac{y_i \mathbf{x_i}}{1 + e^{-\mathbf{w}^\top \mathbf{x_i}}} - \frac{\left ( 1 - y_i \right) \mathbf{x_i}}{1 + e^{\mathbf{w}^\top \mathbf{x_i}} } \\
+&= \sum_{i=1}^n \mathbf{x_i} \left ( \frac{y_i }{1 + e^{-\mathbf{w}^\top \mathbf{x_i}}} - \frac{\left ( 1 - y_i \right) }{1 + e^{\mathbf{w}^\top \mathbf{x_i}} } \right)
+\end{align}
 
 \end{document}
