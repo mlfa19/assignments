@@ -1,7 +1,7 @@
 \documentclass[assignment02_Solutions]{subfiles}
 
-\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
-%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \invalidatemargin
 
@@ -286,28 +286,10 @@ This will be important for applying this to image datasets (which I propose we d
 
 \section{Implementation}
 
-Hopefully that wasn't too painful and you learned a few useful tricks along the way.  One thing that we can say is that the math you just utilized will come up repeatedly in the rest of this module.  Even very complex machine learning techniques wind up boiling down to following recipes that look very much like what you just did.
+Hopefully that wasn't too painful and you learned a few useful tricks along the way.  The good news is that even complex machine learning techniques wind up boiling down to following recipes that look very much like what you just did.
 
-At this point, we'll be taking the derivation of linear regression that we just worked out and using it to implement the linear regression algorithm from scratch (well, we will be using {\tt numpy}) in Python.  Along the way we'll show you some sanity checks that you can perform to verify that your implementation is correct and help solidify your understanding of the math that you just went through.
+At this point, you'll be taking the derivation of linear regression that you just worked out and using it to implement the linear regression algorithm from scratch in Python (well, you will be using {\tt numpy}).  Along the way we'll show you some sanity checks that you can perform to verify that your implementation is correct and help you to solidify your understanding of the math. Without further ado, let's transition over to the \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%201/02/Assignment_02_Companion.ipynb}{Assignment 2 Companion Notebook}.
 
-Without further ado, let's transition over to the Assignment 2 Companion Notebook.
-
-
-\subsection{Application}
-Train / test split.  Use it on a real dataset.  Interpret the results.
-
-
-
-
-\section{This is in class now Confounding Variables}
-
-The topic of confounding variables is a crucial topic in statistics and machine learning.  A very nice, conceptual writeup of the topic is \href{https://statisticsbyjim.com/regression/confounding-variables-bias/}{Statistics By Jim Confounding Variable Bias}.  Read this document and answer the following questions.
-
-\begin{exercise}
-\bes
-\item Something in the checking understanding space (e.g., predicting how omitting a variable would impact the weight estimated for another variable).
-\item Something in the context and ethics space (fairly open-ended probably asking them to reflect on the potential impacts of this sort of bias).  If we wanted to be more directive we could provide ethically charged contexts to consider confounding variables.
-\ees
-\end{exercise}
+\companionnotebook{Assignment_02_Companion}
 
 \end{document}
