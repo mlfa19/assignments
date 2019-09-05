@@ -33,27 +33,61 @@
 \item Training / testing splits.
 \ei
 \end{priorknowledge}
+\vspace{1em}
 
 
 \begin{recall}[Supervised Learning Problem Setup]
-We are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  Our goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
+We are given a training set, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  Our goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
 
 We assume there is a loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  The best possible model, $\hat{f}^\star$, is the one that minimizes these losses over the training set.  This notion can be expressed with the following equation.
 \begin{align}
 \hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}), y_i \right )
 \end{align} 
-
 \end{recall}
 
-\vspace{1em}
 
 \section{The Classification Problem}
 
-\section{Perceptron?}
-TODO: this might fit better after discussing gradient descent.  I can also see just punting is since it is probably not really that important.
+So far in this class we've looked at supervised learning problems where the responses $y_i$ are continuous valued and the loss function was quadratic ($\ell(y, \hat{y}) = (y-\hat{y})^2$).  This setting is called the regression setting.  There are many times, however, where it is unnatural to frame a problem as a regression.  A classification problem is one where the $y_i$'s take on a discrete set of values.  For instance, you might imagine taking an image of a person and predicting their identity.  The identity could be thought of as being from some discrete set.  A special case of the classification problem is binary classification when $y_i$ is either 0 or 1 (e.g., a Paul versus Sam detector).
 
-\section{Mathematical Foundations}
-\subsection{Probability}
+In this assignment will formalize the binary classification problem and see a very useful algorithm for solving it called \emph{logistic regression}.  You will also see that the logistic regression algorithm is a very natural extension of linear regression.  Our plan for getting there is going to be pretty similar to what we did for linear regression:
+\bi
+\item Build some mathematical foundations
+\item Introduce logistic regression from a top-down perspective
+\item Learn about logistic regression from a bottom-up perspective
+\ei
+
+\section{Minimizing the misclassification rate}
+To begin our framing of the binary classification problem, let's look at one possible formalization where we are given a training set, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$, where each $\mlvec{x_i}$ is an element of the input space (e.g., a vector) and each $y_i$ is a binary number (either 1 or 0).  Further, we define the loss function $\ell(y, \hat{y}) = \mathbb{I}[y \neq \hat{y}]$ (the funny looking symbol $\mathbb{I}$ is the indicator function that takes on value 1 when the condition inside is true and 0 otherwise.  Given these choices, the supervised learning problem becomes.
+
+\begin{align}
+\hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \mathbb{I} \left [  \hat{f}(\mlvec{x_i}) \neq, y_i\right ] \label{eq:minimizeerror}
+\end{align}
+
+\begin{exercise}
+Convert Equation~\ref{eq:minimizeerror} to English to make sure you understand it.
+\begin{boxedsolution}
+The equation says that $\hat{f}^\star$ is the function $\hat{f}$ that minimizes the number of mistakes that the function makes on the training set.
+\end{boxedsolution}
+\end{exercise}
+
+Intuitively, such a framing makes perfect sense.  We should choose the model that makes the fewest mistakes on the training set.  It turns out, however, that it is not a particularly easy function to work with mathematically.  For one thing it is a bit all or nothing.  Either we are completely right or completely wrong.  It also turns out to be difficult to minimize for many common classes of functions, $\hat{f}$.  It turns out that we can create a much more natural loss function by thinking about the problem in terms of probabilities.
+
+\section{Probability and the log loss}
+
+Imagine that instead of our model, $\hat{f}$, spitting out either 0 or 1, it outputted a probability that the input $x_i$ had an output of 1.  In this way the classifier could indicate to us its degree of certainty regarding its prediction.  We haven't formally defined probability in this class, and we won't do so here.  For this case, we just need to keep a few things in mind about probabilities.
+\bi
+\item Probabilities give the chance that some event occurs (probability of 0 means that something will definitely not occur and probability of 1 means it definitely will occur.
+\item A probability, $q$, must be between 0 and 1 ($0 \leq q \leq 1$).
+\item If the probability that event occurs is $q$, then the probability that it doesn't occur is $1 - q$.
+\ei
+
+
+\subsection{Log-loss}
+
+One of the  components of our supervised learning problem framing is the loss function $\ell$.  Recall that this function takes as input the true output value, $y$, and a predicted output value, $\hat{y}$, and returns the loss that the model incurs for any potential mismatch between the values.  When we were working with linear regression, we sought to minimize the sum of squared errors and consequently used the loss function $\ell(y, \hat{y}) = (y-\hat{y})^2$.
+
+
 
 \subsection{Logistic function}
 
@@ -127,11 +161,6 @@ If we assume that $p(\mbox{event occurs}) = \sigma(x)$, show that the log odds o
 \ees
 
 \end{exercise}
-
-\subsection{Log-loss}
-
-One of the  components of our supervised learning problem framing is the loss function $\ell$.  Recall that this function takes as input the true output value, $y$, and a predicted output value, $\hat{y}$, and returns the loss that the model incurs for any potential mismatch between the values.  When we were working with linear regression, we sought to minimize the sum of squared errors and consequently used the loss function $\ell(y, \hat{y}) = (y-\hat{y})^2$.
-
 
 
 \section{Top-down View of Logistic Regression}
