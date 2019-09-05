@@ -5,7 +5,7 @@ for f in $FILES
 do
   echo "Processing $f file..."
   base=${f%.*}
-  jupyter nbconvert --RegexRemovePreprocessor.patterns="['.*Expand for Solution.*']" --to html --output ${base}_Solutions "$f" 
+  jupyter nbconvert --execute --RegexRemovePreprocessor.patterns="['.*Expand for Solution.*']" --to html --output ${base}_Solutions "$f" 
   wkhtmltopdf "${base}_Solutions.html" "${base}_Solutions.pdf"
   jupyter nbconvert  --RegexRemovePreprocessor.patterns="['.*Expand for Solution.*', '.*\*\*\*Solution\*\*\*.*']" --to html "$f" 
   wkhtmltopdf "${base}.html" "${base}.pdf"

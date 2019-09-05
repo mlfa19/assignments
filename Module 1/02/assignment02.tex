@@ -25,13 +25,11 @@
 \item Learn mathematical tricks for manipulating matrices and vectors.
 \item Derive the linear regression algorithm
 \item Implement linear regression in Python
-\item Learn about the issue of confounding variables
 \ei
 \end{learningobjectives}
 
 \begin{priorknowledge}
 \bi
-\item Basic machine learning terminology
 \item Supervised learning problem framing
 \item Setup for the linear regression problem
 \item Partial derivatives and gradients, matrix-vector multiplication, and vector-vector multiplication
@@ -93,7 +91,7 @@ Now that we've refreshed ourselves on the basic framing of linear regression, we
 
 \begin{exercise}[(10 minutes)]
 \bes
-\item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$ (note that $w$ is a scalar in the case where $d=1$), write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.
+\item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$ (note that $w$ is a scalar in the case where $d=1$), write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.  \textbf{Note:} In contrast to the line of best fit we saw in the last assignment, here we are not computing a y-intercept (effectively forcing the y-intercept to be $0$).  This choice may result in a worse fit, but it is easier to work out and helps build mathematical intuition.
 
 \begin{boxedsolution}
 \begin{align}

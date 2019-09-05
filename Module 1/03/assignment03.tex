@@ -1,6 +1,8 @@
 \documentclass[assignment03_Solutions]{subfiles}
 
-\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+
+%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
 
@@ -32,22 +34,113 @@
 \ei
 \end{priorknowledge}
 
+
+\begin{recall}[Supervised Learning Problem Setup]
+We are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  Our goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
+
+We assume there is a loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  The best possible model, $\hat{f}^\star$, is the one that minimizes these losses over the training set.  This notion can be expressed with the following equation.
+\begin{align}
+\hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \ell \left ( \hat{f}(\mlvec{x_i}), y_i \right )
+\end{align} 
+
+\end{recall}
+
+\vspace{1em}
+
 \section{The Classification Problem}
 
 \section{Perceptron?}
-
-\section{Top-down View of Logistic Regression}
+TODO: this might fit better after discussing gradient descent.  I can also see just punting is since it is probably not really that important.
 
 \section{Mathematical Foundations}
 \subsection{Probability}
 
 \subsection{Logistic function}
 
+The logistic function turns out to be very useful for modeling the probability that some event occurs.  TODO.
+
+\begin{exercise}
+In this exercise you will be working to better understand some of the properties of the logistic function.  Remember, the logistic function, $\sigma$, is defined as:
+
+\begin{align}
+\sigma(x) &= \frac{1}{1+e^{-x}} \enspace .
+\end{align}
+
+\bes
+\item Do some thought exercises on the logistic function.  Limiting cases, etc. TODO.
+\item Show that $\sigma(-x) = 1 - \sigma(x)$.
+\begin{boxedsolution}
+\begin{align}
+\sigma(-x) &= \frac{1}{1+e^{x}} \\
+&= \frac{e^{-x}}{e^{-x} + 1}~~\mbox{multiply by top and bottom by $e^{-x}$} \\
+ \sigma(-x)  - 1&= \ \frac{e^{-x}}{e^{-x} + 1} - \frac{1 + e^{-x}}{1 + e^{-x}} ~~\mbox{subtract $-1$ on both sides} \\
+ &= \frac{-1}{1+e^{-x}} \\
+ &= -\sigma(x) \\
+ \sigma(-x) &= 1 - \sigma(x)
+\end{align}
+\end{boxedsolution}
+\item Show that the derivative of the logistic function $\frac{d}{dx} \sigma(x) = \sigma(x) (1 - \sigma(x))$
+
+\begin{boxedsolution}
+Two solutions for the price of 1!
+
+Solution 1:
+\begin{align}
+\frac{d}{dx} \sigma(x)  &= -e^{-x} \sigma(x)^2 &\mbox{\href{https://www.math.hmc.edu/calculus/tutorials/quotient_rule/}{apply quotient rule}} \\
+&= \sigma(x) \left ( \frac{-e^{-x}}{1 + e^{-x}} \right) &\mbox{expand out one of the $\sigma(x)$'s}\\
+&= \sigma(x) \left ( \frac{-1}{e^{x} + 1} \right) & \mbox{multiply top and bottom by $e^{x}$}\\
+&=  \sigma(x) ( - \sigma(-x)) &\mbox{substitute for $\sigma(-x)$} \\
+&=  \sigma(x) ( \sigma(x) - 1) &\mbox{apply $\sigma(-x)=1-\sigma(x)$}
+\end{align}
+
+Solution 2:
+\begin{align}
+\frac{d}{dx} \sigma(x)  &=\frac{-e^{-x}}{(1+e^{-x} )^2} & \mbox{\href{https://www.math.hmc.edu/calculus/tutorials/quotient_rule/}{apply quotient rule}} \\
+&= \frac{-e^{-x}}{1+2e^{-x} + e^{-2x}} & \mbox{expand the bottom}\\
+&= \frac{-1}{e^{x}+2 + e^{-x}} & \mbox{multiply top and bottom by $e^{x}$}\\
+&= \frac{-1}{(1+e^{x})(1+e^{-x})} & \mbox{factor} \\
+&= -\sigma(x)\sigma(-x) & \mbox{decompose using definition of $\sigma(x)$}\\
+&= -\sigma(x)(1-\sigma(x)) &\mbox{apply $\sigma(-x)=1-\sigma(x)$} \\
+&= \sigma(x)(\sigma(x) - 1) & \mbox{distribute the $-1$}
+\end{align}
+
+\end{boxedsolution}
+
+\item The log odds of an event occurring is defined as 
+\begin{align}
+\ln \left ( \frac{p(\mbox{event occurs})}{p(\mbox{event does not occur})} \right) = \ln \left ( \frac{p(\mbox{event occurs})}{1 - p(\mbox{event does occur})} \right) \enspace .
+\end{align}
+
+If we assume that $p(\mbox{event occurs}) = \sigma(x)$, show that the log odds of the event occurring is equal to $x$.
+
+\begin{boxedsolution}
+\begin{align}
+\ln \left ( \frac{p(\mbox{event occurs})}{p(\mbox{event does not occur})} \right)  &= \ln \left ( \frac{\sigma(x)}{1 - \sigma(x)} \right ) \\
+&= \ln \left ( \frac{\sigma(x)}{\sigma(-x)} \right ) \\
+&= \ln \left ( \frac{1 + e^x}{1+e^{-x}} \right) \\
+&= \ln \left ( e^x \frac{1 + e^x}{e^{x}(1+e^{-x})} \right) \\
+&= x + \ln \left ( \frac{1+e^x}{e^{x} + 1} \right) \\
+&= x
+\end{align}
+\end{boxedsolution}
+
+\ees
+
+\end{exercise}
+
 \subsection{Log-loss}
+
+One of the  components of our supervised learning problem framing is the loss function $\ell$.  Recall that this function takes as input the true output value, $y$, and a predicted output value, $\hat{y}$, and returns the loss that the model incurs for any potential mismatch between the values.  When we were working with linear regression, we sought to minimize the sum of squared errors and consequently used the loss function $\ell(y, \hat{y}) = (y-\hat{y})^2$.
+
+
+
+\section{Top-down View of Logistic Regression}
+
+
+\section{Gradient Descent}
 
 \subsection{Chain Rule for Gradients}
 
-\section{Gradient Descent}
 
 \subsection{Visualization}
 
