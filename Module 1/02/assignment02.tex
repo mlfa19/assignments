@@ -117,8 +117,14 @@ Now that we've refreshed ourselves on the basic framing of linear regression, we
 \sum_{i=1}^n 2 x_i y_i  &= w^\star \sum_{i=1}^n 2 x_i^2 \\
 w^\star &=\frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x_i^2}
 \end{align}
-\end{boxedsolution}
 
+If we take the second derivative of $e(w)$ we get:
+\begin{align}
+\frac{d^2e}{dw^2} &= \sum_{i=1}^n 2x_i^2 \enspace .
+\end{align}
+
+We can see from the form of the second derivative that it is always non-negative, and therefore the critical point at $w^\star$ corresponds to a minimum.
+\end{boxedsolution}
 \ees
 
 
@@ -161,7 +167,7 @@ The derivation of linear regression for the single variable case made use of you
 This second approach requires that you learn some additional mathematical tricks, but once you learn these tricks, the derivation of linear regression is very straightforward.  The secondary benefit of this approach is that the new mathematical tricks you learn will apply to all sorts of other problems.
 
 \begin{exercise}[(15 minutes)]
-A quadratic form can be expressed in matrix-vector form as $\mlvec{x}^\top \mlmat{A} \mlvec{x}$.  Written this way, it looks very mysterious, but in this exercise you'll build some intuition about what the expression represents. Further, It turns out that expressions like this show up in all sorts of places in machine learning.   To get a better understanding of what a quadratic form \emph{is} (we'll see what it's good for later), watch this \href{https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/quadratic-approximations/v/expressing-a-quadratic-form-with-a-matrix}{Khan Academy video}.
+A quadratic form can be expressed in matrix-vector form as $\mlvec{x}^\top \mlmat{A} \mlvec{x}$.  Written this way, it looks very mysterious, but in this exercise you'll build some intuition about what the expression represents. Further, it turns out that expressions like this show up in all sorts of places in machine learning.   To get a better understanding of what a quadratic form \emph{is} (we'll see what it's good for later), watch this \href{https://www.khanacademy.org/math/multivariable-calculus/applications-of-multivariable-derivatives/quadratic-approximations/v/expressing-a-quadratic-form-with-a-matrix}{Khan Academy video}.
 
 After you've watched the Khan academy video, answer these questions.
 
@@ -225,10 +231,14 @@ $$\left ( \mlmat{A} \mlmat{x}  + \mlmat{y} \right )^\top \left (\mlmat{v} + \mlm
 \begin{boxedsolution}
 
 \begin{align}
-\mlvec{x}^\top \mlmat{A} \mlvec{x} &= \sum_{i=1}^d\sum_{j=1}^d   x_i  x_j  a_{i, j} \\
-\frac{\partial (\mlvec{x}^\top \mlmat{A} \mlvec{x})}{\partial x_i} &= \sum_{j=1}^d x_j a_{i,j} + \sum_{j=1}^d x_j a_{j, i} \\
-&= 2  \sum_{j=1}^d x_j a_{i,j} \\
-\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} &= 2 \mlmat{A}\mlvec{x}
+\mlvec{x}^\top \mlmat{A} \mlvec{x} =& \sum_{i=1}^d\sum_{j=1}^d   x_i  x_j  a_{i, j} &\nonumber \\
+\frac{\partial \mlvec{x}^\top \mlmat{A} \mlvec{x}}{\partial x_k} &= \sum_{i=1}^d\sum_{j=1}^d   a_{i,j} \left ( \frac{\partial{x_i }}{\partial x_k} x_j  +  x_i \frac{\partial{x_j}}{\partial x_k} \right)  & \mbox{apply the \href{https://en.wikipedia.org/wiki/Product_rule}{product rule}} \nonumber \\
+ &= \sum_{i=1}^d\sum_{j=1}^d   a_{i,j}  \frac{\partial{x_i }}{\partial x_k} x_j +   \sum_{i=1}^d\sum_{j=1}^d  a_{i,j}  x_i \frac{\partial{x_j}}{\partial x_k} &\mbox{split into two summations} \nonumber \\
+  &= \sum_{j=1}^d   a_{k,j}  x_j +   \sum_{i=1}^d a_{i,k}  x_i  &\mbox{take partials, many terms are 0} \nonumber \\
+&=  \sum_{j=1}^d   a_{k,j}  x_j +   \sum_{i=1}^d a_{k,i}  x_i  & \mbox{$\mlmat{A}$ is symmetric, so $a_{i,j} = a_{j,i}$} \nonumber \\
+&= 2  \sum_{j =1}^d a_{k,j}  x_j & \mbox{the two summations are the same} \nonumber \\
+&= 2 \mathbf{row}_k^\top \mathbf{x} & \mbox{this is the dot product between $\mlvec{x}$ and the $k$th row of $\mlmat{A}$} \nonumber \\
+\nabla \mlvec{x}^\top \mlmat{A} \mlvec{x} &= 2 \mlmat{A}\mlvec{x} & \mbox{stacking up the partials gives this form} \nonumber
 \end{align}
 
 \end{boxedsolution}
