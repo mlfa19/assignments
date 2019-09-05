@@ -48,7 +48,7 @@ In this assignment we are going to focus on linear regression from the bottom up
 \vspace{1em}
 
 \begin{recall}[Supervised Learning Problem Setup]
-We are given a training set of datapoints, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  Our goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
+We are given a training set of data instances, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$ where each $\mlvec{x_i}$ represents an element of an input space (e.g., a d-dimensional feature vector) and each $y_i$ represents an element of an output space (e.g., a scalar target value).  Our goal is to determine a function $\hat{f}$ that maps from the input space to the output space.
 
 We assume there is a loss function, $\ell$, that determines the amount of loss that a particular prediction $\hat{y}_i$ incurs due to a mismatch with the actual output $y_i$.  The best possible model, $\hat{f}^\star$, is the one that minimizes these losses over the training set.  This notion can be expressed with the following equation.
 \begin{align}
@@ -89,7 +89,7 @@ Now that we've refreshed ourselves on the basic framing of linear regression, we
 
 \subsection{Linear regression with one variable}
 
-\begin{exercise}[(10 minutes)]
+\begin{exercise}[(20 minutes)]
 \bes
 \item Given a dataset $(x_1, y_1), (x_2, y_2), \ldots, (x_n, y_n)$ (where each $x_i$ and each $y_i$ is a scalar) and a potential value of $w$ (note that $w$ is a scalar in the case where $d=1$), write an expression for the sum of squared errors between the model predictions, $\hat{f}$, and the targets, $y_i$.  \textbf{Note:} In contrast to the line of best fit we saw in the last assignment, here we are not computing a y-intercept (effectively forcing the y-intercept to be $0$).  This choice may result in a worse fit, but it is easier to work out and helps build mathematical intuition.
 
