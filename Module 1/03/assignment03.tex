@@ -101,11 +101,13 @@ We haven't formally defined probability in this class, and we won't do so here (
 \item If the probability an event occurs is $p$, then the probability that the event doesn't occur is $1 - p$.
 \ei
 
-\begin{exercise}
-TODO: Quick check of understanding
-\end{exercise}
+\begin{understandingcheck}
+\textbf{Note: these sorts of boxes are here to help you test your understanding of a concept you have just read.  We are trying to use these to breakup long blocks of reading.  You do not need to submit these.}
 
-\subsection{Classification and the Log-loss}
+TODO: Quick check of understanding
+\end{understandingcheck}
+
+\subsection{Log loss}
 Thinking back to the binary classification problem, if we think in terms of probability, then our model output a probability $p$ when supplied with an input $\mlvec{x}$ (i.e., $\hat{f}(\mlvec{x}) = p$).  We might then ask ourselves the question of what would be a reasonable loss function to quantify how good a prediction $p$ is given the actual output $y$ (recall that for the binary classification the output is either $0$ or $1$).  To make to this more intuitive, consider the task of quantifying the quality of a weatherperson's predictions.  Further, let's assume that on any given day the weather is either sunny (call this output $1$) or rainy (call this output $0$).  Suppose that each night the weather person provides a probability that indicates the chance of it being sunny the next day.  In order to quantify the loss of each prediction we need to define a loss function.  Here are two potential choices.
 \be
 \item \textbf{0-1 loss:} we will extract from the weatherperson's prediction the most likely outcome (e.g., if $p = 0.75$, that would be sunny, if $p = 0.4$, that would be rainy).  If this most likely outcome matches the actual outcome we give a loss of 0, otherwise we give a loss of 1 (this is similar to Equation~\ref{eq:minimizeerror}).
@@ -126,7 +128,7 @@ actual weather & forecast 1 & 0-1 loss & squared loss & forecast 2 1 & 0-1 loss 
 \mbox{rainy (y = 0)} & $p = 0.6$  & 1 & $(0-0.6)^2 = 0.36$ & $p = 0.999$ & 1 & $(0 - 0.999)^2 = 0.998$ \\ 
 \mbox{sunny (y = 1)} & $p = 0.8$ & 0 & $(1-0.8)^2 = 0.16$ & $p = 0.99$ & 0 & $(1 - 0.99)^2 = 0.0001$\\
 \hline
-\textbf{average} & & $0.66667$ & $0.34667$ & & 0.33333 & 0.336
+\textbf{average} & & $0.667$ & $0.347$ & & 0.333 & 0.336
 \end{tabular}
 \end{table*}
 
@@ -144,6 +146,24 @@ One entry in the table above is particularly interesting.  In the third row, the
 TODO Here are some questions to test your understanding of the log loss reading.
 \end{exercise}
 \end{externalresources}
+
+\section{Logistic Regression (top-down)}
+Now that we have built up some understanding of how probabilities can be used as a way of quantifying confidence in predictions, you are ready to learn about the logistic regression algorithm.
+
+As always, we assume we are given a training set of inputs and outputs.  As in linear regression we will assume that each of our inputs is a $d$-dimensional vector $\mathbf{x_i}$ and since we are dealing with binary classification, the outputs, $y_i$, will each be binary numbers (indicating whether the corresponding input is of class 0 or 1).  Our hypothesis functions, $\hat{f}$, output the probability that a given input has a corresponding output of 1.  Each $\hat{f}$ has the following form (note: this equation will look daunting, so we have some tips for interpreting it below).
+
+\begin{align}
+\hat{f}(\mathbf{x}) &= \mbox{probability that $y$ is 1 for $\mlvec{x}$} \nonumber \\
+&=\frac{1}{1 + e^{-\mlvec{w}^\top \mathbf{x}}}
+\end{align}
+
+Here are a few things to notice about this equation:
+\be
+\item The weight vector that we saw in linear regression, $\mlvec{w}$, is making a comeback!  In fact, we have a dot product between $\mlvec{x}$ and $\mlvec{w}$ (which creates a weighted sum of the $x_i$'s) just as we did in linear regression.
+\item Despite the similarities with linear regression, we now have this super weird term involving $\frac{1}{1+e^{-\mbox{stuff}}}$.  It turns out that this function is known as the logistic function, $\sigma$.  The graph of $\sigma(u) = \frac{1}{1+e^{-u}}$ is shown in Figure~TODO.  The function acts to map any real number to a number between 0 and 1.  Thus it is a perfect ``squashing'' function to take numbers that might not necessarily be valid probabilities (e.g., $\mlvec{w}^\top \mlvec{x}$) and squash them to the range of valid probabilities $[0,1]$.
+\ee
+
+
 
 \subsection{Logistic function}
 
