@@ -108,7 +108,7 @@ Now that we've refreshed ourselves on the basic framing of linear regression, we
 \end{align}
 \end{boxedsolution}
 
-\item Set the derivative to 0, and solve for $w^\star$.  $w^\star$ corresponds to a critical point of your sum of squared errors function.  Is this critical point a minima, maxima, or neither? (here is a refresher on \href{http://homes.sice.indiana.edu/donbyrd/Teach/M119WebPage/Finding+ClassifyingCriticalPoints.pdf}{classifying critical points}).
+\item Set the derivative to 0, and solve for $w^\star$.  $w^\star$ corresponds to a critical point of your sum of squared errors function.  Is this critical point a minimum, maximum, or neither? (here is a refresher on \href{http://homes.sice.indiana.edu/donbyrd/Teach/M119WebPage/Finding+ClassifyingCriticalPoints.pdf}{classifying critical points}).
  
 \begin{boxedsolution}
 \begin{align}
@@ -217,8 +217,8 @@ $$\left ( \mlmat{A} \mlmat{x}  + \mlmat{y} \right )^\top \left (\mlmat{v} + \mlm
 \begin{boxedsolution}
 
 \begin{align}
-\mlvec{c}^\top \mlvec{x} &= \sum_{i=1}^d c_i x_i \\
-\frac{\partial  \sum_{i=1}^d c_i x_i }{\partial x_i} &= c_i  \\
+\mlvec{c}^\top \mlvec{x} &= \sum_{j=1}^d c_j x_j \\
+\frac{\partial}{\partial x_i}  \sum_{j=1}^d c_j x_j  &= c_i  \\
 \nabla \mlvec{c}^\top \mlvec{x} &= \mlvec{c}
 \end{align}
 
