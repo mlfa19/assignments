@@ -180,6 +180,12 @@
 \end{tcolorbox}
 }
 
+\NewEnviron{understandingcheck}{
+\begin{tcolorbox}[breakable=true,parbox=false,enhanced,
+  colback=white,colframe=purple!20,title=\textcolor{black}{\faCheck~Understanding Check},fonttitle=\Large\bfseries]
+  \BODY
+\end{tcolorbox}}
+
 \NewEnviron{notice}{
 \begin{tcolorbox}[breakable=true,parbox=false,enhanced,
   colback=white,colframe=yellow!100,title=\textcolor{black}{\faWarning~Notice},fonttitle=\Large\bfseries]

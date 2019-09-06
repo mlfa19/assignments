@@ -48,46 +48,102 @@ We assume there is a loss function, $\ell$, that determines the amount of loss t
 
 \section{The Classification Problem}
 
-So far in this class we've looked at supervised learning problems where the responses $y_i$ are continuous valued and the loss function was quadratic ($\ell(y, \hat{y}) = (y-\hat{y})^2$).  This setting is called the regression setting.  There are many times, however, where it is unnatural to frame a problem as a regression.  A classification problem is one where the $y_i$'s take on a discrete set of values.  For instance, you might imagine taking an image of a person and predicting their identity.  The identity could be thought of as being from some discrete set.  A special case of the classification problem is binary classification when $y_i$ is either 0 or 1 (e.g., a Paul versus Sam detector).
+So far in this class we've looked at supervised learning problems where the responses $y_i$ are continuous-valued and the loss function is quadratic ($\ell(y, \hat{y}) = (y-\hat{y})^2$).  This is an example of a regression problem.  There are many times, however, where it is unnatural to frame a problem as a regression.  For instance, it may be the case that $y_i$ does not come from a continuous range but can only take on a few different values.  This sort of problem is known as a classification problem.  For instance, you might want to have a system that can take in an image of a person and predict their identity.  The identity could be thought of as the output, $y_i$, and it could only take on one of several values (each value might represent a particular person the system was trained to recognize).  In this assignment you'll learn about a special case of the classification problem known as binary classification (where $y_i$ is either 0 or 1, e.g., a Paul versus Sam detector).
 
-In this assignment will formalize the binary classification problem and see a very useful algorithm for solving it called \emph{logistic regression}.  You will also see that the logistic regression algorithm is a very natural extension of linear regression.  Our plan for getting there is going to be pretty similar to what we did for linear regression:
+In this assignment will formalize the binary classification problem and see a very useful algorithm for solving it called \emph{logistic regression}.  You will also see that the logistic regression algorithm is a very natural extension of linear regression.  Our plan for getting there is going to be pretty similar to what we did for linear regression.
 \bi
 \item Build some mathematical foundations
 \item Introduce logistic regression from a top-down perspective
 \item Learn about logistic regression from a bottom-up perspective
 \ei
 
-\section{Minimizing the misclassification rate}
-To begin our framing of the binary classification problem, let's look at one possible formalization where we are given a training set, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$, where each $\mlvec{x_i}$ is an element of the input space (e.g., a vector) and each $y_i$ is a binary number (either 1 or 0).  Further, we define the loss function $\ell(y, \hat{y}) = \mathbb{I}[y \neq \hat{y}]$ (the funny looking symbol $\mathbb{I}$ is the indicator function that takes on value 1 when the condition inside is true and 0 otherwise.  Given these choices, the supervised learning problem becomes.
+\section{Formalizing the Classification Problem}
+Let's start by making the binary classification problem more formal.  Suppose, we are given a training set, $(\mlvec{x_1}, y_1), (\mlvec{x}_2, y_2), \ldots, (\mlvec{x}_n, y_n)$, where each $\mlvec{x_i}$ is an element of the input space (e.g., a vector) and each $y_i$ is a binary number (either 1 or 0).  In this setting we will attempt to use the training data to determine a function, $\hat{f}^\star$, that predicts the corresponding output, $y$, for any possible input, $\mathbf{x}$.  To make this concrete with an example,  $\mathbf{x}$ could be an image and $y$ could be a binary number that takes on value $1$ when the picture contains a puppy.
 
+
+\begin{exercise}[(10 minutes)]
+\bes
+\item Given this setup of the binary classification problem, the only thing left to specify is the loss function, $\ell$.  Recall that $\ell$ takes as input the actual output $y$, and the predicted output $\hat{y}$.  What function could you use for $\ell$ that would result in the learning algorithm choosing a good model.  If the choice of $\ell$ depends on the application, how so?
+
+\begin{boxedsolution}
+An easy choice is to output a $1$ if the values don't match and a $0$ otherwise (essentially counting the number of mistakes the model makes).  Alternatively, you could have different penalties for a false positive (the model says $\hat{y} = 1$, but the actual value is $y = 0$) or false negatives (the model says $\hat{y} = 0$, but the actual value is $y = 1$). 
+\end{boxedsolution}
+
+\item \label{ex:minmistakes}
+One natural choice, that you may have already come up with in the previous question, is to define our loss function as $\ell(y, \hat{y}) = \mathbb{I}[y \neq \hat{y}]$ (the funny looking $\mathbb{I}$ is the indicator function that takes on value 1 when the condition inside is true and 0 otherwise.  Given these choices, the supervised learning problem becomes:
 \begin{align}
-\hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \mathbb{I} \left [  \hat{f}(\mlvec{x_i}) \neq, y_i\right ] \label{eq:minimizeerror}
+\hat{f}^\star &= \argmin_{\hat{f}} \sum_{i=1}^n \mathbb{I} \left [  \hat{f}(\mlvec{x_i}) \neq, y_i\right ] \enspace . \label{eq:minimizeerror}
 \end{align}
 
-\begin{exercise}
 Convert Equation~\ref{eq:minimizeerror} to English to make sure you understand it.
 \begin{boxedsolution}
-The equation says that $\hat{f}^\star$ is the function $\hat{f}$ that minimizes the number of mistakes that the function makes on the training set.
+The equation says that $\hat{f}^\star$ is the function $\hat{f}^\star$ that minimizes the number of mistakes that the function makes on the training set.
 \end{boxedsolution}
+
+\ees
+
 \end{exercise}
 
-Intuitively, such a framing makes perfect sense.  We should choose the model that makes the fewest mistakes on the training set.  It turns out, however, that it is not a particularly easy function to work with mathematically.  For one thing it is a bit all or nothing.  Either we are completely right or completely wrong.  It also turns out to be difficult to minimize for many common classes of functions, $\hat{f}$.  It turns out that we can create a much more natural loss function by thinking about the problem in terms of probabilities.
+The loss function given in Exercise~2\ref{ex:minmistakes} is a totally reasonable choice since it will result in choosing the model that makes the fewest mistakes on the training.  It turns out, however, that it has the following drawbacks.
+\bi
+\item It is all or nothing.  Either we are completely right or completely wrong.
+\item It is not a particularly easy function to work with mathematically.  In fact, for many common classes of models, it will be difficult for the learning algorithm to find the best possible model\sidenote{One of the key challenges that must be in met in machine learning, and modeling in general, is balancing computational considerations (e.g., how long does it take to find the best possible model) with the realism of the model (e.g., how directly does the task you pose to the learning algorithm match the problem you are solving.  Sometimes these things are in conflict and you must make tradeoffs.}.
+\ei
+It turns out that we can create a much more natural loss function by thinking about predictions in terms of probabilities.
 
 \section{Probability and the log loss}
+Imagine that instead of our model, $\hat{f}$, spitting out either 0 or 1, it outputs a confidence that the input $x_i$ has an output, $y_i$, that was 1.  In other words, rather than giving us its best guess, the classifier would indicate to us its degree of certainty regarding its prediction.  This notion of ``certainty'' can be formalized using the concept of a probability.  That is, the model can output a probability that the output for a particular input is 1.
 
-Imagine that instead of our model, $\hat{f}$, spitting out either 0 or 1, it outputted a probability that the input $x_i$ had an output of 1.  In this way the classifier could indicate to us its degree of certainty regarding its prediction.  We haven't formally defined probability in this class, and we won't do so here.  For this case, we just need to keep a few things in mind about probabilities.
+We haven't formally defined probability in this class, and we won't do so here (we'll be working with probabilities extensively in module 2 and we don't need a formal treatment to derive the classification algorithms we will study in this module).  Here are a few things to keep a few things in mind about probabilities.
 \bi
-\item Probabilities give the chance that some event occurs (probability of 0 means that something will definitely not occur and probability of 1 means it definitely will occur.
-\item A probability, $q$, must be between 0 and 1 ($0 \leq q \leq 1$).
-\item If the probability that event occurs is $q$, then the probability that it doesn't occur is $1 - q$.
+\item A probability, $p$, specifies the chance that some event occurs ($p = 0$ means that the even will definitely not occur and $p=1$ means that it will definitely occur.
+\item A probability, $p$, must be between 0 and 1 ($0 \leq p \leq 1$).
+\item If the probability an event occurs is $p$, then the probability that the event doesn't occur is $1 - p$.
 \ei
 
+\begin{exercise}
+TODO: Quick check of understanding
+\end{exercise}
 
-\subsection{Log-loss}
+\subsection{Classification and the Log-loss}
+Thinking back to the binary classification problem, if we think in terms of probability, then our model output a probability $p$ when supplied with an input $\mlvec{x}$ (i.e., $\hat{f}(\mlvec{x}) = p$).  We might then ask ourselves the question of what would be a reasonable loss function to quantify how good a prediction $p$ is given the actual output $y$ (recall that for the binary classification the output is either $0$ or $1$).  To make to this more intuitive, consider the task of quantifying the quality of a weatherperson's predictions.  Further, let's assume that on any given day the weather is either sunny (call this output $1$) or rainy (call this output $0$).  Suppose that each night the weather person provides a probability that indicates the chance of it being sunny the next day.  In order to quantify the loss of each prediction we need to define a loss function.  Here are two potential choices.
+\be
+\item \textbf{0-1 loss:} we will extract from the weatherperson's prediction the most likely outcome (e.g., if $p = 0.75$, that would be sunny, if $p = 0.4$, that would be rainy).  If this most likely outcome matches the actual outcome we give a loss of 0, otherwise we give a loss of 1 (this is similar to Equation~\ref{eq:minimizeerror}).
+\item \textbf{squared loss:} one downside of \emph{0-1 loss} is that it doesn't take into account the certainty expressed by the weatherperson.  The weatherperson gets the same loss if it is rainy and they predicted $p = 0.51$ or $p = 1$.  For squared loss we can compute the difference between the outcome and $p$ and square it to arrive at the loss.  So if we predict $p = 0.51$ and it is sunny we get a loss of $(1 - 0.51)^2$.  If it was rainy in this same example, we get a loss of $(0 - 0.51)^2$.
+\ee
 
-One of the  components of our supervised learning problem framing is the loss function $\ell$.  Recall that this function takes as input the true output value, $y$, and a predicted output value, $\hat{y}$, and returns the loss that the model incurs for any potential mismatch between the values.  When we were working with linear regression, we sought to minimize the sum of squared errors and consequently used the loss function $\ell(y, \hat{y}) = (y-\hat{y})^2$.
+As an example, here are hypothetical predictions from two forecasters, the actual weather, and the resulting loss with either \emph{0-1} loss or \emph{squared loss}.
 
 
+\begin{table*}
+\centering
+\small
+\begin{tabular}{c | c | c | c | c | c | c}
+\hline
+actual weather & forecast 1 & 0-1 loss & squared loss & forecast 2 1 & 0-1 loss & squared loss \\
+\hline
+\mbox{sunny (y = 1)} & $p = 0.3$ & 1 & $(1-0.2)^2 = 0.64$ & $p = 0.9$ & 0 & $(1 - 0.9)^2 = 0.01$\\
+\mbox{rainy (y = 0)} & $p = 0.6$  & 1 & $(0-0.6)^2 = 0.36$ & $p = 0.999$ & 1 & $(0 - 0.999)^2 = 0.998$ \\ 
+\mbox{sunny (y = 1)} & $p = 0.8$ & 0 & $(1-0.8)^2 = 0.16$ & $p = 0.99$ & 0 & $(1 - 0.99)^2 = 0.0001$\\
+\hline
+\textbf{average} & & $0.66667$ & $0.34667$ & & 0.33333 & 0.336
+\end{tabular}
+\end{table*}
+
+\normalsize % I don't think we actually need this.
+
+\begin{understandingcheck}
+According to the table above, which forecaster is better with regards to \emph{0-1 loss}?  Which forecaster is better with regards to \emph{squared loss}?
+\end{understandingcheck}
+
+One entry in the table above is particularly interesting.  In the third row, the second forecaster assigned a probability of $0.999$ to the fact that it was going to be sunny.  It turned out to rain (boo!!!).  That is, the forecaster was almost certain it would be sunny and it wasn't.  The 0-1 loss of course doesn't capture this at all.  The squared loss seems to assign a fairly large loss.  One might argue, though, that this loss does not fully capture how bad the prediction was.  This last observation motivates a third loss function that we can use to evaluate probabilistic predictions: the log loss.
+
+\begin{externalresources}
+\url{wiki.fast.ai} has some really nice resources on a number of topics.  They have a nice concise writeup that explains the concept of log loss.  We ask that you read about \href{http://nb.mit.edu/f/55213}{log loss on NB} so you can take advantage of some notes from us to help guide your reading and add your own notes as well.  If you want the original page (e.g., to click on the links), you can access the \href{http://wiki.fast.ai/index.php/Log_Loss}{log loss page on wiki.fast.ai}.
+\begin{exercise}
+TODO Here are some questions to test your understanding of the log loss reading.
+\end{exercise}
+\end{externalresources}
 
 \subsection{Logistic function}
 
@@ -140,7 +196,7 @@ Solution 2:
 
 \end{boxedsolution}
 
-\item The log odds of an event occurring is defined as 
+\item \textbf{considering making this optional or just deleting} The log odds of an event occurring is defined as 
 \begin{align}
 \ln \left ( \frac{p(\mbox{event occurs})}{p(\mbox{event does not occur})} \right) = \ln \left ( \frac{p(\mbox{event occurs})}{1 - p(\mbox{event does occur})} \right) \enspace .
 \end{align}
@@ -170,10 +226,9 @@ If we assume that $p(\mbox{event occurs}) = \sigma(x)$, show that the log odds o
 
 \subsection{Chain Rule for Gradients}
 
-
 \subsection{Visualization}
 
-\section{Algorithm Derivation}
+\section{Likely punting this to next assignment: Algorithm Derivation}
 
 Todo: this is easier with the identities of the derivative of a logistic function.
 
