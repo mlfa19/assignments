@@ -160,14 +160,77 @@ As always, we assume we are given a training set of inputs and outputs.  As in l
 Here are a few things to notice about this equation:
 \be
 \item The weight vector that we saw in linear regression, $\mlvec{w}$, is making a comeback!  In fact, we have a dot product between $\mlvec{x}$ and $\mlvec{w}$ (which creates a weighted sum of the $x_i$'s) just as we did in linear regression.
-\item Despite the similarities with linear regression, we now have this super weird term involving $\frac{1}{1+e^{-\mbox{stuff}}}$.  It turns out that this function is known as the logistic function, $\sigma$.  The graph of $\sigma(u) = \frac{1}{1+e^{-u}}$ is shown in Figure~TODO.  The function acts to map any real number to a number between 0 and 1.  Thus it is a perfect ``squashing'' function to take numbers that might not necessarily be valid probabilities (e.g., $\mlvec{w}^\top \mlvec{x}$) and squash them to the range of valid probabilities $[0,1]$.
+\item Despite the similarities with linear regression, we now have this super weird term involving $\frac{1}{1+e^{-\mbox{stuff}}}$.  It turns out that this function is known as the logistic function, $\sigma$.  The graph of $\sigma(u) = \frac{1}{1+e^{-u}}$ is shown in Figure~\ref{fig:sigmoid}.  The function acts to map any real number to a number between 0 and 1.  Thus it is a perfect ``squashing'' function to take numbers that might not necessarily be valid probabilities (e.g., $\mlvec{w}^\top \mlvec{x}$) and squash them to the range of valid probabilities $[0,1]$.
+
+\begin{marginfigure}
+\includegraphics[width=\linewidth]{figures/Logistic-curve}
+\caption{fasf}\label{fig:sigmoid}
+\end{marginfigure}
 \ee
 
+As motivating example, consider what would happen if we were faced with learning the following task.
 
+\href{https://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+}{The dataset} can be found at the UCI Machine Learning repository.  was presented in the paper \href{https://www.sciencedirect.com/science/article/pii/S0378778815304357}{Accurate occupancy detection of an office room from light, temperature, humidity and CO2 measurements using statistical learning models}
 
-\subsection{Logistic function}
+\begin{table}
+\begin{tabular}{c | c}
+2 & 2
+\end{tabular}
+\end{table}
 
-The logistic function turns out to be very useful for modeling the probability that some event occurs.  TODO.
+TODO: state the objective function.
+
+\subsection{Example}
+Todo: link to notebook
+
+\section{Gradient Descent}
+
+TODO: Link out to a resource here.
+
+\section{Chain Rule for Gradients}
+It turns out that when we are fitting the parameters of our logistic regression model we are going to use the technique of gradient descent in order to compute the optimal weights.  Looking back at Equation~REFTOOBJECTIVE, we see that in order to compute a gradient we will have to compute the gradient of $\mathbf{x}^\top \mlvec{w}$ with respect to $\mlvec{w}$ (which we know how to do from the last assignment).  Additionally, we will have to understand how the application of the sigmoid function and the log function change this gradient.  In this section we'll learn some rules for easily computing gradients in such situations.
+
+In the past assignment you dusted off some old tricks from single variable calculus.  You may have applied the chain rule for derivatives.  The chain rule tells us how to compute the derivative of the composition of two single variable functions $f$ and $g$.  
+
+\begin{align}
+h(x)&= g(f(x))&\mbox{h(x) is the composition of $f$ with $g$} \nonumber \\
+h'(x) &= g'(f(x))f'(x)&\mbox{this is the chain rule!}
+\end{align}
+
+Suppose that instead of the input being a scalar $x$, the input is now a vector, $\mlvec{w}$.  In this case $h$ takes a vector input and returns a scalar, $f$ takes a vector input and returns a scalar, and $g$ takes a scalar input and returns a scalar.
+
+\begin{align}
+h(\mlvec{w}) &= g(f(\mlvec{w}))&\mbox{h($\mlvec{w}$) is the composition of $f$ with $g$} \nonumber \\
+\nabla_{\mlvec{w}} h(\mlvec{w}) &= g'(f(\mlvec{w})) \nabla_w f(\mlvec{w}) & \mbox{this is the multivariable chain rule}
+\end{align}
+
+\begin{exercise}
+\bes
+\item Compute the gradient of $h(\mlvec{v}) = (\mlvec{c}^\top \mlvec{v})^2$.
+\begin{boxedsolution}
+We can see that $h(\mlvec{v}) = g(f(\mlvec{v}))$ with $g(x) = x^2$ and $f(\mlvec{v}) = \mlvec{c}^\top \mlvec{v}$ The gradient can now easily be found by applying the chain rule.
+
+\begin{align}
+\nabla h(\mlvec{v}) &= 2(\mlvec{c}^\top \mlvec{v}) \mlvec{c}
+\end{align}
+\end{boxedsolution}
+\item This should be punted until the known the derivative of sigmoid function: Compute the gradient of $h(\mlvec{w}) = \frac{1}{1+e^{-\mlvec{w}^\top \mlvec{x_i}}}$ (hint: this is $\sigma(\mlvec{w}^\top \mlvec{x_i})$).
+\begin{boxedsolution}
+We can see that $h(\mlvec{w}) = g(f(\mlvec{w}))$ with $g(x) = \sigma(x)$ and $f(\mlvec{w}) = \mlvec{w}^\top \mlvec{x_i}$ The gradient can now easily be found by applying the chain rule.
+
+\begin{align}
+\nabla h(\mlvec{v}) &= \sigma(\mlvec{w}^\top \mlvec{x_i})(1 - \sigma(\mlvec{w}^\top \mlvec{x_i}) ) \mlvec{x_i}
+\end{align}
+
+\end{boxedsolution}
+\ees
+\end{exercise}
+
+\section{Deriving the Learning Rule for Logistic Regression}
+
+\subsection{Useful Properties of the Sigmoid Function}
+
+The sigmoid function\sidenote{the sigmoid function is a special case of the logistic function.  It is common to see it referred to in be either name} known as a logistic function) turns out to be very useful for modeling the probability that some event occurs.  TODO.
 
 \begin{exercise}
 In this exercise you will be working to better understand some of the properties of the logistic function.  Remember, the logistic function, $\sigma$, is defined as:
@@ -215,40 +278,29 @@ Solution 2:
 \end{align}
 
 \end{boxedsolution}
-
-\item \textbf{considering making this optional or just deleting} The log odds of an event occurring is defined as 
-\begin{align}
-\ln \left ( \frac{p(\mbox{event occurs})}{p(\mbox{event does not occur})} \right) = \ln \left ( \frac{p(\mbox{event occurs})}{1 - p(\mbox{event does occur})} \right) \enspace .
-\end{align}
-
-If we assume that $p(\mbox{event occurs}) = \sigma(x)$, show that the log odds of the event occurring is equal to $x$.
-
-\begin{boxedsolution}
-\begin{align}
-\ln \left ( \frac{p(\mbox{event occurs})}{p(\mbox{event does not occur})} \right)  &= \ln \left ( \frac{\sigma(x)}{1 - \sigma(x)} \right ) \\
-&= \ln \left ( \frac{\sigma(x)}{\sigma(-x)} \right ) \\
-&= \ln \left ( \frac{1 + e^x}{1+e^{-x}} \right) \\
-&= \ln \left ( e^x \frac{1 + e^x}{e^{x}(1+e^{-x})} \right) \\
-&= x + \ln \left ( \frac{1+e^x}{e^{x} + 1} \right) \\
-&= x
-\end{align}
-\end{boxedsolution}
+%
+%\item \textbf{considering making this optional or just deleting} The log odds of an event occurring is defined as 
+%\begin{align}
+%\ln \left ( \frac{p(\mbox{event occurs})}{p(\mbox{event does not occur})} \right) = \ln \left ( \frac{p(\mbox{event occurs})}{1 - p(\mbox{event does occur})} \right) \enspace .
+%\end{align}
+%
+%If we assume that $p(\mbox{event occurs}) = \sigma(x)$, show that the log odds of the event occurring is equal to $x$.
+%
+%\begin{boxedsolution}
+%\begin{align}
+%\ln \left ( \frac{p(\mbox{event occurs})}{p(\mbox{event does not occur})} \right)  &= \ln \left ( \frac{\sigma(x)}{1 - \sigma(x)} \right ) \\
+%&= \ln \left ( \frac{\sigma(x)}{\sigma(-x)} \right ) \\
+%&= \ln \left ( \frac{1 + e^x}{1+e^{-x}} \right) \\
+%&= \ln \left ( e^x \frac{1 + e^x}{e^{x}(1+e^{-x})} \right) \\
+%&= x + \ln \left ( \frac{1+e^x}{e^{x} + 1} \right) \\
+%&= x
+%\end{align}
+%\end{boxedsolution}
 
 \ees
 
 \end{exercise}
 
-
-\section{Top-down View of Logistic Regression}
-
-
-\section{Gradient Descent}
-
-\subsection{Chain Rule for Gradients}
-
-\subsection{Visualization}
-
-\section{Likely punting this to next assignment: Algorithm Derivation}
 
 Todo: this is easier with the identities of the derivative of a logistic function.
 
@@ -259,5 +311,8 @@ e(\mathbf{w}) &= \sum_{i=1}^n y_i \log \frac{1}{1 + e^{-\mathbf{w}^\top \mathbf{
 \nabla e(\mathbf{w}) &= \sum_{i=1}^n \frac{y_i \mathbf{x_i}}{1 + e^{-\mathbf{w}^\top \mathbf{x_i}}} - \frac{\left ( 1 - y_i \right) \mathbf{x_i}}{1 + e^{\mathbf{w}^\top \mathbf{x_i}} } \\
 &= \sum_{i=1}^n \mathbf{x_i} \left ( \frac{y_i }{1 + e^{-\mathbf{w}^\top \mathbf{x_i}}} - \frac{\left ( 1 - y_i \right) }{1 + e^{\mathbf{w}^\top \mathbf{x_i}} } \right)
 \end{align}
+
+\section{Implementation?}
+Todo
 
 \end{document}
