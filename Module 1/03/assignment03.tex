@@ -1,12 +1,12 @@
 \documentclass[assignment03_Solutions]{subfiles}
 
-\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
 
-%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
 
-{\rhead{Assignment 1 \linebreak \textit{Version: \today}}}
+{\rhead{Assignment 3 \linebreak \textit{Version: \today}}}
 
 \title{Assignment 3: Classification, Logistic Regression, and Gradient Descent}
 \author{Machine Learning}
@@ -140,7 +140,7 @@ According to the table above, which forecaster is better with regards to \emph{0
 
 One entry in the table above is particularly interesting.  In the third row, the second forecaster assigned a probability of $0.999$ to the fact that it was going to be sunny.  It turned out to rain (boo!!!).  That is, the forecaster was almost certain it would be sunny and it wasn't.  The 0-1 loss of course doesn't capture this at all.  The squared loss seems to assign a fairly large loss.  One might argue, though, that this loss does not fully capture how bad the prediction was.  This last observation motivates a third loss function that we can use to evaluate probabilistic predictions: the log loss.
 
-\begin{externalresources}
+\begin{externalresources}[(30 minutes)]
 \url{wiki.fast.ai} has some really nice resources on a number of topics.  They have a nice concise writeup that explains the concept of log loss.  We ask that you read about \href{http://nb.mit.edu/f/55213}{log loss on NB} so you can take advantage of some notes from us to help guide your reading and add your own notes as well.  If you want the original page (e.g., to click on the links), you can access the \href{http://wiki.fast.ai/index.php/Log_Loss}{log loss page on wiki.fast.ai}.
 \begin{exercise}
 TODO Here are some questions to test your understanding of the log loss reading.
@@ -150,97 +150,70 @@ TODO Here are some questions to test your understanding of the log loss reading.
 \section{Logistic Regression (top-down)}
 Now that we have built up some understanding of how probabilities can be used as a way of quantifying confidence in predictions, you are ready to learn about the logistic regression algorithm.
 
-As always, we assume we are given a training set of inputs and outputs.  As in linear regression we will assume that each of our inputs is a $d$-dimensional vector $\mathbf{x_i}$ and since we are dealing with binary classification, the outputs, $y_i$, will each be binary numbers (indicating whether the corresponding input is of class 0 or 1).  Our hypothesis functions, $\hat{f}$, output the probability that a given input has a corresponding output of 1.  Each $\hat{f}$ has the following form (note: this equation will look daunting, so we have some tips for interpreting it below).
+\begin{marginfigure}
+\includegraphics[width=2in]{figures/linearandlogistic}
+\caption{Graphical representation of both linear and logistic regression.  The key difference is the application of the squashing function shown in yellow.  \href{https://towardsdatascience.com/building-a-logistic-regression-in-python-301d27367c24}{Original source}.}\label{fig:graphicaldataflow}
+\end{marginfigure}
+As always, we assume we are given a training set of inputs and outputs.  As in linear regression we will assume that each of our inputs is a $d$-dimensional vector $\mathbf{x_i}$ and since we are dealing with binary classification, the outputs, $y_i$, will each be binary numbers (indicating whether the corresponding input is of class 0 or 1).  Our hypothesis functions, $\hat{f}$, output the probability that a given input has a corresponding output of 1.  What's cool is that we can borrow a lot of what we did in the linear regression case.  In fact, all we're going to do in order to make sure that that output of $\hat{f}$ is between 0 and 1 is pass $\mlvec{w}^\top \mlvec{x}$ through a function that ``squashes'' its input so that the output is between 0 and 1.  This idea is shown graphically in Figure~\ref{fig:graphicaldataflow}
+
+To make the intuition we've described concrete, we define each $\hat{f}$ to have the following form (note: this equation looks daunting. We have some tips for interpreting it below).
 
 \begin{align}
 \hat{f}(\mathbf{x}) &= \mbox{probability that $y$ is 1 for $\mlvec{x}$} \nonumber \\
-&=\frac{1}{1 + e^{-\mlvec{w}^\top \mathbf{x}}}
+&=\frac{1}{1 + e^{-\mlvec{w}^\top \mathbf{x}}} \label{eq:logistichypothesis}
 \end{align}
 
 Here are a few things to notice about this equation:
 \be
-\item The weight vector that we saw in linear regression, $\mlvec{w}$, is making a comeback!  In fact, we have a dot product between $\mlvec{x}$ and $\mlvec{w}$ (which creates a weighted sum of the $x_i$'s) just as we did in linear regression.
-\item Despite the similarities with linear regression, we now have this super weird term involving $\frac{1}{1+e^{-\mbox{stuff}}}$.  It turns out that this function is known as the logistic function, $\sigma$.  The graph of $\sigma(u) = \frac{1}{1+e^{-u}}$ is shown in Figure~\ref{fig:sigmoid}.  The function acts to map any real number to a number between 0 and 1.  Thus it is a perfect ``squashing'' function to take numbers that might not necessarily be valid probabilities (e.g., $\mlvec{w}^\top \mlvec{x}$) and squash them to the range of valid probabilities $[0,1]$.
+\item The weight vector that we saw in linear regression, $\mlvec{w}$, has made a comeback. As we said before, we are using the dot product between $\mlvec{x}$ and $\mlvec{w}$ (which creates a weighted sum of the $x_i$'s) (just as we did in linear regression)!
+\item As indicated in the picture above, the dot product $\mlvec{w}^\top \mlvec{x}$ has been passed through a squashing function known as the \href{https://en.wikipedia.org/wiki/Sigmoid_function}{sigmoid function}.  The graph of $\sigma(u) = \frac{1}{1+e^{-u}}$ is shown in Figure~\ref{fig:sigmoid}.  If we take $\sigma( \mlvec{w}^\top \mlvec{x})$ we will wind up with exactly what we have in Equation~\ref{eq:logistichypothesis}. 
 
 \begin{marginfigure}
 \includegraphics[width=\linewidth]{figures/Logistic-curve}
-\caption{fasf}\label{fig:sigmoid}
+\caption{a graph of the sigmoid function $\frac{1}{1+e^{-x}}$.}\label{fig:sigmoid}
 \end{marginfigure}
 \ee
 
-As motivating example, consider what would happen if we were faced with learning the following task.
+\subsection{Motivating Example: Sensor Networks}
 
-\href{https://archive.ics.uci.edu/ml/datasets/Occupancy+Detection+}{The dataset} can be found at the UCI Machine Learning repository.  was presented in the paper \href{https://www.sciencedirect.com/science/article/pii/S0378778815304357}{Accurate occupancy detection of an office room from light, temperature, humidity and CO2 measurements using statistical learning models}
+\begin{notice}
+Pretty much every writeup of logistic regression contains a simple 2-feature ($d=2$) example of logistic regression.  Usually these examples involve things like predicting who would be approved for a credit card or who will be admitted to a college.  We are going to do something a little messier and bit different.  If you want the admission to college example, you can read about it in \href{https://towardsdatascience.com/building-a-logistic-regression-in-python-301d27367c24}{Building a Logistic Regression in Python}.
+\end{notice}
 
-\begin{table}
-\begin{tabular}{c | c}
-2 & 2
-\end{tabular}
-\end{table}
+\begin{externalresources}[(TODO minutes)]
+Switch on over to the \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%201/03/Assignment_03_Companion.ipynb}{Assignment 3 Companion Notebook} for a presentation of the motivating example.
+\end{externalresources}
 
-TODO: state the objective function.
+\section{Putting it All Together: Deriving the Logistic Regression Learning Rule}
+Let's summarize what we've done thus far in this assignment.
 
-\subsection{Example}
-Todo: link to notebook
+\bi
+\item We motivated the binary classification problem.
+\item We presented a particular useful loss function (log loss).
+\item We met the logistic regression model and tried it out on a real dataset.
+\ei
 
-\section{Gradient Descent}
-
-TODO: Link out to a resource here.
-
-\section{Chain Rule for Gradients}
-It turns out that when we are fitting the parameters of our logistic regression model we are going to use the technique of gradient descent in order to compute the optimal weights.  Looking back at Equation~REFTOOBJECTIVE, we see that in order to compute a gradient we will have to compute the gradient of $\mathbf{x}^\top \mlvec{w}$ with respect to $\mlvec{w}$ (which we know how to do from the last assignment).  Additionally, we will have to understand how the application of the sigmoid function and the log function change this gradient.  In this section we'll learn some rules for easily computing gradients in such situations.
-
-In the past assignment you dusted off some old tricks from single variable calculus.  You may have applied the chain rule for derivatives.  The chain rule tells us how to compute the derivative of the composition of two single variable functions $f$ and $g$.  
+Next, we're going to build on these pieces and formalize the logistic regression problem so we can derive a learning rule to solve it (i.e., compute the optimal weights). The formalization of logistic regression will combine Equation~\ref{eq:logistichypothesis} with selected $\ell$ to be the log-loss to arrive at the following objective function.
 
 \begin{align}
-h(x)&= g(f(x))&\mbox{h(x) is the composition of $f$ with $g$} \nonumber \\
-h'(x) &= g'(f(x))f'(x)&\mbox{this is the chain rule!}
+\mlvec{w}^\star &= \argmin_{\mlvec{w}} \sum_{i=1}^n - y_i \ln \sigma(\mlvec{w}^\top \mlvec{x_i}) - (1-y_i) \ln (1 - \sigma(\mlvec{w}^\top \mlvec{x_i}) ) \\
+&= \argmin_{\mlvec{w}} \sum_{i=1}^n - y_i \ln \left ( \frac{1}{1+e^{-\mlvec{w}^\top \mlvec{x_i}}} \right) - (1-y_i) \ln  \left (1 - \frac{1}{1+e^{-\mlvec{w}^\top \mlvec{x_i}}} \right ) &\mbox{expanded out if you prefer this form} \label{eq:objective}
 \end{align}
 
-Suppose that instead of the input being a scalar $x$, the input is now a vector, $\mlvec{w}$.  In this case $h$ takes a vector input and returns a scalar, $f$ takes a vector input and returns a scalar, and $g$ takes a scalar input and returns a scalar.
-
-\begin{align}
-h(\mlvec{w}) &= g(f(\mlvec{w}))&\mbox{h($\mlvec{w}$) is the composition of $f$ with $g$} \nonumber \\
-\nabla_{\mlvec{w}} h(\mlvec{w}) &= g'(f(\mlvec{w})) \nabla_w f(\mlvec{w}) & \mbox{this is the multivariable chain rule}
-\end{align}
-
-\begin{exercise}
-\bes
-\item Compute the gradient of $h(\mlvec{v}) = (\mlvec{c}^\top \mlvec{v})^2$.
-\begin{boxedsolution}
-We can see that $h(\mlvec{v}) = g(f(\mlvec{v}))$ with $g(x) = x^2$ and $f(\mlvec{v}) = \mlvec{c}^\top \mlvec{v}$ The gradient can now easily be found by applying the chain rule.
-
-\begin{align}
-\nabla h(\mlvec{v}) &= 2(\mlvec{c}^\top \mlvec{v}) \mlvec{c}
-\end{align}
-\end{boxedsolution}
-\item This should be punted until the known the derivative of sigmoid function: Compute the gradient of $h(\mlvec{w}) = \frac{1}{1+e^{-\mlvec{w}^\top \mlvec{x_i}}}$ (hint: this is $\sigma(\mlvec{w}^\top \mlvec{x_i})$).
-\begin{boxedsolution}
-We can see that $h(\mlvec{w}) = g(f(\mlvec{w}))$ with $g(x) = \sigma(x)$ and $f(\mlvec{w}) = \mlvec{w}^\top \mlvec{x_i}$ The gradient can now easily be found by applying the chain rule.
-
-\begin{align}
-\nabla h(\mlvec{v}) &= \sigma(\mlvec{w}^\top \mlvec{x_i})(1 - \sigma(\mlvec{w}^\top \mlvec{x_i}) ) \mlvec{x_i}
-\end{align}
-
-\end{boxedsolution}
-\ees
-\end{exercise}
-
-\section{Deriving the Learning Rule for Logistic Regression}
+Our typical recipe for finding $\mlvec{w}^\star$ has been to take the gradient of the expression inside the $\argmin$, set it to $0$, and solve for $\mlvec{w}^\star$.  The last two steps will be a bit different for reasons that will become clear soon, but we will need to find the gradient.  This will be the focus of the next parts.
 
 \subsection{Useful Properties of the Sigmoid Function}
 
-The sigmoid function\sidenote{the sigmoid function is a special case of the logistic function.  It is common to see it referred to in be either name} known as a logistic function) turns out to be very useful for modeling the probability that some event occurs.  TODO.
+Looking at Equation~\ref{eq:objective} it looks really, really hairy!  We see that in order to compute the gradient we will have to compute the gradient of $\mathbf{x}^\top \mlvec{w}$ with respect to $\mlvec{w}$ (we just wrapped our minds around this last assignment).  Additionally, we will have to take into account how the application of the sigmoid function and the log function changes this gradient.  In this section we'll learn some properties for manipulating the sigmoid function and computing its derivative.
 
-\begin{exercise}
-In this exercise you will be working to better understand some of the properties of the logistic function.  Remember, the logistic function, $\sigma$, is defined as:
+\begin{exercise}[(60 minutes)]
+In this exercise you will be working to better understand some of the properties of the sigmoid function.  Remember, the sigmoid function, $\sigma$, is defined as:
 
 \begin{align}
 \sigma(x) &= \frac{1}{1+e^{-x}} \enspace .
 \end{align}
 
 \bes
-\item Do some thought exercises on the logistic function.  Limiting cases, etc. TODO.
 \item Show that $\sigma(-x) = 1 - \sigma(x)$.
 \begin{boxedsolution}
 \begin{align}
@@ -301,18 +274,118 @@ Solution 2:
 
 \end{exercise}
 
-
-Todo: this is easier with the identities of the derivative of a logistic function.
+\subsection{Chain Rule for Gradients}
+We now know how to take derivatives of each of the major pieces of Equation~\ref{eq:objective}.  What we need is a way to put these derivatives together.  You probably remember that in the case of single variable calculus you have just such a tool.  This tool is known as the chain rule.  The chain rule tells us how to compute the derivative of the composition of two single variable functions $f$ and $g$.  
 
 \begin{align}
-\mathbf{w^\star} &= \argmin_{\mathbf{w}} e(\mathbf{w}) \\
-e(\mathbf{w}) &= \sum_{i=1}^n y_i \log \frac{1}{1 + e^{-\mathbf{w}^\top \mathbf{x_i}}} +  (1-y_i) \log \frac{1}{1 + e^{\mathbf{w}^\top \mathbf{x_i}}} \\
-&= \argmin_{\mathbf{w}} \sum_{i=1}^n -y_i \log \left ( 1 + e^{-\mathbf{w}^\top \mathbf{x_i}} \right) -  (1-y_i) \log \left ( 1 + e^{\mathbf{w}^\top \mathbf{x_i}} \right) \\
-\nabla e(\mathbf{w}) &= \sum_{i=1}^n \frac{y_i \mathbf{x_i}}{1 + e^{-\mathbf{w}^\top \mathbf{x_i}}} - \frac{\left ( 1 - y_i \right) \mathbf{x_i}}{1 + e^{\mathbf{w}^\top \mathbf{x_i}} } \\
-&= \sum_{i=1}^n \mathbf{x_i} \left ( \frac{y_i }{1 + e^{-\mathbf{w}^\top \mathbf{x_i}}} - \frac{\left ( 1 - y_i \right) }{1 + e^{\mathbf{w}^\top \mathbf{x_i}} } \right)
+h(x)&= g(f(x))&\mbox{h(x) is the composition of $f$ with $g$} \nonumber \\
+h'(x) &= g'(f(x))f'(x)&\mbox{this is the chain rule!}
 \end{align}
 
-\section{Implementation?}
-Todo
+Suppose that instead of the input being a scalar $x$, the input is now a vector, $\mlvec{w}$.  In this case $h$ takes a vector input and returns a scalar, $f$ takes a vector input and returns a scalar, and $g$ takes a scalar input and returns a scalar.
+
+\begin{align}
+h(\mlvec{w}) &= g(f(\mlvec{w}))&\mbox{h($\mlvec{w}$) is the composition of $f$ with $g$} \nonumber \\
+\nabla_{\mlvec{w}} h(\mlvec{w}) &= g'(f(\mlvec{w})) \nabla_w f(\mlvec{w}) & \mbox{this is the multivariable chain rule}
+\end{align}
+
+\begin{exercise}[(60 minutes)]
+\bes
+\item Suppose $h(x) = \sin(x^2)$, compute $h'(x)$ (x is a scalar so you can apply the single-variable chain rule).
+
+\begin{boxedsolution}
+
+Applying the chain rule gives
+\begin{align}
+h'(x) &= cos(x^2) 2x \enspace .
+\end{align}
+\end{boxedsolution}
+
+\item Compute the gradient of $h(\mlvec{v}) = (\mlvec{c}^\top \mlvec{v})^2$.
+
+\begin{boxedsolution}
+We can see that $h(\mlvec{v}) = g(f(\mlvec{v}))$ with $g(x) = x^2$ and $f(\mlvec{v}) = \mlvec{c}^\top \mlvec{v}$ The gradient can now easily be found by applying the chain rule.
+\begin{align}
+\nabla h(\mlvec{v}) &= 2(\mlvec{c}^\top \mlvec{v}) \mlvec{c}
+\end{align}
+\end{boxedsolution}
+
+\item Compute the gradient of the expression from Equation~\ref{eq:objective}
+
+\begin{align}
+ \sum_{i=1}^n -y_i \ln \sigma( \mlvec{w}^\top \mlvec{x_i}) - (1-y_i) \ln  \left (1 - \sigma( \mlvec{w}^\top \mlvec{x_i}) \right ) \enspace .
+\end{align}
+
+You can either use the chain rule and the identities you learned about sigmoid, or expand everything out and work from that.
+
+\begin{boxedsolution}
+Applying the chain rule gives us
+
+\begin{align}
+ \sum_{i=1}^n -y_i \frac{\nabla \sigma( \mlvec{w}^\top \mlvec{x_i})}{\sigma( \mlvec{w}^\top \mlvec{x_i})} - (1-y_i) \frac{- \nabla \sigma( \mlvec{w}^\top \mlvec{x_i})}{1 - \sigma( \mlvec{w}^\top \mlvec{x_i})}  \enspace .
+\end{align}
+
+Applying the chain rule again gives us
+\begin{align}
+& \sum_{i=1}^n -y_i \frac{\sigma( \mlvec{w}^\top \mlvec{x_i})(1-\sigma( \mlvec{w}^\top \mlvec{x_i}))\nabla \mlvec{w}^\top \mlvec{x_i}}{\sigma( \mlvec{w}^\top \mlvec{x_i})} - (1-y_i) \frac{- \sigma( \mlvec{w}^\top \mlvec{x_i})(1-\sigma( \mlvec{w}^\top \mlvec{x_i}))\nabla \mlvec{w}^\top \mlvec{x_i}}{1 - \sigma( \mlvec{w}^\top \mlvec{x_i})} \nonumber \\
+ &= \sum_{i=1}^n -y_i (1-\sigma( \mlvec{w}^\top \mlvec{x_i}))\mlvec{x_i} + (1-y_i)  \sigma( \mlvec{w}^\top \mlvec{x_i})) \mlvec{x_i} 
+ \end{align}
+ 
+ You could certainly stop here, but if you plug in $y=0$ and $y=1$ you'll find that the expression can be further simplified to:
+ 
+ \begin{align}
+\sum_{i=1}^n  -(y_i - \sigma(\mlvec{w}^\top \mlvec{x_i})) \mlvec{x_i} \nonumber
+ \end{align}
+
+
+\end{boxedsolution}
+
+\ees
+\end{exercise}
+
+
+\subsection{Gradient Descent for Optimization}
+If we were to follow our derivation of linear regression we would set our expression for the gradient to 0 and solve for $\mlvec{w}$.  It turns out this equation will be difficult to solve due to the $\sigma$ function.  Instead, we can use an iterative approach to optimization where we start with some initial value of $\mlvec{w^0}$ and iteratively adjust it by moving down the gradient (the gradient represents the direction of fastest increase for our function, therefore, moving along the negative gradient is the direction where the loss is decreasing the fastest).
+
+\begin{externalresources}[(45 minutes)]
+There are tons of great resources that explain gradient descent with both math and compelling visuals.
+TODO: post these on NB
+\bi
+\item Recommended: \href{https://www.youtube.com/watch?v=IHZwWFHWa-w}{Gradient descent, how neural networks learn | Deep learning, chapter 2}
+\item \href{https://medium.com/@viveksingh.heritage/an-introduction-to-gradient-descent-54775b55ba4f}{An Introduction to Gradient Descent}
+\item The \href{https://en.wikipedia.org/wiki/Gradient_descent}{Wikipedia page on Gradient Descent} (contains a nice visual)
+\item There are quite a few resources out there, do you have some suggestions? (suggest so on NB)
+\ei 
+\end{externalresources}
+
+TODO: some understanding checks
+
+If we take the logic of Gradient Descent and apply it to the logistic regression problem, we arrive at the following learning rule.  Given some initial weights $\mlvec{w^0}$, and a learning rate $\eta$, we can iteratively update our weights using the formula below.
+
+\begin{align}
+\mlvec{w^{n+1}} &= \mlvec{w^n} - \eta \nabla \sum_{i=1}^n - y_i \ln \sigma(\mlvec{w}^\top \mlvec{x_i}) - (1-y_i) \ln (1 - \sigma(\mlvec{w}^\top \mlvec{x_i}) ) \nonumber \\
+&= \mlvec{w^n} - \eta \sum_{i=1}^n  -(y_i - \sigma(\mlvec{w}^\top \mlvec{x_i})) \mlvec{x_i} ~~~\mbox{applying the result from exercise 4} \\
+&=  \mlvec{w^n} + \eta \sum_{i=1}^n  (y_i - \sigma(\mlvec{w}^\top \mlvec{x_i})) \mlvec{x_i} 
+\end{align}
+
+This beautiful equation turns out to be provide us with the recipe we need to implement logistic regression.
+
+
+
+
+\section{Reading on TODO}
+TODO
+
+\section{Suggestions for Additional Challenge}
+
+We are asking folks for whom this is review to push themselves a bit farther.  Based on the first two assignments, we thought that we could help out with some suggestions of our own.  Please don't construe this as work that you have to do.  None of the course content will assume that you've done any of these additional activities.
+
+\begin{itemize}
+\item Implement logistic regression using gradient descent.  You will need to search for a good learning rate or you may consider implementing some \href{https://towardsdatascience.com/gradient-descent-algorithms-and-adaptive-learning-rate-adjustment-methods-79c701b086be}{strategies for automatically tuning the learning rate}.
+\item Some additional reading?
+\end{itemize}
+
+\companionnotebook{Assignment_03_Companion}
+
 
 \end{document}
