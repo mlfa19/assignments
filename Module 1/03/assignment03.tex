@@ -83,10 +83,10 @@ The equation says that $\hat{f}^\star$ is the function that minimizes the number
 
 \end{exercise}
 
-While the loss function given in Exercise~2\ref{ex:minmistakes} (minimizing mistakes on the training set) is a totally reasonable choice for the loss function, it turns out that it has the a number of drawbacks.
+While the loss function given in Exercise~1\ref{ex:minmistakes} (minimizing mistakes on the training set) is a totally reasonable choice for the loss function, it turns out that it has a number of drawbacks.
 \bi
 \item It is all or nothing.  Either we are completely right or completely wrong.
-\item It is not a particularly easy function to work with mathematically.  In fact, for many common classes of models, it will be difficult for the learning algorithm to find the best possible model\sidenote{One of the key challenges that must be in met in machine learning, and modeling in general, is balancing computational considerations (e.g., how long does it take to find the best possible model) with the realism of the model (e.g., how directly does the task you pose to the learning algorithm match the problem you are solving).  Sometimes these things are in conflict and you must make tradeoffs.}.
+\item It is not a particularly easy function to work with mathematically.  In fact, for many common classes of models, it will be difficult for the learning algorithm to find the best possible model\sidenote{One of the key challenges that must be met in machine learning, and modeling in general, is balancing computational considerations (e.g., how long does it take to find the best possible model) with the realism of the model (e.g., how directly does the task you pose to the learning algorithm match the problem you are solving).  Sometimes these things are in conflict and you must make tradeoffs.}.
 \ei
 It turns out that we can create a more natural loss function by thinking about predictions in terms of probabilities.
 
@@ -122,7 +122,7 @@ The output would be close to 0 (e.g., 0.01).  The degree of closeness to 0 would
 \end{understandingcheck}
 
 \subsection{Log loss}
-If our model outputs a probability $p$ when supplied with an input $\mlvec{x}$ (i.e., $\hat{f}(\mlvec{x}) = p$), we might then ask ourselves what loss function we should choose in order to select the best possible model?  This loss function will be used to quantify how bad a prediction $p$ is given the actual output $y$ (recall that for binary classification the output is either $0$ or $1$).  To make to this more intuitive, consider the task of quantifying the quality of a weatherperson's predictions.  Let's assume that on the $i$th day the weather is either sunny ($y_i = 1$) or rainy ($y_i = 0$).  Suppose that each night the weatherperson gives the probability of it being sunny the next day.  Here are two potential choices for quantifying the loss of each prediction compared to the outcome (the actual weather).
+If our model outputs a probability $p$ when supplied with an input $\mlvec{x}$ (i.e., $\hat{f}(\mlvec{x}) = p$), we might then ask ourselves what loss function we should choose in order to select the best possible model?  This loss function will be used to quantify how bad a prediction $p$ is given the actual output $y$ (recall that for binary classification the output is either $0$ or $1$).  To make this more intuitive, consider the task of quantifying the quality of a weatherperson's predictions.  Let's assume that on the $i$th day the weather is either sunny ($y_i = 1$) or rainy ($y_i = 0$).  Suppose that each night the weatherperson gives the probability of it being sunny the next day.  Here are two potential choices for quantifying the loss of each prediction compared to the outcome (the actual weather).
 \be
 \item \textbf{0-1 loss:} we will extract from the weatherperson's prediction the most likely output (e.g., if $p = 0.75$, that would be sunny, if $p = 0.4$, that would be rainy).  If the most likely output matches the actual output we give a loss of 0, otherwise we give a loss of 1 (this is similar to Equation~\ref{eq:minimizeerror}).
 \item \textbf{squared loss:} one downside of \emph{0-1 loss} is that it doesn't take into account the certainty expressed by the weatherperson.  The weatherperson gets the same loss if it is rainy and they predicted $p = 0.51$ or $p = 1$.  For squared loss we compute the difference between the outcome and $p$ and square it to arrive at the loss.  For example if the weatherperson predicts $p = 0.51$ and it is sunny the loss is $(1 - 0.51)^2$.  If it was rainy in this same example, the loss is $(0 - 0.51)^2$.
@@ -137,7 +137,7 @@ As an example, here are hypothetical predictions from two forecasters, the actua
 \hline
 actual weather & forecast 1 & 0-1 loss & squared loss & forecast 2 & 0-1 loss & squared loss \\
 \hline
-\mbox{sunny (y = 1)} & $p = 0.3$ & 1 & $(1-0.2)^2 = 0.64$ & $p = 0.9$ & 0 & $(1 - 0.9)^2 = 0.01$\\
+\mbox{sunny (y = 1)} & $p = 0.2$ & 1 & $(1-0.2)^2 = 0.64$ & $p = 0.9$ & 0 & $(1 - 0.9)^2 = 0.01$\\
 \mbox{rainy (y = 0)} & $p = 0.6$  & 1 & $(0-0.6)^2 = 0.36$ & $p = 0.999$ & 1 & $(0 - 0.999)^2 = 0.998$ \\ 
 \mbox{sunny (y = 1)} & $p = 0.8$ & 0 & $(1-0.8)^2 = 0.16$ & $p = 0.99$ & 0 & $(1 - 0.99)^2 = 0.0001$\\
 \hline
@@ -168,11 +168,11 @@ Revisit the example from before with the two weather forecasters.  Compute the l
 \hline
 actual weather & forecast 1 & log loss & forecast 2 & log loss \\
 \hline
-\mbox{sunny (y = 1)} & $p = 0.3$ & $-\ln 0.3$ & $p = 0.9$ &  $-\ln 0.9$\\
+\mbox{sunny (y = 1)} & $p = 0.2$ & $-\ln 0.2$ & $p = 0.9$ &  $-\ln 0.9$\\
 \mbox{rainy (y = 0)} & $p = 0.6$  &  $-\ln 0.4$ & $p = 0.999$ &  $-\ln 0.001$\\ 
-\mbox{sunny (y = 1)} & $p = 0.8$ & $-\ln 0.2$ & $p = 0.99$ & $-\ln 0.99$\\
+\mbox{sunny (y = 1)} & $p = 0.8$ & $-\ln 0.8$ & $p = 0.99$ & $-\ln 0.99$\\
 \hline
-\textbf{sum} & & $3.73$ &  & 7.02
+\textbf{sum} & & $2.75$ &  & 7.02
 \end{tabular}
 \end{center}
 The first forecaster is better according to log loss.
