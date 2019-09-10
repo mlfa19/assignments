@@ -267,22 +267,21 @@ Two solutions for the price of 1!
 
 Solution 1:
 \begin{align}
-\frac{d}{dx} \sigma(x)  &= -e^{-x} \sigma(x)^2 &\mbox{\href{https://www.math.hmc.edu/calculus/tutorials/quotient_rule/}{apply quotient rule}} \\
-&= \sigma(x) \left ( \frac{-e^{-x}}{1 + e^{-x}} \right) &\mbox{expand out one of the $\sigma(x)$'s}\\
-&= \sigma(x) \left ( \frac{-1}{e^{x} + 1} \right) & \mbox{multiply top and bottom by $e^{x}$}\\
-&=  \sigma(x) ( - \sigma(-x)) &\mbox{substitute for $\sigma(-x)$} \\
-&=  \sigma(x) ( \sigma(x) - 1) &\mbox{apply $\sigma(-x)=1-\sigma(x)$}
+\frac{d}{dx} \sigma(x)  &= e^{-x} \sigma(x)^2 &\mbox{\href{https://www.math.hmc.edu/calculus/tutorials/quotient_rule/}{apply quotient rule}} \\
+&= \sigma(x) \left ( \frac{e^{-x}}{1 + e^{-x}} \right) &\mbox{expand out one of the $\sigma(x)$'s}\\
+&= \sigma(x) \left ( \frac{1}{e^{x} + 1} \right) & \mbox{multiply top and bottom by $e^{x}$}\\
+&=  \sigma(x) (  \sigma(-x)) &\mbox{substitute for $\sigma(-x)$} \\
+&=  \sigma(x) (1 -  \sigma(x) ) &\mbox{apply $\sigma(-x)=1-\sigma(x)$}
 \end{align}
 
 Solution 2:
 \begin{align}
-\frac{d}{dx} \sigma(x)  &=\frac{-e^{-x}}{(1+e^{-x} )^2} & \mbox{\href{https://www.math.hmc.edu/calculus/tutorials/quotient_rule/}{apply quotient rule}} \\
-&= \frac{-e^{-x}}{1+2e^{-x} + e^{-2x}} & \mbox{expand the bottom}\\
-&= \frac{-1}{e^{x}+2 + e^{-x}} & \mbox{multiply top and bottom by $e^{x}$}\\
-&= \frac{-1}{(1+e^{x})(1+e^{-x})} & \mbox{factor} \\
-&= -\sigma(x)\sigma(-x) & \mbox{decompose using definition of $\sigma(x)$}\\
-&= -\sigma(x)(1-\sigma(x)) &\mbox{apply $\sigma(-x)=1-\sigma(x)$} \\
-&= \sigma(x)(\sigma(x) - 1) & \mbox{distribute the $-1$}
+\frac{d}{dx} \sigma(x)  &=\frac{e^{-x}}{(1+e^{-x} )^2} & \mbox{\href{https://www.math.hmc.edu/calculus/tutorials/quotient_rule/}{apply quotient rule}} \\
+&= \frac{e^{-x}}{1+2e^{-x} + e^{-2x}} & \mbox{expand the bottom}\\
+&= \frac{1}{e^{x}+2 + e^{-x}} & \mbox{multiply top and bottom by $e^{x}$}\\
+&= \frac{1}{(1+e^{x})(1+e^{-x})} & \mbox{factor} \\
+&= \sigma(x)\sigma(-x) & \mbox{decompose using definition of $\sigma(x)$}\\
+&= \sigma(x)(1-\sigma(x)) &\mbox{apply $\sigma(-x)=1-\sigma(x)$}
 \end{align}
 
 \end{boxedsolution}
