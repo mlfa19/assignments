@@ -1,0 +1,55 @@
+\documentclass[assignment06_Solutions]{subfiles}
+
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+
+\fancypagestyle{firstpage}
+
+{\rhead{Assignment 6 \linebreak \textit{Version: \today}}}
+
+\title{Assignment 6: Introduction to Neural Networks and Backpropagation}
+\author{Machine Learning}
+\date{Fall 2019}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{firstpage}
+
+
+\begin{learningobjectives}
+\bi
+\item Gain some familiarity with some of the key ideas in machine learning.
+\item Review of mathematical concepts we will be using in the beginning part of this course.
+\item Familiarize yourself with computational tools for machine learning.
+\item Learn linear regression using a ``top-down'' approach.
+\ei
+\end{learningobjectives}
+
+
+\href{https://www.math.hmc.edu/calculus/tutorials/multichainrule/}{HMC Multivariable Chain Rule Page}
+
+Hidden layer to loss function.
+
+\begin{align}
+e &= -y \ln z - (1-y) \ln (1-z) \\
+\frac{de}{dz} &= -y \frac{1}{z} - (1-y) \frac{1}{1-z}\\
+z &= \sigma(s) \\
+\frac{d e}{s} &= \frac{d z}{s}  \frac{de}{dz} \\
+&= \sigma(s)(1 - \sigma(s)) \frac{de}{dz} \\
+s &= \mlvec{w}^\top \mlvec{h} \\
+\nabla_{h} e &=  \frac{d e}{d s} \nabla_{\mlvec{h}}{s} \\
+&=   \frac{d e}{d s}  \mlvec{w}
+\end{align}
+
+Input layer to hidden layer.
+
+\begin{align}
+s_1 &= \mlvec{w_1}^\top \mlvec{x}\\
+h_1 &= \sigma(s_1) \\
+\nabla_{\mlvec{w_1}} e &=  \frac{d e}{d s_1} \nabla_{\mlvec{w_1}}{s_1} \\
+&=   \frac{d e}{d s_1}  \mlvec{x} \\
+\frac{d e}{s_1} &= \frac{d h_1}{s_1}  \frac{de}{dh_1} \\
+&= \sigma(s_1)(1 - \sigma(s_1)) \frac{de}{dh_1}
+\end{align}
+
+\end{document}
