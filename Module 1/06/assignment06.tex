@@ -27,29 +27,25 @@
 
 
 \href{https://www.math.hmc.edu/calculus/tutorials/multichainrule/}{HMC Multivariable Chain Rule Page}
+\includegraphics[width=\linewidth]{figures/singleneuroncloseup}
+Todo: use a variable for layer instead of just hidden (this would simplify things).
 
-Hidden layer to loss function.
-
+Hidden unit to error:
 \begin{align}
-e &= -y \ln z - (1-y) \ln (1-z) \\
-\frac{de}{dz} &= -y \frac{1}{z} - (1-y) \frac{1}{1-z}\\
-z &= \sigma(s) \\
-\frac{d e}{s} &= \frac{d z}{s}  \frac{de}{dz} \\
-&= \sigma(s)(1 - \sigma(s)) \frac{de}{dz} \\
-s &= \mlvec{w}^\top \mlvec{h} \\
-\nabla_{h} e &=  \frac{d e}{d s} \nabla_{\mlvec{h}}{s} \\
-&=   \frac{d e}{d s}  \mlvec{w}
+\frac{\partial{e}}{\partial{h_{i,j}}} &= \sum_{k=1}^{n_{i+1}} \frac{\partial s_{i+1, k}}{\partial h_{i,j}} \frac{\partial h_{i+1, k}}{\partial s_{i+1, k}} \frac{\partial e}{\partial h_{i+1, k}} \\
+&= \sum_{k=1}^{n_{i+1}} w^{i+1}_{j,k} \sigma(s_{i+1,k})(1 - \sigma_{i+1,k})\frac{\partial e}{\partial h_{i+1, k}}
 \end{align}
 
-Input layer to hidden layer.
-
+Weights to error:
 \begin{align}
-s_1 &= \mlvec{w_1}^\top \mlvec{x}\\
-h_1 &= \sigma(s_1) \\
-\nabla_{\mlvec{w_1}} e &=  \frac{d e}{d s_1} \nabla_{\mlvec{w_1}}{s_1} \\
-&=   \frac{d e}{d s_1}  \mlvec{x} \\
-\frac{d e}{s_1} &= \frac{d h_1}{s_1}  \frac{de}{dh_1} \\
-&= \sigma(s_1)(1 - \sigma(s_1)) \frac{de}{dh_1}
+\nabla_{\mathbf{w_{i,j}}} e &= \frac{\partial e} {s_{i,j}} \nabla_{\mathbf{w_{i,j}}} s_{i,j} \\
+&= \frac{\partial e}{h_{i,j}}  \frac{\partial h_{i,j}}{s_{i,j}} \nabla_{\mathbf{w_{i,j}}} s_{i,j} \\
+&= \frac{\partial e}{h_{i,j}}  \sigma(s_{i,j})(1-\sigma (s_{i,j})) \mathbf{h}_{i-1} 
+\end{align}
+
+Output to error (serves as a base case.  For simplicity we use $h_{m,1}$ to refer to the single node in the $m$th layer (which is the output layer).
+\begin{align}
+\frac{\partial{e}}{\partial h_{m,1}} = - y \frac{1}{h_{m,1}} - (1-y) \frac{1}{1-h_{m,1}}
 \end{align}
 
 \end{document}
