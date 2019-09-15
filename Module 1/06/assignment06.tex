@@ -18,16 +18,157 @@
 
 \begin{learningobjectives}
 \bi
-\item Gain some familiarity with some of the key ideas in machine learning.
-\item Review of mathematical concepts we will be using in the beginning part of this course.
-\item Familiarize yourself with computational tools for machine learning.
-\item Learn linear regression using a ``top-down'' approach.
+\item Understand the difficulties that neural networks address in comparison to algorithms like logistic regression.
+\item Interpret the results of applying a simple neural network to a dataset.
+\item Understand the architecture of a particular type of neural network called a multi-layer perceptron.
+\item Learn how to represent the multivariable chain rule graphically.
+\item Understand how the backpropagation algorithm can be used to compute the gradient of a loss function with respect to the parameters of a neural network.
+%\item Learn about a few strategies used to optimize the weights of a neural network that leverage the gradient of the loss function with respect to the network's parameters.
 \ei
 \end{learningobjectives}
 
 
-\href{https://www.math.hmc.edu/calculus/tutorials/multichainrule/}{HMC Multivariable Chain Rule Page}
+\section{Assignment Structure}
+In this assignment we'll be doing the following things in order to meet the learning goals articulated above.
+\be
+\item Motivate the idea of neural networks through a Jupyter notebook that examines the \href{https://www.kaggle.com/c/titanic}{Titanic Dataset from Kaggle}.
+\item Introduce the architecture of a particular type of neural network called a multi-layer perceptron.
+\item See another way to think about the chain rule for multivariable functions that uses a graphical representation.
+\item Learn about, and ultimately derive, the backpropagation algorithm.
+\ee
+
+\begin{priorknowledge}
+Here are some things we'll be utilizing in this assignment.  When appropriate, we'll call these out in a particular section with some helpful text to jog your memory.
+\bi
+\item Logistic regression algorithm
+\item Multivariable chain rule
+\item Binary classification problem setting
+\ei
+\end{priorknowledge}
+
+\section{Motivation for Neural Networks}
+
+In order to motivate the idea of neural networks, we'll be examining the Titanic Kaggle dataset.  If you didn't work with this data, it might help you to briefly skim \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%201/05/assignment05.ipynb#scrollTo=56C4fPtK7YeQ}{the walkthrough in assignment 5}.
+
+\vspace{1em}
+\begin{externalresources}[(TODO minutes)]
+Go through the \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%201/06/Assignment_6_Companion.ipynb}{Assignment 6 Companion notebook}.
+\end{externalresources}
+
+\section{Our First Neural Network: the Multilayer Perceptron (MLP)}
+
+TODO: include refresher on logistic regression.
+
+Now that you've seen a neural network in action, we'll be digging into how a neural network works.  The presentation will be specific to a particular type of neural network known as a multilayer perceptron, but the main ideas generalize to many other types of networks.
+
+Thinking back to the companion notebook, we observed that the features in the original dataset ({\tt age} and {\tt sex}) were not conducive to predicting whether someone would survive.  We showed that by augmenting the input features with a column called {\tt is young male} that captured whether or not a person was young \emph{and} male, that the algorithm could effectively learn the task.  The fundamental idea of a neural network is that the network automatically constructs useful representations of the input data \emph{as a part of the learning process}.
+
+Graphically we can contrast these approaches in the following way\sidenote{to interpret these graphs, think of the circles (also called nodes) as representing values that are put into or computed by the network.  Directed lines (also called edges) as representing data flowing in the network.  Each edge multiplies the value flowing into it by a weight (represented by a text label on the edge).}. First we'll show the logistic regression model that we applied in the notebook.
+
+\includegraphics[width=\linewidth]{figures/titaniclogisticregression}
+
+Notice how we had to manually introduce the feature {\tt is young male} in order for the logistic regression model to utilize it to make its prediction.  In contrast, here is the neural network that we fit at the end of the notebook.
+
+Before giving you the equivalent figure for the multi-layer perceptron, let's look at a little bit more cartoonish version of the multi-layer perceptron.  This version will leave off the math and the particular notation we are using.  Once you have a good sense of what this is, you can look at the more precise version which is to follow.
+
+
+\begin{externalresources}
+Here are some additional resources that explain the concept of a multi-layer perceptron.  If the explanations we give below are not working for you, consider checking out some of these.  \textbf{You do not need to consult these resources if you feel like our explanations are working well for you.}
+\bi
+\item todo
+\ei
+\end{externalresources}
+
+\includegraphics[width=\linewidth]{figures/titanicmlpsimple}
+
+This figure shows the basic idea of a multi-layer perceptron (MLP. Input data (in this case we just use age, male, and a bias term) are propagated via a set of connection weights to a set of hidden representations.  These hidden representations are propagated via another set of a connection weights to the output of the network.   In the companion notebook we showed that in the Titanic example, the network learned two hidden representations: one that encoded {\tt is young male} and the other that encoded sex.  Of particular importance is that we did not have to manually introduce the {\tt is young male} feature.
+
+Next, let's make this cartoon picture concrete.  We'll use the following notation.
+\bi
+\item $x^{(j)}_i$ will refer to the $i$th unit in the $j$th layer of the network ($j=1$ will correspond to the inputs, $j=2$ will correspond to the hidden representations, and $j=3$ will correspond to the output).  For instance, in the figure above the circle labeled \emph{male} would be $x^{(1)}_2$, \emph{hidden repr. 1} would be $x^{(2)}_1$ and \emph{prob survived} would be $x^{(3)}_1$.
+\item $s^{(j)}_i$ will refer to the $i$th summation unit in the $j$th layer of the network (as before, $j=1$ will correspond to the inputs, $j=2$ will correspond to the hidden representations, and $j=3$ will correspond to the output).  The summation unit will play a similar role to $s$ in the logistic regression figure.
+\item $w^{(k)}_{i,j}$ will refer to the weight of the connection between the the $j$th unit in layer $k$ and the $i$th unit in layer $k+1$.
+\ei
+
+\begin{notice}
+There are a lot of symbols here!  Take some time to unpack each of them.  Make sure you know what superscripts and subscripts represent.  While there is an upfront cost to introducing these symbols, it will ultimately make our lives considerably simpler.
+\end{notice}
+\includegraphics[width=\linewidth]{figures/titanicmlp}
+
+\vspace{1em}
+
+\begin{exercise}[(TODO minutes)]
+There's a lot to interpret an unpack.  Make sure they can do it. TODO.
+\bes
+\item TODO: relate the structure of the MLP to logistic regression.  You should see it represented multiple times.
+\ees
+\end{exercise}
+
+\begin{exercise}[(TODO minutes)]
+Without using any training data (this is testing your understanding of the model itself), compute the weights in this network ($w^{(1)}_{1,1}, w^{(1)}_{1,2}, w^{(1)}_{1,3}, w^{(1)}_{2,1}, w^{(1)}_{2,2}, w^{(1)}_{2,3}, w^{(2)}_{1,1}, w^{(2)}_{1,2}$) such that the MLP has the following behavior.  Recall that $x^{(1)}_1$ is the passenger's age, $x^{(1)}_2$ is a binary variable that is 1 if the passenger is male and 0 if female, $x^{(1)}_3$ is a constant term (always 1).
+\bi
+\item $x^{(2)}_1$ encodes whether or not the passenger is female (i.e., it should take a value close to 1 when the passenger is female and 0 when the passenger is male).
+\item $x^{(2)}_2$ encodes whether or not the passenger is a young male (i.e., it should take a value close to 1 when the passenger is male under the age of say 5 and 0 otherwise).
+\item $x^{(3)}_1$ should be close to 1 (i.e., predict survival) when the passenger is female \emph{or} a male under the age of 5.
+\ei
+\end{exercise}
+
+Believe it or not, computing these weights by hand was fairly common back before we had algorithms for automatically learning the weights from data.  The reason for this was that early techniques for learning the weights were very inefficient and often unable to converge to good solutions.  Later in this document we will be learning about the backpropagation algorithm that can be used to efficiently compute the gradient of the weights in this neural network with respect to some cost function.  \textbf{Just as we did with logistic regression, we can use this gradient in order to optimize the weights of the network using gradient descent.}  What's beautiful is that even though the model itself got more complicated, the learning algorithm and basic ideas remain largely the same.
+
+In order to prepare ourselves for the derivation of the backpropagation algorithm, we need to build up a bit more powerful method of applying the chain rule to multivariate functions.
+
+
+\section{A Graphical View of the Multivariable Chain Rule}
+
+In assignment 3 we learned the multivariable chain rule, which allowed us to take partial derivatives (or the gradient) of the composition of a multivariable and a single variable function.  In the listing below, $h$ is a function from a vector to a scalar, $f$ is from a vector to a scalar, and $g$ is from a scalar to a scalar.
+
+\begin{align}
+h(\mlvec{w}) &= g(f(\mlvec{w}))&\mbox{h($\mlvec{w}$) is the composition of $f$ with $g$} \nonumber \\
+\nabla h(\mlvec{w}) &= g'(f(\mlvec{w})) \nabla f(\mlvec{w}) & \mbox{this is the multivariable chain rule} \\
+\frac{\partial h(\mlvec{w})}{\partial w_i} &= g'(f(\mlvec{w})) \frac{\partial f}{\partial w_i}& \mbox{this is for a single partial deriv. (rather than the gradient)}
+\end{align}
+
+If we were to write out the MLP example in the previous section using this notation, we'd have a huge mess.  The function would probably barely fit on one line of this document.  Luckily, there's another way to apply the chain rule that uses the concept of a dataflow diagram.  What we will soon see is that not only will the dataflow diagram make our lives easier from a mathematical perspective, it will actually make our lives easier from a computational perspective (that last bit is a foreshadowing of the backpropagation algorithm, which we'll soon meet).
+
+
+\begin{externalresources}[(20 minutes)]
+This HMC calculus tutorials explain this concept beautifully.  Go and read the \href{https://www.math.hmc.edu/calculus/tutorials/multichainrule/}{HMC Multivariable Chain Rule Page} and come back for some exercises to test your understanding.
+\end{externalresources}
+
+\begin{exercise}
+\bes
+\item Some quick probably to make sure they get it.
+\item Generalize to gradients.
+\ees
+\end{exercise}
+
+
+\section{Backpropagation}
+
+Before getting into the derivation of the backpropagation algorithm, let's revisit our logistic regression model.
+
+TODO replicate the figure from before.
+
+\begin{exercise}
+\bes
+\item Add a log loss function node to the top.
+\item Compute the gradient.
+\item Comment on flow of information in both forwards and backwards direction.
+\ees
+\end{exercise}
+
+\subsection{Forward Pass}
+
+TODO, all symbols are defined in the network.
+
+\subsection{Backward Pass: Applying the Chain Rule}
+TODO
+
+
 \includegraphics[width=\linewidth]{figures/singleneuroncloseup}
+
+
+
 Todo: use a variable for layer instead of just hidden (this would simplify things).
 
 Hidden unit to error:
@@ -47,5 +188,12 @@ Output to error (serves as a base case.  For simplicity we use $h_{m,1}$ to refe
 \begin{align}
 \frac{\partial{e}}{\partial h_{m,1}} = - y \frac{1}{h_{m,1}} - (1-y) \frac{1}{1-h_{m,1}}
 \end{align}
+
+
+\begin{externalresources}
+\bi
+\item \href{https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/}{A Step-by-step Backpropagation Example}
+\ei
+\end{externalresources}
 
 \end{document}
