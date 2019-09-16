@@ -87,7 +87,7 @@ Next, let's make this cartoon picture concrete.  We'll use the following notatio
 \bi
 \item $x^{(j)}_i$ will refer to the $i$th unit in the $j$th layer of the network ($j=1$ will correspond to the inputs, $j=2$ will correspond to the hidden representations, and $j=3$ will correspond to the output).  For instance, in the figure above the circle labeled \emph{male} would be $x^{(1)}_2$, \emph{hidden repr. 1} would be $x^{(2)}_1$ and \emph{prob survived} would be $x^{(3)}_1$.
 \item $s^{(j)}_i$ will refer to the $i$th summation unit in the $j$th layer of the network (as before, $j=1$ will correspond to the inputs, $j=2$ will correspond to the hidden representations, and $j=3$ will correspond to the output).  The summation unit will play a similar role to $s$ in the logistic regression figure.
-\item $w^{(j)}_{i,k}$ will refer to the weight of the connection between the the $k$th unit in layer $j$ and the $i$th unit in layer $k+1$.
+\item $w^{(j)}_{i,k}$ will refer to the weight of the connection between the the $k$th unit in layer $j$ and the $i$th unit in layer $j+1$.
 \ei
 
 \begin{notice}
