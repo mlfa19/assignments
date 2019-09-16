@@ -87,7 +87,7 @@ Next, let's make this cartoon picture concrete.  We'll use the following notatio
 \bi
 \item $x^{(j)}_i$ will refer to the $i$th unit in the $j$th layer of the network ($j=1$ will correspond to the inputs, $j=2$ will correspond to the hidden representations, and $j=3$ will correspond to the output).  For instance, in the figure above the circle labeled \emph{male} would be $x^{(1)}_2$, \emph{hidden repr. 1} would be $x^{(2)}_1$ and \emph{prob survived} would be $x^{(3)}_1$.
 \item $s^{(j)}_i$ will refer to the $i$th summation unit in the $j$th layer of the network (as before, $j=1$ will correspond to the inputs, $j=2$ will correspond to the hidden representations, and $j=3$ will correspond to the output).  The summation unit will play a similar role to $s$ in the logistic regression figure.
-\item $w^{(k)}_{i,j}$ will refer to the weight of the connection between the the $j$th unit in layer $k$ and the $i$th unit in layer $k+1$.
+\item $w^{(j)}_{i,k}$ will refer to the weight of the connection between the the $k$th unit in layer $j$ and the $i$th unit in layer $k+1$.
 \ei
 
 \begin{notice}
@@ -116,11 +116,11 @@ Without using any training data (this is testing your understanding of the model
 \bes
 \item $x^{(2)}_1$ encodes whether or not the passenger is female (i.e., it should take a value close to 1 when the passenger is female and 0 when the passenger is male).
 \begin{boxedsolution}
-Setting $w^{(1)}_{1,1} = -10$, $w^{(1)}_{1,2} = 0$, and $w^{(1)}_{1,3} = 5$ will do the trick.  If the passenger is male then $x^{(2)}_1 = \sigma(-10 + 5) = \sigma(-5) = 0.0067$ and if the passenger is female then $x^{(2)}_1 = \sigma(5) = 0.9933$
+Setting $w^{(1)}_{1,2} = -10$, $w^{(1)}_{1,1} = 0$, and $w^{(1)}_{1,3} = 5$ will do the trick.  If the passenger is male then $x^{(2)}_1 = \sigma(-10 + 5) = \sigma(-5) = 0.0067$ and if the passenger is female then $x^{(2)}_1 = \sigma(5) = 0.9933$
 \end{boxedsolution}
 \item $x^{(2)}_2$ encodes whether or not the passenger is a young male (i.e., it should take a value close to 1 when the passenger is male under the age of say 5 and 0 otherwise).
 \begin{boxedsolution}
-Setting $w^{(1)}_{2,1} = 15$, $w^{(1)}_{2,2} = -1$, and $w^{(1)}_{1,3} = -10$ will do the trick.  If the passenger is female and one years-old $x^{(2)}_2 = \sigma(-10 - 1) = \sigma(-11) \approx 0$ (any older female passengers will have even lower values. and if the passenger is male and 1 years-old then $x^{(2)}_1 = \sigma(15 - 1 - 10) = \sigma(4) = 0.982$.  A four year old male would have $x^{(2)}_1 = \sigma(15 - 4 - 10) = \sigma(1) = 0.731$.  An older male (e.g., a 10 year old) would have $x^{(2)}_1 = \sigma(15 - 10 - 10) = \sigma(-5) = 0.0067$
+Setting $w^{(1)}_{2,2} = 15$, $w^{(1)}_{2,1} = -1$, and $w^{(1)}_{2,3} = -10$ will do the trick.  If the passenger is female and one years-old $x^{(2)}_2 = \sigma(-10 - 1) = \sigma(-11) \approx 0$ (any older female passengers will have even lower values. and if the passenger is male and 1 years-old then $x^{(2)}_1 = \sigma(15 - 1 - 10) = \sigma(4) = 0.982$.  A four year old male would have $x^{(2)}_1 = \sigma(15 - 4 - 10) = \sigma(1) = 0.731$.  An older male (e.g., a 10 year old) would have $x^{(2)}_1 = \sigma(15 - 10 - 10) = \sigma(-5) = 0.0067$
 \end{boxedsolution}
 \item $x^{(3)}_1$ should be close to 1 (i.e., predict survival) when the passenger is female \emph{or} a male under the age of 5.
 \begin{boxedsolution}
