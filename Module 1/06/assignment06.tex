@@ -64,7 +64,7 @@ Thinking back to the companion notebook, we observed that the features in the or
 
 Graphically we can contrast these approaches in the following way.  First we'll show the logistic regression model that we applied in the notebook.
 
-\includegraphics[width=\linewidth]{figures/titaniclogisticregression}\marginnote{To interpret these flow diagrams, think of the circles (also called nodes) as representing values that are either input to or computed by the network.  Directed lines (also called edges) represent data flowing in the network.  Each edge multiplies the value flowing into it by a weight (represented by a text label on the edge).}
+\includegraphics[width=\linewidth]{figures/titaniclogisticregression}\marginnote{To interpret these diagrams, think of the circles (also called nodes) as representing values that are either input to or computed by the network.  Directed lines (also called edges) represent data flowing in the network.  Each edge multiplies the value flowing into it by a weight (represented by a text label on the edge).}
 
 Notice how we had to manually introduce the feature {\tt is young male} in order for the logistic regression model to utilize it to make its prediction.  Before giving you the equivalent figure for the multi-layer perceptron, let's look at a little bit more cartoonish version of the multi-layer perceptron.  This version will leave off the math and the particular notation we are using.  Once you have a good sense of what this is, you can look at the more precise version which is to follow.
 
@@ -72,7 +72,10 @@ Notice how we had to manually introduce the feature {\tt is young male} in order
 \begin{externalresources}{(optional if what we give you below is not clicking)}
 Here are some additional resources that explain the concept of a multi-layer perceptron.  If the explanations we give below are not working for you, consider checking out some of these.  \textbf{You do not need to consult these resources if you feel like our explanations are working well for you.}
 \bi
-\item todo
+\item 3blue1brown \href{https://www.youtube.com/watch?v=aircAruvnKk&t=6s}{What is a neural network?} 
+\item 3blue1brown video \href{https://www.youtube.com/watch?v=IHZwWFHWa-w&list=PL_h2yd2CGtBHEKwEH5iqTZH85wLS-eUzv&index=2}{How neural networks learn?}
+\item 3blue1brown \href{https://www.youtube.com/watch?v=Ilg3gGewQ5U}{Backpropagation}
+\item Please add your own links via NB.
 \ei
 \end{externalresources}
 
@@ -184,7 +187,7 @@ Before getting into the derivation of the backpropagation algorithm, let's revis
 \mlvec{w^\star} &= \argmin_{\mlvec w} \sum_{i=1}^n \left ( -y_i \ln \sigma\left (\mlvec{w}^\top \mlvec{x_i} \right) - (1-y_i) \ln \left ( 1 - \sigma\left (\mlvec{w}^\top \mlvec{x_i} \right) \right) \right)
 \end{align}
 
-Even though you've seem this before, it might seem a bit intimidating.  Remember, that this optimization problem arose from using the sigmoid function ($\frac{1}{1+e^{-x}}$) to map $\mlvec{w}^\top \mlvec{x_i}$ into a probability and then applying the log loss.  We can represent the logistic regression model applied to an input point $\mlvec{x}$ using the data flow representation shown in Figure~\ref{fig:logisticreggeneral}.  
+Even though you've seem this before, it might seem a bit intimidating.  Remember, that this optimization problem arose from using the sigmoid function ($\frac{1}{1+e^{-x}}$) to map $\mlvec{w}^\top \mlvec{x_i}$ into a probability and then applying the log loss.  We can represent the logistic regression model applied to an input point $\mlvec{x}$ using the data flow representation shown in Figure~\ref{fig:logisticreggeneral}.
 \begin{notice}
 We have moved the weights the arrows into circles.  In the dataflow graph we will label the edges with partial derivatives (or gradients).
 \end{notice}
@@ -202,7 +205,7 @@ Starting from the data flow representation of the logistic regression model show
 \includegraphics[width=0.6\linewidth]{figures/4asolution}
 \end{center}
 \end{boxedsolution}
-\item Using the technique in the HMC calculus tutorials writeup, compute the gradient of the log loss with respect to weights, $\mlvec{w}$.  \emph{Hint: remember when examining the arrow from $\mlvec{x}$ to $s$, instead of writing the partial derivative of $s$ with respect to its input, you can instead write the gradient.  The rest of the process in the HMC calculus tutorial can be applied without modification.}
+\item Using the technique in the HMC calculus tutorials writeup, compute the gradient of the log loss with respect to weights, $\mlvec{w}$.  \emph{Hint: remember when examining the arrow from $\mlvec{x}$ to $s$, instead of writing the partial derivative of $s$ with respect to its input, you can instead write the gradient.  The rest of the process in the HMC calculus tutorial can be applied without modification.}.   Note that we are only showing the path of one input $\mathbf{x}$ through the network.  If you want to work with multiple inputs to take a gradient, all you need to do is sum over the gradient with respect to each training instance.
 \begin{boxedsolution}
 \begin{center}
 \includegraphics[width=0.8\linewidth]{figures/4bsolution}
@@ -263,12 +266,17 @@ Let's get to it.
 \begin{exercise}[(75 minutes)]
 The backpropagation algorithm, not surprisingly, works by computing gradients in the network starting from the output and working backwards.  In this exercise you'll work through the major steps of the backpropagation algorithm.  This exercise should be done in reference to Figure~\ref{fig:mlpgeneral}.
 \bes
-\item Referencing view 3, create a data flow graph and compute $\frac{\partial l}{\partial x^{(m)}_1}$.
+
+
+\item Referencing view 1, compute the gradient of the loss with respect to $\mathbf{w^{(k)}_i}$, $\nabla_{\mathbf{w^{(k)}_i}} l$.  You can assume you have already computed $\frac{\partial l}{\partial x^{(k+1)}_i}$.
 \begin{boxedsolution}
 \begin{center}
-\includegraphics[width=0.5\linewidth]{figures/5asolution}
+\includegraphics[width=0.5\linewidth]{figures/5csolution}
 \end{center}
-The partial derivative can be read right off the data flow graph.
+\begin{align}
+\nabla_{\mathbf{w^{(k)}_i}} l &= \mlvec{x^{(k)}} \sigma(s_i^{(k+1)}) (1 - \sigma(s_i^{(k+1)}))\frac{\partial l}{\partial x_i^{(k+1)}} \\
+&=  \mlvec{x^{(k)}} \sigma\left (\mlvec{w_i^{(i)}}^\top \mlvec{x^{(k)}} \right )\left (1-\sigma\left (\mlvec{w_i^{(i)}}^\top \mlvec{x^{(k)}} \right )\right) \frac{\partial l}{\partial x_i^{(k+1)}}
+\end{align}
 \end{boxedsolution}
 
 \item Referencing view 2, compute $\frac{\partial l}{\partial x^{(k)}_i}$.  You can assume that you have already calculated the partial derivatives of the loss with respect to the layer $k+1$.  That is, you already have $\frac{\partial l}{\partial x^{(k+1)}_1}, \ldots, \frac{\partial l}{\partial x^{(k+1)}_{n_{k+1}}}$.
@@ -283,16 +291,14 @@ The partial derivative can be read right off the data flow graph.
 \end{align}
 \end{boxedsolution}
 
-\item Referencing view 1, compute the gradient of the loss with respect to $\mathbf{w^{(k)}_i}$, $\nabla_{\mathbf{w^{(k)}_i}} l$.  You can assume you have already computed $\frac{\partial l}{\partial x^{(k+1)}_i}$.
+\item Referencing view 3, create a data flow graph and compute $\frac{\partial l}{\partial x^{(m)}_1}$.
 \begin{boxedsolution}
 \begin{center}
-\includegraphics[width=0.5\linewidth]{figures/5csolution}
+\includegraphics[width=0.5\linewidth]{figures/5asolution}
 \end{center}
-\begin{align}
-\nabla_{\mathbf{w^{(k)}_i}} l &= \mlvec{x^{(k)}} \sigma(s_i^{(k+1)}) (1 - \sigma(s_i^{(k+1)}))\frac{\partial l}{\partial x_i^{(k+1)}} \\
-&=  \mlvec{x^{(k)}} \sigma\left (\mlvec{w_i^{(i)}}^\top \mlvec{x^{(k)}} \right )\left (1-\sigma\left (\mlvec{w_i^{(i)}}^\top \mlvec{x^{(k)}} \right )\right) \frac{\partial l}{\partial x_i^{(k+1)}}
-\end{align}
+The partial derivative can be read right off the data flow graph.
 \end{boxedsolution}
+
 \ees
 \end{exercise}
 
