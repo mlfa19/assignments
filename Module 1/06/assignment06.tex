@@ -1,6 +1,7 @@
 \documentclass[assignment06_Solutions]{subfiles}
 
 \IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
 
 \fancypagestyle{firstpage}
 
@@ -51,28 +52,24 @@ Here are some things we'll be utilizing in this assignment.  When appropriate, w
 In order to motivate the idea of neural networks, we'll be examining the Titanic Kaggle dataset.  If you didn't work with this data, it might help you to briefly skim \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%201/05/assignment05.ipynb#scrollTo=56C4fPtK7YeQ}{the walkthrough in assignment 5}.
 
 \vspace{1em}
-\begin{externalresources}[(TODO minutes)]
+\begin{externalresources}[(45 minutes)]
 Go through the \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%201/06/Assignment_6_Companion.ipynb}{Assignment 6 Companion notebook}.
 \end{externalresources}
 
 \section{Our First Neural Network: the Multilayer Perceptron (MLP)}
 
-TODO: include refresher on logistic regression.
-
-Now that you've seen a neural network in action, we'll be digging into how a neural network works.  The presentation will be specific to a particular type of neural network known as a multilayer perceptron, but the main ideas generalize to many other types of networks.
+Now that you've seen a neural network in action, we'll be digging into how a neural network works.  The presentation will be specific to a particular type of neural network that we used in the companion notebook known as a multilayer perceptron (MLP), but the main ideas generalize to many other types of networks.
 
 Thinking back to the companion notebook, we observed that the features in the original dataset ({\tt age} and {\tt sex}) were not conducive to predicting whether someone would survive.  We showed that by augmenting the input features with a column called {\tt is young male} that captured whether or not a person was young \emph{and} male, that the algorithm could effectively learn the task.  The fundamental idea of a neural network is that the network automatically constructs useful representations of the input data \emph{as a part of the learning process}.
 
-Graphically we can contrast these approaches in the following way\sidenote{to interpret these graphs, think of the circles (also called nodes) as representing values that are put into or computed by the network.  Directed lines (also called edges) as representing data flowing in the network.  Each edge multiplies the value flowing into it by a weight (represented by a text label on the edge).}. First we'll show the logistic regression model that we applied in the notebook.
+Graphically we can contrast these approaches in the following way.  First we'll show the logistic regression model that we applied in the notebook.
 
-\includegraphics[width=\linewidth]{figures/titaniclogisticregression}
+\includegraphics[width=\linewidth]{figures/titaniclogisticregression}\marginnote{To interpret these flow diagrams, think of the circles (also called nodes) as representing values that are either input to or computed by the network.  Directed lines (also called edges) represent data flowing in the network.  Each edge multiplies the value flowing into it by a weight (represented by a text label on the edge).}
 
-Notice how we had to manually introduce the feature {\tt is young male} in order for the logistic regression model to utilize it to make its prediction.  In contrast, here is the neural network that we fit at the end of the notebook.
-
-Before giving you the equivalent figure for the multi-layer perceptron, let's look at a little bit more cartoonish version of the multi-layer perceptron.  This version will leave off the math and the particular notation we are using.  Once you have a good sense of what this is, you can look at the more precise version which is to follow.
+Notice how we had to manually introduce the feature {\tt is young male} in order for the logistic regression model to utilize it to make its prediction.  Before giving you the equivalent figure for the multi-layer perceptron, let's look at a little bit more cartoonish version of the multi-layer perceptron.  This version will leave off the math and the particular notation we are using.  Once you have a good sense of what this is, you can look at the more precise version which is to follow.
 
 
-\begin{externalresources}
+\begin{externalresources}{(optional if what we give you below is not clicking)}
 Here are some additional resources that explain the concept of a multi-layer perceptron.  If the explanations we give below are not working for you, consider checking out some of these.  \textbf{You do not need to consult these resources if you feel like our explanations are working well for you.}
 \bi
 \item todo
@@ -81,7 +78,7 @@ Here are some additional resources that explain the concept of a multi-layer per
 
 \includegraphics[width=\linewidth]{figures/titanicmlpsimple}
 
-This figure shows the basic idea of a multi-layer perceptron (MLP. Input data (in this case we just use age, male, and a bias term) are propagated via a set of connection weights to a set of hidden representations.  These hidden representations are propagated via another set of a connection weights to the output of the network.   In the companion notebook we showed that in the Titanic example, the network learned two hidden representations: one that encoded {\tt is young male} and the other that encoded sex.  Of particular importance is that we did not have to manually introduce the {\tt is young male} feature.
+Input data (in this case we just use age, male, and a bias term) are propagated via a set of connection weights to a set of hidden representations.  These hidden representations are propagated via another set of a connection weights to the output of the network.   In the companion notebook we showed that for the Titanic dataset, the network learned two hidden representations: one that seemed to encode {\tt is young male} and the another that encoded sex.  Of particular importance is that we did not have to manually introduce the {\tt is young male} feature.
 
 Next, let's make this cartoon picture concrete.  We'll use the following notation.
 \bi
@@ -91,36 +88,52 @@ Next, let's make this cartoon picture concrete.  We'll use the following notatio
 \ei
 
 \begin{notice}
-There are a lot of symbols here!  Take some time to unpack each of them.  Make sure you know what superscripts and subscripts represent.  While there is an upfront cost to introducing these symbols, it will ultimately make our lives considerably simpler.
+There are a lot of symbols here!  Take some time to unpack each of them.  Make sure you know what superscripts and subscripts represent.  While there is an upfront cost to introducing these symbols, it will ultimately make the derivation of the general form of the MLP easier.
 \end{notice}
 \includegraphics[width=\linewidth]{figures/titanicmlp}
 
 \vspace{1em}
 
-\begin{exercise}[(TODO minutes)]
-There's a lot to interpret an unpack.  Make sure they can do it. TODO.
+\begin{exercise}[(10 minutes)]
+Before going on, let's make sure you have a firm handle on what's being represented in the figure above.
 \bes
-\item TODO: relate the structure of the MLP to logistic regression.  You should see it represented multiple times.
+\item Just as in logistic regression, we will try to tune the weights to fit the data.  How many weights are there to tune in this network?
+\begin{boxedsolution}
+There are a total of 9 weights in the network.  There are 6 connecting the 3 input units to the 2 hidden summation units.  There are another 3 connecting the 1 output summation unit.
+\end{boxedsolution}
+\item While the figure looks pretty crazy, it has a lot of similarities with the logistic regression model.  Where does the logistic regression model show up in the figure?
+\begin{boxedsolution}
+There are three different logistic regression models represented.  There is one going from the inputs to the $x_1^{(2)}$.  There is another going from the inputs to $x_2^{(2)}$.  There is a third going from the hidden units to $x_1^{(3)}$.  The models are connected together such that the two lower logistic models feed into the higher-level one.
+\end{boxedsolution}
 \ees
 \end{exercise}
 
-\begin{exercise}[(TODO minutes)]
-Without using any training data (this is testing your understanding of the model itself), compute the weights in this network ($w^{(1)}_{1,1}, w^{(1)}_{1,2}, w^{(1)}_{1,3}, w^{(1)}_{2,1}, w^{(1)}_{2,2}, w^{(1)}_{2,3}, w^{(2)}_{1,1}, w^{(2)}_{1,2}$) such that the MLP has the following behavior.  Recall that $x^{(1)}_1$ is the passenger's age, $x^{(1)}_2$ is a binary variable that is 1 if the passenger is male and 0 if female, $x^{(1)}_3$ is a constant term (always 1).
-\bi
+\begin{exercise}[(30 minutes)]
+Without using any training data (this is testing your understanding of the model itself), compute the weights in this network ($w^{(1)}_{1,1}, w^{(1)}_{1,2}, w^{(1)}_{1,3}, w^{(1)}_{2,1}, w^{(1)}_{2,2}, w^{(1)}_{2,3}, w^{(2)}_{1,1}, w^{(2)}_{1,2}, w^{(2)}_{1,3}$) such that the MLP has the following behavior.  Recall that $x^{(1)}_1$ is the passenger's age, $x^{(1)}_2$ is a binary variable that is 1 if the passenger is male and 0 if female, $x^{(1)}_3$ and $x^{(2)}_3$ are always 1.
+\bes
 \item $x^{(2)}_1$ encodes whether or not the passenger is female (i.e., it should take a value close to 1 when the passenger is female and 0 when the passenger is male).
+\begin{boxedsolution}
+Setting $w^{(1)}_{1,1} = -10$, $w^{(1)}_{1,2} = 0$, and $w^{(1)}_{1,3} = 5$ will do the trick.  If the passenger is male then $x^{(2)}_1 = \sigma(-10 + 5) = \sigma(-5) = 0.0067$ and if the passenger is female then $x^{(2)}_1 = \sigma(5) = 0.9933$
+\end{boxedsolution}
 \item $x^{(2)}_2$ encodes whether or not the passenger is a young male (i.e., it should take a value close to 1 when the passenger is male under the age of say 5 and 0 otherwise).
+\begin{boxedsolution}
+Setting $w^{(1)}_{2,1} = 15$, $w^{(1)}_{2,2} = -1$, and $w^{(1)}_{1,3} = -10$ will do the trick.  If the passenger is female and one years-old $x^{(2)}_2 = \sigma(-10 - 1) = \sigma(-11) \approx 0$ (any older female passengers will have even lower values. and if the passenger is male and 1 years-old then $x^{(2)}_1 = \sigma(15 - 1 - 10) = \sigma(4) = 0.982$.  A four year old male would have $x^{(2)}_1 = \sigma(15 - 4 - 10) = \sigma(1) = 0.731$.  An older male (e.g., a 10 year old) would have $x^{(2)}_1 = \sigma(15 - 10 - 10) = \sigma(-5) = 0.0067$
+\end{boxedsolution}
 \item $x^{(3)}_1$ should be close to 1 (i.e., predict survival) when the passenger is female \emph{or} a male under the age of 5.
-\ei
+\begin{boxedsolution}
+Set $w^{(2)}_{1,1} = 2$ and $w^{(2)}_{1,2} = 2$ and $w^{(2)}_{1,3} = -1$.  That way if either $x^{(2)}_1$ or $x^{(2)}_2$ are close to 1, then $x^{(3)}_1 \approx \sigma(1) = 0.73$.
+\end{boxedsolution}
+\ees
 \end{exercise}
 
-Believe it or not, computing these weights by hand was fairly common back before we had algorithms for automatically learning the weights from data.  The reason for this was that early techniques for learning the weights were very inefficient and often unable to converge to good solutions.  Later in this document we will be learning about the backpropagation algorithm that can be used to efficiently compute the gradient of the weights in this neural network with respect to some cost function.  \textbf{Just as we did with logistic regression, we can use this gradient in order to optimize the weights of the network using gradient descent.}  What's beautiful is that even though the model itself got more complicated, the learning algorithm and basic ideas remain largely the same.
+Believe it or not, computing these weights by hand was fairly common before we had algorithms for automatically tuning weights from data.  The reason for this was that early techniques for learning the weights were very inefficient and often unable to converge to good solutions.  Later in this document we will be learning about the \href{https://en.wikipedia.org/wiki/Backpropagation}{backpropagation algorithm} that can be used to efficiently compute the gradient of the weights in this neural network with respect to some cost function.  \textbf{Just as we did with logistic regression, we can use this gradient in order to optimize the weights of the network using gradient descent.}  What's beautiful is that even though the model itself will get more complicated, the learning algorithm and basic ideas will remain largely the same.
 
-In order to prepare ourselves for the derivation of the backpropagation algorithm, we need to build up a bit more powerful method of applying the chain rule to multivariate functions.
+In order to prepare ourselves for the derivation of the backpropagation algorithm, we need to build up a new technique for applying the chain rule to multivariate functions.
 
 
 \section{A Graphical View of the Multivariable Chain Rule}
 
-In assignment 3 we learned the multivariable chain rule, which allowed us to take partial derivatives (or the gradient) of the composition of a multivariable and a single variable function.  In the listing below, $h$ is a function from a vector to a scalar, $f$ is from a vector to a scalar, and $g$ is from a scalar to a scalar.
+In assignment 3 we learned the multivariable chain rule, which allowed us to take partial derivatives (or the gradient if we wanted to take all partial derivatives simultaneously) of the composition of a multivariable and a single variable function.  In the listing below, $h$ is a function from a vector to a scalar, $f$ is from a vector to a scalar, and $g$ is from a scalar to a scalar.
 
 \begin{align}
 h(\mlvec{w}) &= g(f(\mlvec{w}))&\mbox{h($\mlvec{w}$) is the composition of $f$ with $g$} \nonumber \\
@@ -128,17 +141,37 @@ h(\mlvec{w}) &= g(f(\mlvec{w}))&\mbox{h($\mlvec{w}$) is the composition of $f$ w
 \frac{\partial h(\mlvec{w})}{\partial w_i} &= g'(f(\mlvec{w})) \frac{\partial f}{\partial w_i}& \mbox{this is for a single partial deriv. (rather than the gradient)}
 \end{align}
 
-If we were to write out the MLP example in the previous section using this notation, we'd have a huge mess.  The function would probably barely fit on one line of this document.  Luckily, there's another way to apply the chain rule that uses the concept of a dataflow diagram.  What we will soon see is that not only will the dataflow diagram make our lives easier from a mathematical perspective, it will actually make our lives easier from a computational perspective (that last bit is a foreshadowing of the backpropagation algorithm, which we'll soon meet).
+If we were to write out the MLP example in the previous section using this notation, we'd have a huge mess.  The function would probably barely fit on one line of this document.  Luckily, there's another way to apply the chain rule that uses the concept of a dataflow diagram.  What you will eventually see is that not only will the dataflow diagram make our lives easier from a mathematical perspective, it will actually make our lives easier from a computational perspective (that last bit is a foreshadowing of the backpropagation algorithm).
 
 
 \begin{externalresources}[(20 minutes)]
-This HMC calculus tutorials explain this concept beautifully.  Go and read the \href{https://www.math.hmc.edu/calculus/tutorials/multichainrule/}{HMC Multivariable Chain Rule Page} and come back for some exercises to test your understanding.
+This HMC calculus tutorials explain the concept of the chain rule using dataflow diagrams beautifully.  Go and read the \href{https://www.math.hmc.edu/calculus/tutorials/multichainrule/}{HMC Multivariable Chain Rule Page} and come back for some exercises to test your understanding.
 \end{externalresources}
 
-\begin{exercise}
+\begin{exercise}[(20 minutes)]
 \bes
-\item Some quick probably to make sure they get it.
-\item Generalize to gradients.
+\item Draw a dataflow diagram to represent the function $f(x,y,z) = \cos(x^2 y) + x^2 \sqrt{z}$.  Compute $\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}, \frac{\partial f}{\partial z}$ using the dataflow diagram method.
+\begin{boxedsolution}
+\begin{center}
+\includegraphics[width=0.5\linewidth]{figures/3asolution}
+\end{center}
+\begin{align}
+\frac{\partial f}{\partial x}&= 2x y (-sin(x^2 y)) + 2x{\sqrt z} \nonumber \\
+&= -2x y sin(x^2 y) + 2x{\sqrt z} \\
+\frac{\partial f}{\partial y} &= x^2 (-sin(x^2 y)) \nonumber \\
+&= -x^2 sin(x^2 y) \\
+\frac{\partial f}{\partial z} &= \frac{1}{2 \sqrt z} x^2
+\end{align}
+\end{boxedsolution}
+\item Draw a dataflow diagram to represent the function $f(\mlvec{x}) = (\mlvec{c}^\top \mlvec{x})^2$.  Compute $\nabla_{\mlvec{x}} f$ using the dataflow diagram method.  Hint: we're generalizing what is on the HMC page a bit.  You can have vector quantities flowing through your diagram as well and all the ideas will carry over except you will have a gradient instead of a partial derivative.
+\begin{boxedsolution}
+\begin{center}
+\includegraphics[width=0.1\linewidth]{figures/3bsolution}
+\end{center}
+\begin{align}
+\nabla_{\mlvec{x}} f = 2(\mlvec{c}^\top \mlvec{x}) \mlvec{c}
+\end{align}
+\end{boxedsolution}
 \ees
 \end{exercise}
 
@@ -151,23 +184,46 @@ Before getting into the derivation of the backpropagation algorithm, let's revis
 \mlvec{w^\star} &= \argmin_{\mlvec w} \sum_{i=1}^n \left ( -y_i \ln \sigma\left (\mlvec{w}^\top \mlvec{x_i} \right) - (1-y_i) \ln \left ( 1 - \sigma\left (\mlvec{w}^\top \mlvec{x_i} \right) \right) \right)
 \end{align}
 
-Even though you've seem this before, it might seem a bit intimidating.  Remember, that this optimization problem arose from using the sigmoid function ($\frac{1}{1+e^{-x}}$) to map $\mlvec{w}^\top \mlvec{x_i}$ into a probability and then applying the log loss.  We can represent the logistic regression model applied to an input point $\mlvec{x}$ using the data flow representation shown in Figure~\ref{fig:logisticreggeneral}.
+Even though you've seem this before, it might seem a bit intimidating.  Remember, that this optimization problem arose from using the sigmoid function ($\frac{1}{1+e^{-x}}$) to map $\mlvec{w}^\top \mlvec{x_i}$ into a probability and then applying the log loss.  We can represent the logistic regression model applied to an input point $\mlvec{x}$ using the data flow representation shown in Figure~\ref{fig:logisticreggeneral}.  
+\begin{notice}
+We have moved the weights the arrows into circles.  In the dataflow graph we will label the edges with partial derivatives (or gradients).
+\end{notice}
 \begin{marginfigure}
 \includegraphics[width=\linewidth]{figures/logisticregressiongeneral}\label{fig:logisticreggeneral}
+\caption{Dataflow in the logistic regression model}
 \end{marginfigure}
 
-\begin{exercise}
+\begin{exercise}[(30 minutes)]
 Starting from the data flow representation of the logistic regression model shown in Figure~\ref{fig:logisticreggeneral}, complete the following steps.
 \bes
 \item Add a new circle (node) to the graph that represents the log loss that the output $z$ incurs when compared to the training output $y$.
-\item Using the technique in the HMC calculus tutorials writeup, compute the gradient of the log loss with respect to weights, $\mlvec{w}$.  \emph{Hint: when examining the arrow form $\mlvec{x}$ to $s$, instead of writing the partial derivative of $s$ with respect to its input, you can instead write the gradient.  The rest of the process in the HMC calculus tutorial can be applied without modification.}
-\item Was computing the gradient using this approach easier, harder, or the same in comparison with what you did in assignment 3?  Why? (this is subjective, so there is no right answer, we just want you to reflect on the differences between the approaches and which you liked better).
+\begin{boxedsolution}
+\begin{center}
+\includegraphics[width=0.6\linewidth]{figures/4asolution}
+\end{center}
+\end{boxedsolution}
+\item Using the technique in the HMC calculus tutorials writeup, compute the gradient of the log loss with respect to weights, $\mlvec{w}$.  \emph{Hint: remember when examining the arrow from $\mlvec{x}$ to $s$, instead of writing the partial derivative of $s$ with respect to its input, you can instead write the gradient.  The rest of the process in the HMC calculus tutorial can be applied without modification.}
+\begin{boxedsolution}
+\begin{center}
+\includegraphics[width=0.8\linewidth]{figures/4bsolution}
+\end{center}
+\begin{align}
+\nabla_{\mlvec w} l &= \mlvec{x} \sigma(s)(1-\sigma(s))\left(-y\frac{1}{z} + (1-y)\frac{1}{1-z}\right) \nonumber \\
+&= \mlvec{x} \sigma(s)(1-\sigma(s))\left(-y\frac{1}{\sigma(s)} + (1-y)\frac{1}{1-\sigma(s)}\right) \nonumber \\
+&= -\mlvec{x} y(1- \sigma(\mlvec{w}^\top \mlvec{x})) + \mlvec{x} (1-y) \sigma(\mlvec{w}^\top \mlvec{x})
+\end{align}
+See assignment 3 for additional simplifications.
+\end{boxedsolution}
+\item Was computing the gradient using this approach easier, harder, or the same in comparison with what you did in assignment 3?  Why? (this is subjective, so there is no right answer, we just want you to reflect on the differences between the approaches and which you liked better).e. 
+\begin{boxedsolution}
+This is subjective.  In this example, it's fair to say that the dataflow method is not really any easier.  It will pay off later though!
+\end{boxedsolution}
 \ees
 \end{exercise}
 
 \subsection{Forward Pass}
 \begin{notice}
-The notation for the general MLP gets pretty cluttered. It's important to realize that much of the complexity in this section is simply a result of keeping track of various indices (e.g., layer, unit number) rather than anything conceptually difficult.  Our advice is to be diligent in going through these figures and make sure you have a firm grasp on the notation we are using.  Please post on NB if something is confusing (or even just to verify your understanding).
+The notation for the general case of MLP gets pretty cluttered. It's important to realize that much of the complexity in this section is simply a result of keeping track of various indices (e.g., layer, unit number) rather than anything conceptually difficult.  Our advice is to be diligent in going through these figures and make sure you have a firm grasp on the notation we are using.  Please post on NB if something is confusing (or even just to verify your understanding).
 \end{notice}
 
 Let's generalize the diagram of the multilayer perceptron in the Titanic example in the following ways.
@@ -176,7 +232,9 @@ Let's generalize the diagram of the multilayer perceptron in the Titanic example
 \item We'll allow for an arbitrary number of units at each layer in the network.  We'll use the notation $n_k$ to refer to the number of units in the $k$th layer of the network.
 \ee
 
-These generalizations are summarized in the following figure that shows the data flow between two layers of the network (MLP data flow view 1) and between the output layer and the loss function.
+These generalizations are summarized in the following figure that shows the data flow between two layers of the network (MLP data flow view 1) and between the output layer and the loss function.  You may see examples of MLP's with activation functions other than sigmoid.  The math to handle these other functions is very similar, so we are just using sigmoid here.
+
+In the figure below we show how data propagates through the network in the forward direction.  Note that this is not a dataflow diagram in the sense that the arrows are labeled with weights rather than partial derivatives.
 
 \includegraphics[width=\linewidth]{figures/mlpfullforward}
 
@@ -197,23 +255,49 @@ Before we do this we'll augment the data flow graph just a little bit with to pr
 \begin{center}
 \includegraphics[width=\linewidth]{figures/mlpfull}
 \end{center}
-\caption{The general data flow graph for a multi-layer perceptron.\label{fig:mlpgeneral}}
+\caption{A data flow graph for the multi-layer perceptron.\label{fig:mlpgeneral}}
 \end{figure*}
 
 Let's get to it.
 
-\newpage
-\begin{exercise}[(60 minutes)]
+\begin{exercise}[(75 minutes)]
 The backpropagation algorithm, not surprisingly, works by computing gradients in the network starting from the output and working backwards.  In this exercise you'll work through the major steps of the backpropagation algorithm.  This exercise should be done in reference to Figure~\ref{fig:mlpgeneral}.
 \bes
-\item Referencing view 3, compute $\frac{\partial l}{\partial x^{(m)}_1}$.
+\item Referencing view 3, create a data flow graph and compute $\frac{\partial l}{\partial x^{(m)}_1}$.
+\begin{boxedsolution}
+\begin{center}
+\includegraphics[width=0.5\linewidth]{figures/5asolution}
+\end{center}
+The partial derivative can be read right off the data flow graph.
+\end{boxedsolution}
+
 \item Referencing view 2, compute $\frac{\partial l}{\partial x^{(k)}_i}$.  You can assume that you have already calculated the partial derivatives of the loss with respect to the layer $k+1$.  That is, you already have $\frac{\partial l}{\partial x^{(k+1)}_1}, \ldots, \frac{\partial l}{\partial x^{(k+1)}_{n_{k+1}}}$.
+
+\begin{boxedsolution}
+\begin{center}
+\includegraphics[width=0.9\linewidth]{figures/5bsolution}
+\end{center}
+\begin{align}
+\frac{\partial l}{\partial x^{(k)}_i} &= \sum_{j=1}^{n_{k+1}} w^{(k)}_{j,i} \sigma \left (s^{(k+1)}_{j} \right) \left (1-\sigma \left (s^{(k+1)}_{j} \right)\right) \frac{\partial l}{\partial x^{(k+1)}_j}&  \mbox{need to consider all $n_{k+1}$ nodes} \nonumber \\
+&= \sum_{j=1}^{n_{k+1}} w^{(k)}_{j,i} \sigma \left ( \mathbf{w_j^{(k)}}^\top \mathbf{x^{(k)}} \right) \left (1-\sigma \left ( \mathbf{w_j^{(k)}}^\top \mathbf{x^{(k)}}\right)\right) \frac{\partial l}{\partial x^{(k+1)}_j}
+\end{align}
+\end{boxedsolution}
+
 \item Referencing view 1, compute the gradient of the loss with respect to $\mathbf{w^{(k)}_i}$, $\nabla_{\mathbf{w^{(k)}_i}} l$.  You can assume you have already computed $\frac{\partial l}{\partial x^{(k+1)}_i}$.
+\begin{boxedsolution}
+\begin{center}
+\includegraphics[width=0.5\linewidth]{figures/5csolution}
+\end{center}
+\begin{align}
+\nabla_{\mathbf{w^{(k)}_i}} l &= \mlvec{x^{(k)}} \sigma(s_i^{(k+1)}) (1 - \sigma(s_i^{(k+1)}))\frac{\partial l}{\partial x_i^{(k+1)}} \\
+&=  \mlvec{x^{(k)}} \sigma\left (\mlvec{w_i^{(i)}}^\top \mlvec{x^{(k)}} \right )\left (1-\sigma\left (\mlvec{w_i^{(i)}}^\top \mlvec{x^{(k)}} \right )\right) \frac{\partial l}{\partial x_i^{(k+1)}}
+\end{align}
+\end{boxedsolution}
 \ees
 \end{exercise}
 
 \section{Summary (AKA What the Heck Just Happened?)}
-That was a lot of math flying at you.  We hope that you realize how cool what you just did was.  When you combine the gradient you computed with gradient descent, you have derived a learning rule for efficiently tuning the weights of a special type of neural network called a multi-layer perceptron (MLP).  The learning rules for almost every other type of neural network are just variations on this same theme.  This is incredibly powerful, and you now have a very powerful mental model for how learning in neural networks is possible.
+That was a lot of math flying at you.  We hope that you realize how cool what you just did was.  When you combine the gradient you computed with gradient descent, you have derived a learning rule for efficiently tuning the weights of a special type of neural network called a multi-layer perceptron (MLP).  Without defining the derivatives at lower layers in terms of higher layers, we would have been left to sum over all possible paths from some unit in the network to the loss.  The number of paths would grow exponentially with the depth of the network.  Here, we are able to compute derivatives without a significant computational expense.  The learning rules for almost every other type of neural network are just variations on this same theme.  This is incredibly powerful, and you now have a very powerful mental model for how learning in neural networks is possible.
 %
 %\includegraphics[width=\linewidth]{figures/singleneuroncloseup}
 %
@@ -254,5 +338,8 @@ If you'd like to take this material farther, here are some suggestions. We do no
 \item Implement the backpropagation algorithm to compute the gradient for an MLP. Hint: if you do this, e-mail us for hints / guidance.  It is pretty challenging, but it does pay off in terms of solidifying the backpropagation algorithm.
 \item Make sure your implementation is correct by comparing the numerical approximation of the gradient to the gradient you calculated with the backpropagation algorithm.
 \ei
+
+\companionnotebook{Assignment_6_Companion}
+
 
 \end{document}
