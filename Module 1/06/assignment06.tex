@@ -275,7 +275,7 @@ The backpropagation algorithm, not surprisingly, works by computing gradients in
 \end{center}
 \begin{align}
 \nabla_{\mathbf{w^{(k)}_i}} l &= \mlvec{x^{(k)}} \sigma(s_i^{(k+1)}) (1 - \sigma(s_i^{(k+1)}))\frac{\partial l}{\partial x_i^{(k+1)}} \\
-&=  \mlvec{x^{(k)}} \sigma\left (\mlvec{w_i^{(i)}}^\top \mlvec{x^{(k)}} \right )\left (1-\sigma\left (\mlvec{w_i^{(i)}}^\top \mlvec{x^{(k)}} \right )\right) \frac{\partial l}{\partial x_i^{(k+1)}}
+&=  \mlvec{x^{(k)}} \sigma\left (\mlvec{w_i^{(k)}}^\top \mlvec{x^{(k)}} \right )\left (1-\sigma\left (\mlvec{w_i^{(k)}}^\top \mlvec{x^{(k)}} \right )\right) \frac{\partial l}{\partial x_i^{(k+1)}}
 \end{align}
 \end{boxedsolution}
 
