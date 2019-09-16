@@ -145,55 +145,114 @@ This HMC calculus tutorials explain this concept beautifully.  Go and read the \
 
 \section{Backpropagation}
 
-Before getting into the derivation of the backpropagation algorithm, let's revisit our logistic regression model.
+Before getting into the derivation of the backpropagation algorithm, let's revisit our logistic regression model from the last few assignments.  For the logistic regression model, we were given training inputs $\mlvec{x_1}, \mlvec{x_2}, \ldots \mlvec{x_n}$ with each $\mlvec{x_i}$ being a d-dimensional vector and training outputs $y_1, y_2, \ldots, y_n$ with each $y_i$ being a binary number that indicates the class that the $i$th instance belongs to.  Given this training data, our goal was to compute the best possible set of weights by solving the following optimization problem.
 
-TODO replicate the figure from before.
+\begin{align}
+\mlvec{w^\star} &= \argmin_{\mlvec w} \sum_{i=1}^n \left ( -y_i \ln \sigma\left (\mlvec{w}^\top \mlvec{x_i} \right) - (1-y_i) \ln \left ( 1 - \sigma\left (\mlvec{w}^\top \mlvec{x_i} \right) \right) \right)
+\end{align}
+
+Even though you've seem this before, it might seem a bit intimidating.  Remember, that this optimization problem arose from using the sigmoid function ($\frac{1}{1+e^{-x}}$) to map $\mlvec{w}^\top \mlvec{x_i}$ into a probability and then applying the log loss.  We can represent the logistic regression model applied to an input point $\mlvec{x}$ using the data flow representation shown in Figure~\ref{fig:logisticreggeneral}.
+\begin{marginfigure}
+\includegraphics[width=\linewidth]{figures/logisticregressiongeneral}\label{fig:logisticreggeneral}
+\end{marginfigure}
 
 \begin{exercise}
+Starting from the data flow representation of the logistic regression model shown in Figure~\ref{fig:logisticreggeneral}, complete the following steps.
 \bes
-\item Add a log loss function node to the top.
-\item Compute the gradient.
-\item Comment on flow of information in both forwards and backwards direction.
+\item Add a new circle (node) to the graph that represents the log loss that the output $z$ incurs when compared to the training output $y$.
+\item Using the technique in the HMC calculus tutorials writeup, compute the gradient of the log loss with respect to weights, $\mlvec{w}$.  \emph{Hint: when examining the arrow form $\mlvec{x}$ to $s$, instead of writing the partial derivative of $s$ with respect to its input, you can instead write the gradient.  The rest of the process in the HMC calculus tutorial can be applied without modification.}
+\item Was computing the gradient using this approach easier, harder, or the same in comparison with what you did in assignment 3?  Why? (this is subjective, so there is no right answer, we just want you to reflect on the differences between the approaches and which you liked better).
 \ees
 \end{exercise}
 
 \subsection{Forward Pass}
+\begin{notice}
+The notation for the general MLP gets pretty cluttered. It's important to realize that much of the complexity in this section is simply a result of keeping track of various indices (e.g., layer, unit number) rather than anything conceptually difficult.  Our advice is to be diligent in going through these figures and make sure you have a firm grasp on the notation we are using.  Please post on NB if something is confusing (or even just to verify your understanding).
+\end{notice}
 
-TODO, all symbols are defined in the network.
+Let's generalize the diagram of the multilayer perceptron in the Titanic example in the following ways.
+\be
+\item We'll allow for an arbitrary number of layers in the network.  We'll call the number of layers $m$ (the number of layers is also called the depth of the network.  networks with large $m$ are known as deep learning).
+\item We'll allow for an arbitrary number of units at each layer in the network.  We'll use the notation $n_k$ to refer to the number of units in the $k$th layer of the network.
+\ee
+
+These generalizations are summarized in the following figure that shows the data flow between two layers of the network (MLP data flow view 1) and between the output layer and the loss function.
+
+\includegraphics[width=\linewidth]{figures/mlpfullforward}
+
+Before we get into the math of how we can compute the gradient of the weights in this network using backpropagation, we must first perform the forward pass through the network.  \textbf{In the forward pass, we use the formulas in the figure above to calculate the value for every circle in the network.}  The forward pass is thus a very straightforward application of the equations shown here.  For the backward pass, we can assume that we have the values for each of these nodes.
 
 \subsection{Backward Pass: Applying the Chain Rule}
-TODO
 
+The stage is now set for you to finish the derivation of one of the most important algorithms in computer science!!!  Before you finish this off, let's take a look at what you've learned and the tools you have at your disposal.
+\be
+\item You know how to compute gradients using the data flow representation of a mutlivariable function.
+\item We've applied this technique to deriving the gradient of the logistic regression model.
+\item We've written the MLP in this same data flow representation.
+\ee
 
-\includegraphics[width=\linewidth]{figures/singleneuroncloseup}
+Before we do this we'll augment the data flow graph just a little bit with to provide a view that focuses more directly on the weights coming into a particular neuron.  In doing this, we'll refer to the weights coming into the $i$th node in layer $k+1$ as $w^{(k)}_i$.
 
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\linewidth]{figures/mlpfull}
+\end{center}
+\caption{The general data flow graph for a multi-layer perceptron.\label{fig:mlpgeneral}}
+\end{figure*}
 
+Let's get to it.
 
-Todo: use a variable for layer instead of just hidden (this would simplify things).
+\newpage
+\begin{exercise}[(60 minutes)]
+The backpropagation algorithm, not surprisingly, works by computing gradients in the network starting from the output and working backwards.  In this exercise you'll work through the major steps of the backpropagation algorithm.  This exercise should be done in reference to Figure~\ref{fig:mlpgeneral}.
+\bes
+\item Referencing view 3, compute $\frac{\partial l}{\partial x^{(m)}_1}$.
+\item Referencing view 2, compute $\frac{\partial l}{\partial x^{(k)}_i}$.  You can assume that you have already calculated the partial derivatives of the loss with respect to the layer $k+1$.  That is, you already have $\frac{\partial l}{\partial x^{(k+1)}_1}, \ldots, \frac{\partial l}{\partial x^{(k+1)}_{n_{k+1}}}$.
+\item Referencing view 1, compute the gradient of the loss with respect to $\mathbf{w^{(k)}_i}$, $\nabla_{\mathbf{w^{(k)}_i}} l$.  You can assume you have already computed $\frac{\partial l}{\partial x^{(k+1)}_i}$.
+\ees
+\end{exercise}
 
-Hidden unit to error:
-\begin{align}
-\frac{\partial{e}}{\partial{h_{i,j}}} &= \sum_{k=1}^{n_{i+1}} \frac{\partial s_{i+1, k}}{\partial h_{i,j}} \frac{\partial h_{i+1, k}}{\partial s_{i+1, k}} \frac{\partial e}{\partial h_{i+1, k}} \\
-&= \sum_{k=1}^{n_{i+1}} w^{i+1}_{j,k} \sigma(s_{i+1,k})(1 - \sigma_{i+1,k})\frac{\partial e}{\partial h_{i+1, k}}
-\end{align}
+\section{Summary (AKA What the Heck Just Happened?)}
+That was a lot of math flying at you.  We hope that you realize how cool what you just did was.  When you combine the gradient you computed with gradient descent, you have derived a learning rule for efficiently tuning the weights of a special type of neural network called a multi-layer perceptron (MLP).  The learning rules for almost every other type of neural network are just variations on this same theme.  This is incredibly powerful, and you now have a very powerful mental model for how learning in neural networks is possible.
+%
+%\includegraphics[width=\linewidth]{figures/singleneuroncloseup}
+%
+%
+%
+%Todo: use a variable for layer instead of just hidden (this would simplify things).
+%
+%Hidden unit to error:
+%\begin{align}
+%\frac{\partial{e}}{\partial{h_{i,j}}} &= \sum_{k=1}^{n_{i+1}} \frac{\partial s_{i+1, k}}{\partial h_{i,j}} \frac{\partial h_{i+1, k}}{\partial s_{i+1, k}} \frac{\partial e}{\partial h_{i+1, k}} \\
+%&= \sum_{k=1}^{n_{i+1}} w^{i+1}_{j,k} \sigma(s_{i+1,k})(1 - \sigma_{i+1,k})\frac{\partial e}{\partial h_{i+1, k}}
+%\end{align}
+%
+%Weights to error:
+%\begin{align}
+%\nabla_{\mathbf{w_{i,j}}} e &= \frac{\partial e} {s_{i,j}} \nabla_{\mathbf{w_{i,j}}} s_{i,j} \\
+%&= \frac{\partial e}{h_{i,j}}  \frac{\partial h_{i,j}}{s_{i,j}} \nabla_{\mathbf{w_{i,j}}} s_{i,j} \\
+%&= \frac{\partial e}{h_{i,j}}  \sigma(s_{i,j})(1-\sigma (s_{i,j})) \mathbf{h}_{i-1} 
+%\end{align}
+%
+%Output to error (serves as a base case.  For simplicity we use $h_{m,1}$ to refer to the single node in the $m$th layer (which is the output layer).
+%\begin{align}
+%\frac{\partial{e}}{\partial h_{m,1}} = - y \frac{1}{h_{m,1}} - (1-y) \frac{1}{1-h_{m,1}}
+%\end{align}
+%
+%
+%\begin{externalresources}
+%\bi
+%\item \href{https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/}{A Step-by-step Backpropagation Example}
+%\ei
+%\end{externalresources}
 
-Weights to error:
-\begin{align}
-\nabla_{\mathbf{w_{i,j}}} e &= \frac{\partial e} {s_{i,j}} \nabla_{\mathbf{w_{i,j}}} s_{i,j} \\
-&= \frac{\partial e}{h_{i,j}}  \frac{\partial h_{i,j}}{s_{i,j}} \nabla_{\mathbf{w_{i,j}}} s_{i,j} \\
-&= \frac{\partial e}{h_{i,j}}  \sigma(s_{i,j})(1-\sigma (s_{i,j})) \mathbf{h}_{i-1} 
-\end{align}
-
-Output to error (serves as a base case.  For simplicity we use $h_{m,1}$ to refer to the single node in the $m$th layer (which is the output layer).
-\begin{align}
-\frac{\partial{e}}{\partial h_{m,1}} = - y \frac{1}{h_{m,1}} - (1-y) \frac{1}{1-h_{m,1}}
-\end{align}
-
-
-\begin{externalresources}
+\section{Suggestions for Going Beyond}
+\begin{notice}
+If you'd like to take this material farther, here are some suggestions. We do not at all expect you to do any of this, but we felt that these suggestions might be helpful to folks who want to go into additional depth with this material.  We will never make any assumption that you did any of these additional tasks in any course materials.  If you also have other ideas for additional topics to explore, feel free to go in that direction instead (please let us know what you do though in case it is of interest to others).
+\end{notice}
 \bi
-\item \href{https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/}{A Step-by-step Backpropagation Example}
+\item Implement the backpropagation algorithm to compute the gradient for an MLP. Hint: if you do this, e-mail us for hints / guidance.  It is pretty challenging, but it does pay off in terms of solidifying the backpropagation algorithm.
+\item Make sure your implementation is correct by comparing the numerical approximation of the gradient to the gradient you calculated with the backpropagation algorithm.
 \ei
-\end{externalresources}
 
 \end{document}
