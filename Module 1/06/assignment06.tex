@@ -187,9 +187,9 @@ Before getting into the derivation of the backpropagation algorithm, let's revis
 \mlvec{w^\star} &= \argmin_{\mlvec w} \sum_{i=1}^n \left ( -y_i \ln \sigma\left (\mlvec{w}^\top \mlvec{x_i} \right) - (1-y_i) \ln \left ( 1 - \sigma\left (\mlvec{w}^\top \mlvec{x_i} \right) \right) \right)
 \end{align}
 
-Even though you've seem this before, it might seem a bit intimidating.  Remember, that this optimization problem arose from using the sigmoid function ($\frac{1}{1+e^{-x}}$) to map $\mlvec{w}^\top \mlvec{x_i}$ into a probability and then applying the log loss.  We can represent the logistic regression model applied to an input point $\mlvec{x}$ using the data flow representation shown in Figure~\ref{fig:logisticreggeneral}.
+Even though you've seen this before, it might seem a bit intimidating.  Remember, that this optimization problem arose from using the sigmoid function ($\frac{1}{1+e^{-x}}$) to map $\mlvec{w}^\top \mlvec{x_i}$ into a probability and then applying the log loss.  We can represent the logistic regression model applied to an input point $\mlvec{x}$ using the data flow representation shown in Figure~\ref{fig:logisticreggeneral}.
 \begin{notice}
-We have moved the weights the arrows into circles.  In the dataflow graph we will label the edges with partial derivatives (or gradients).
+We have moved the weights from the arrows into circles.  In the dataflow graph we will label the edges with partial derivatives (or gradients).
 \end{notice}
 \begin{marginfigure}
 \includegraphics[width=\linewidth]{figures/logisticregressiongeneral}
