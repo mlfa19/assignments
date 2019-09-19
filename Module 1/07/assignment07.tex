@@ -2,9 +2,9 @@
 
 \invalidatemargin
 
-\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
 
-%\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
 
@@ -64,7 +64,7 @@ We recommend you go through these with Colab open so you can try the blocks of c
 \ei
 \end{externalresources}
 
-\begin{externalresources}[(TBD minutes)]
+\begin{externalresources}[(60 minutes)]
 Now that you have the barebones basics for Pytorch, let's look back at our old friend the logistic regression model.  In this \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%201/07/Assignment_07_Companion_Pytorch_Titanic.ipynb}{companion notebook} you'll play with an implementation of logistic regression using pytorch and compare it with sklearn's implementation of logistic regression.  In the notebook we'll use the Titanic data as our example.
 \end{externalresources}
 
@@ -138,16 +138,25 @@ Last assignment we derived the following backpropagation equations.
 
 \begin{align}
 (\nabla_{\mathbf{w^{(k)}_i}}) l &= \mlvec{x^{(k)}} \sigma\left (s_i^{(k+1)} \right )\left (1-\sigma\left (s_i^{(k+1)} \right )\right) \frac{\partial l}{\partial x_i^{(k+1)}} & \mbox{gives us the gradient of the weights going into a unit} \\
-\frac{\partial l}{\partial x^{(k)}_i} &= \sum_{j=1}^{n_{k+1}} w^{(k)}_{j,i} \sigma \left ( s_{j}^{k+1} \right) \left (1-\sigma \left ( s_{j}^{k+1} \right)\right) \frac{\partial l}{\partial x^{(k+1)}_j} \label{eq:recursion} & \mbox{recursively gives the partial of the loss w.r.t. the units} \\
+\frac{\partial l}{\partial x^{(k)}_i} &= \sum_{j=1}^{n_{k+1}} w^{(k)}_{j,i} \sigma \left ( s_{j}^{(k+1)} \right) \left (1-\sigma \left ( s_{j}^{(k+1)} \right)\right) \frac{\partial l}{\partial x^{(k+1)}_j} \label{eq:recursion} & \mbox{recursively gives the partial of the loss w.r.t. the units} \\
 \frac{\partial l}{\partial x^{(m)}_1} &= -y\frac{1}{x_1^{(m)}} + (1-y) \frac{1}{1-x_1^{(m)}} & \mbox{provides the base case of the recursion}
 \end{align}
 
 \bes
 \item If we examine these equations, we can understand where the vanishing gradient problem comes from.  In particular, Equation~\ref{eq:recursion} provides the crucial recursive formula for defining the partial derivatives of the loss with respect to nodes in the network in terms of the same partial derivatives for nodes deeper in the network (i.e., closer to the output).  Based on Equation~\ref{eq:recursion}, what aspects of the network might contribute to or counteract the vanishing gradient problem? Consider things such as the values of the summation units $s_j^{(k+1)}$, the values of the weights, and the number of units at each layer of the network (the $n_k$'s).
+
+\begin{boxedsolution}
+\bi
+\item The product of $\sigma(s_j^{(k+1)})(1-\sigma(s_j^{(k+1)}))$ is at most $\frac{1}{4}$.  Further, if the value of $s_j^{(k+1)}$ is either very positive or very negative, the product will be very, very small.  Thus $\sigma(s_j^{(k+1)})(1-\sigma(s_j^{(k+1)}))$ will tend to decrease gradients as they go through the network.
+\item The weight term $w_{j,i}^{(k)}$ could act to either increase gradients or decrease gradients depending on whether, on average, its magnitude is bigger or smaller than 1.
+\item Since we are summing over $n_{k+1}$ units, having more units will tend to increase the values of the gradient as you move backward down the layers of the network.
+\ei
+\end{boxedsolution}
+
 \item It turns out that the sigmoid function is only one viable choice for transforming the summation units into the values of the units for the next layer.  In fact, many different  non-linear functions can be used (e.g., \href{http://mathworld.wolfram.com/HyperbolicTangent.html}{tanh}).  The function used in this capacity is called an \emph{activation function}.  If we let $a$ refer to our activation function, then Equation~\ref{eq:recursion} becomes
 
 \begin{align}
-\frac{\partial l}{\partial x^{(k)}_i} &= \sum_{j=1}^{n_{k+1}} w^{(k)}_{j,i} a' \left ( s_{j}^{k+1} \right)  \frac{\partial l}{\partial x^{(k+1)}_j} \label{eq:recursion2} \enspace .
+\frac{\partial l}{\partial x^{(k)}_i} &= \sum_{j=1}^{n_{k+1}} w^{(k)}_{j,i} a' \left ( s_{j}^{(k+1)} \right)  \frac{\partial l}{\partial x^{(k+1)}_j} \label{eq:recursion2} \enspace .
 \end{align}
 
 
@@ -159,6 +168,10 @@ One very popular choice of activation function is called \href{https://en.wikipe
 
 How might choosing the ReLu as an activation function help with the vanishing gradient problem in comparison to choosing the sigmoid as the activation function (use the backpropagation equations to arrive at your answer)?
 
+\begin{boxedsolution}
+the derivative of the function $ReLu(s^{(k+1)}_{j})$ will be 1 if $s^{(k+1)}_{j}$ is greater than 0.  The derivative will be 0 if $s^{(k+1)}_{j} \leq 0$.  Looking back at our equation, this means that the gradients from upper layers will either be preserved (if $s^{(k+1)}_{j} > 0$) or zeroed out (if $s^{(k+1)}_{j} \leq 0$).  As long as at least a few of the values $s^{(k+1)}_{1}, \ldots, s^{(k+1)}_{n_{k+1}}$ are positive, the partial derivative magnitudes won't be decreased to 0.  In order to avoid exploding gradients, you would want to make sure the weight magnitudes are in the appropriate range to counteract exponential growth in the partial derivatives (this is why weight initialization is the focus of a lot of research in deep learning).
+\end{boxedsolution}
+
 \item \textbf{Going Beyond (optional)} Using pytorch, perform a computational investigation of the vanishing gradient problem.  We suggest the following steps (note: we have our own version of this in the solutions if you want to check it out):
 \bi
 \item Create an MLP where the number of layers is passed in as a parameter.
@@ -166,7 +179,9 @@ How might choosing the ReLu as an activation function help with the vanishing gr
 \item Summarize the partial derivatives of the weights at each level in the network (e.g., take the mean of the absolute values) and plot this quantity as a function of $k$ (the layer number).  It may be helpful to use a log scale for the y-axis.
 \ei
 \ees
-
+\begin{boxedsolution}
+This is pretty rough, but \href{https://colab.research.google.com/drive/1lGlW-rnBnT-wh48HmNJlNb43FJuFQn01}{here} is our go of this.  We'll update after class.
+\end{boxedsolution}
 \end{exercise}
 
 \section{Convolutions and Image Filtering}
@@ -206,7 +221,7 @@ We now come to a particular type of neural network called a convolutional neural
 \end{externalresources}
 
 \begin{exercise}[(15 minutes)]
-Open up \href{https://cs.stanford.edu/people/karpathy/convnetjs/}{Convnet.js} and try it on either MNIST or CIFAR-10.  Watch the network train.  Interpret as much of what you see as possible.  If you don't understand something, ask about it on NB (Convnet.js on MNIST or Convnet.js on CIFAR-10)
+Open up \href{https://cs.stanford.edu/people/karpathy/convnetjs/}{Convnet.js} and try it on either MNIST or CIFAR-10.  Watch the network train.  Interpret as much of what you see as possible.  If you don't understand something, ask about it on NB (\href{http://nb.mit.edu/f/55494}{Convnet.js MNIST on NB} or \href{http://nb.mit.edu/f/55495}{Convnet.js on CIFAR-10 on NB})
 \end{exercise}
 
 \companionnotebook{Assignment_07_Companion_Pytorch_Titanic}
