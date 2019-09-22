@@ -112,17 +112,17 @@ There are three different logistic regression models represented.  There is one 
 \end{exercise}
 
 \begin{exercise}[(30 minutes)]
-Without using any training data (this is testing your understanding of the model itself), compute the weights in this network ($w^{(1)}_{1,1}, w^{(1)}_{1,2}, w^{(1)}_{1,3}, w^{(1)}_{2,1}, w^{(1)}_{2,2}, w^{(1)}_{2,3}, w^{(2)}_{1,1}, w^{(2)}_{1,2}, w^{(2)}_{1,3}$) such that the MLP has the following behavior.  Recall that $x^{(1)}_1$ is the passenger's age, $x^{(1)}_2$ is a binary variable that is 1 if the passenger is male and 0 if female, $x^{(1)}_3$ and $x^{(2)}_3$ are always 1.
+Without using any training data (this is testing your understanding of the model itself), determine reasonable values for the weights in this network ($w^{(1)}_{1,1}, w^{(1)}_{1,2}, w^{(1)}_{1,3}, w^{(1)}_{2,1}, w^{(1)}_{2,2}, w^{(1)}_{2,3}, w^{(2)}_{1,1}, w^{(2)}_{1,2}, w^{(2)}_{1,3}$) such that the MLP has the following behavior.  Recall that $x^{(1)}_1$ is the passenger's age, $x^{(1)}_2$ is a binary variable that is 1 if the passenger is male and 0 if female, $x^{(1)}_3$ and $x^{(2)}_3$ are always 1.
 \bes
-\item $x^{(2)}_1$ encodes whether or not the passenger is female (i.e., it should take a value close to 1 when the passenger is female and 0 when the passenger is male).
+\item $x^{(2)}_1$ encodes whether or not the passenger is female (i.e., it should take a value close to 1 when the passenger is female and close to 0 when the passenger is male).
 \begin{boxedsolution}
 Setting $w^{(1)}_{1,2} = -10$, $w^{(1)}_{1,1} = 0$, and $w^{(1)}_{1,3} = 5$ will do the trick.  If the passenger is male then $x^{(2)}_1 = \sigma(-10 + 5) = \sigma(-5) = 0.0067$ and if the passenger is female then $x^{(2)}_1 = \sigma(5) = 0.9933$
 \end{boxedsolution}
-\item $x^{(2)}_2$ encodes whether or not the passenger is a young male (i.e., it should take a value close to 1 when the passenger is male under the age of say 5 and 0 otherwise).
+\item $x^{(2)}_2$ encodes whether or not the passenger is a young male (i.e., it should take a value close to 1 when the passenger is male under the age of say 5 and close to 0 otherwise).
 \begin{boxedsolution}
 Setting $w^{(1)}_{2,2} = 15$, $w^{(1)}_{2,1} = -1$, and $w^{(1)}_{2,3} = -10$ will do the trick.  If the passenger is female and one years-old $x^{(2)}_2 = \sigma(-10 - 1) = \sigma(-11) \approx 0$ (any older female passengers will have even lower values. and if the passenger is male and 1 years-old then $x^{(2)}_1 = \sigma(15 - 1 - 10) = \sigma(4) = 0.982$.  A four year old male would have $x^{(2)}_1 = \sigma(15 - 4 - 10) = \sigma(1) = 0.731$.  An older male (e.g., a 10 year old) would have $x^{(2)}_1 = \sigma(15 - 10 - 10) = \sigma(-5) = 0.0067$
 \end{boxedsolution}
-\item $x^{(3)}_1$ should be close to 1 (i.e., predict survival) when the passenger is female \emph{or} a male under the age of 5.
+\item $x^{(3)}_1$ should be close to 1 (i.e., predict survival) when the passenger is female \emph{or} a male under the age of 5 and close to 0 otherwise.
 \begin{boxedsolution}
 Set $w^{(2)}_{1,1} = 2$ and $w^{(2)}_{1,2} = 2$ and $w^{(2)}_{1,3} = -1$.  That way if either $x^{(2)}_1$ or $x^{(2)}_2$ are close to 1, then $x^{(3)}_1 \approx \sigma(1) = 0.73$.
 \end{boxedsolution}
@@ -131,7 +131,7 @@ Set $w^{(2)}_{1,1} = 2$ and $w^{(2)}_{1,2} = 2$ and $w^{(2)}_{1,3} = -1$.  That 
 
 Believe it or not, computing these weights by hand was fairly common before we had algorithms for automatically tuning weights from data.  The reason for this was that early techniques for learning the weights were very inefficient and often unable to converge to good solutions.  Later in this document we will be learning about the \href{https://en.wikipedia.org/wiki/Backpropagation}{backpropagation algorithm} that can be used to efficiently compute the gradient of the weights in this neural network with respect to some cost function.  \textbf{Just as we did with logistic regression, we can use this gradient in order to optimize the weights of the network using gradient descent.}  What's beautiful is that even though the model itself will get more complicated, the learning algorithm and basic ideas will remain largely the same.
 
-In order to prepare ourselves for the derivation of the backpropagation algorithm, we need to build up a new technique for applying the chain rule to multivariate functions.
+In order to prepare ourselves for the derivation of the backpropagation algorithm, we will introduce a new technique for applying the chain rule to multivariate functions.  This new technique is not necessary for deriving the algorithm, but it will introduce a new, visual representation of the chain rule that will help us more easily derive the algorithm and understand its significance.
 
 
 \section{A Graphical View of the Multivariable Chain Rule}
@@ -166,7 +166,7 @@ This HMC calculus tutorials explain the concept of the chain rule using dataflow
 \frac{\partial f}{\partial z} &= \frac{1}{2 \sqrt z} x^2
 \end{align}
 \end{boxedsolution}
-\item Draw a dataflow diagram to represent the function $f(\mlvec{x}) = (\mlvec{c}^\top \mlvec{x})^2$.  Compute $\nabla_{\mlvec{x}} f$ using the dataflow diagram method.  Hint: we're generalizing what is on the HMC page a bit.  You can have vector quantities flowing through your diagram as well and all the ideas will carry over except you will have a gradient instead of a partial derivative.
+\item Draw a dataflow diagram to represent the function $f(\mlvec{x}) = (\mlvec{c}^\top \mlvec{x})^2$.  Compute $\nabla_{\mlvec{x}} f$ using the dataflow diagram method.  Hint: we're generalizing what is on the HMC page a bit.  You can have vector quantities at the leaf nodes in the graph (leaf nodes are those that have no incoming arrows) and all the ideas will carry over except you will have a gradient instead of a partial derivative on the edge.  If you wanted to have a vector quantity at a non-leaf node, that would require modifying the technique on the HMC page a bit (we won't cover that in this class).
 \begin{boxedsolution}
 \begin{center}
 \includegraphics[width=0.1\linewidth]{figures/3bsolution}
@@ -217,7 +217,7 @@ Starting from the data flow representation of the logistic regression model show
 \end{align}
 See assignment 3 for additional simplifications.
 \end{boxedsolution}
-\item Was computing the gradient using this approach easier, harder, or the same in comparison with what you did in assignment 3?  Why? (this is subjective, so there is no right answer, we just want you to reflect on the differences between the approaches and which you liked better).e. 
+\item Was computing the gradient using this approach easier, harder, or the same in comparison with what you did in assignment 3?  Why? (this is subjective, so there is no right answer, we just want you to reflect on the differences between the approaches and which you liked better).
 \begin{boxedsolution}
 This is subjective.  In this example, it's fair to say that the dataflow method is not really any easier.  It will pay off later though!
 \end{boxedsolution}
@@ -231,7 +231,7 @@ The notation for the general case of MLP gets pretty cluttered. It's important t
 
 Let's generalize the diagram of the multilayer perceptron in the Titanic example in the following ways.
 \be
-\item We'll allow for an arbitrary number of layers in the network.  We'll call the number of layers $m$ (the number of layers is also called the depth of the network.  networks with large $m$ are known as deep learning).
+\item We'll allow for an arbitrary number of layers in the network.  We'll call the number of layers $m$ (the number of layers is also called the depth of the network.  Networks with large $m$ are known as deep neural networks).
 \item We'll allow for an arbitrary number of units at each layer in the network.  We'll use the notation $n_k$ to refer to the number of units in the $k$th layer of the network.
 \ee
 
@@ -247,7 +247,7 @@ Before we get into the math of how we can compute the gradient of the weights in
 
 The stage is now set for you to finish the derivation of one of the most important algorithms in computer science!!!  Before you finish this off, let's take a look at what you've learned and the tools you have at your disposal.
 \be
-\item You know how to compute gradients using the data flow representation of a mutlivariable function.
+\item You know how to compute gradients using the data flow representation of a multivariable function.
 \item We've applied this technique to deriving the gradient of the logistic regression model.
 \item We've written the MLP in this same data flow representation.
 \ee

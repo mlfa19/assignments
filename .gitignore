@@ -2,7 +2,11 @@
 *.swp
 .DS_Store
 
+*.mat
+*.zip
+*.csv
 *Companion*.html
+*.html
 
 ## source https://github.com/github/gitignore/blob/master/TeX.gitignore
 Icon*
