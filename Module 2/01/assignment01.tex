@@ -1,0 +1,141 @@
+\documentclass[assignment01_Solutions]{subfiles}
+
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
+
+\fancypagestyle{firstpage}
+
+{\rhead{Assignment 1 \linebreak \textit{Version: \today}}}
+
+\title{Assignment 1: Bayes' Rule}
+\author{Machine Learning}
+\date{Fall 2019}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{firstpage}
+
+
+\begin{learningobjectives}
+\bi
+\item Gain familiarity with key ideas in ML (with a focus on probabilistic methods).
+\item Review of mathematical concepts we will be using in the beginning part of this course.
+\item Familiarize yourself with computational tools for machine learning.
+\item Learn linear regression using a ``top-down'' approach.
+\ei
+\end{learningobjectives}
+
+\section{Motivation}
+We’ve circled around the idea of uncertainty a lot in this class.  For instance, when we studied logistic regression, we learned that logistic regression outputs a probability that the class output is 1, which lets us capture the model's certainty in its prediction.
+
+TODO: fix the rest of this.
+
+We’ve also thought about models that don’t fit the data perfectly (e.g., a line of best fit will usually not perfectly fit out data).  One way we can think of this lack of fit is due to inherent uncertainty in the thing we are trying to predict.
+In this next part of the class we’re going to formalize our notion of uncertainty using various concepts from probability theory.  The major outcomes of this move will be to:
+
+\bi
+\item make more explicit our assumptions about where data comes from and how uncertainty impacts that data.
+\item allow us to quantify our confidence in our model - instead of giving back the best fitting model we will actually be able to say how confident we are that this model is the right model.
+\item give us a way to incorporate prior knowledge into our machine learning models, giving us more interpretable models.
+\item give us powerful tools to reason about fairness and bias in machine learning models.
+\ei
+
+\section{Six Big Ideas in (Probabilistic) Machine Learning}
+We're going to reprise the Six Big ideas in ML from our very first assignment with a focus on connections to probabilistic machine learning.  Our intent is to provide a larger framework for you to interpret the content you are learning.
+
+
+\subsection*{Idea 1: Correlations for the Win?}
+
+\subsection*{Idea 2: There's No Such Thing as a Free Lunch}
+
+\subsection*{Idea 3: It's All About How You Frame the Problem}
+
+\subsection*{Idea 4: ML Systems Can Learn Intermediate Representations}
+
+\subsection*{Idea 5: Machine Learning Zoomed Out}
+
+\subsection*{Idea 6: It's Not All Doom and Gloom}
+
+\begin{exercise}[\faShareAlt~(60 minutes)]
+Now, we want to hear from you!  
+Choose one of the big ideas above and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  As a rough guide, you should aim for a response of a 1-2 paragraphs.
+
+\begin{boxedsolution}
+There's no one right answer here!
+\end{boxedsolution}
+\end{exercise}
+
+\section{Probability}
+First we'll build some intuition around probability, and then we'll define it formally.
+
+\subsection{Intuition}
+Most of us are used to thinking that observable events can be probabilistic, that is we can attach some probability to whether or not they occur.  Take for example flipping a coin.  We could think of the event that the coin comes up heads as having probability 0.5.  That is, there is an even chance that it happens versus doesn’t happen.
+\begin{exercise}
+Come up with some examples of observable events (events are things that either happen or don’t) that are probabilistic in nature.  For each event, either provide the probability or explain what factors would determine the probability.
+
+\begin{boxedsolution}
+TODO
+\end{boxedsolution}
+
+\end{exercise}
+
+\subsection{Formal Definition}
+
+TODO link to external resource.
+\begin{externalresources}
+\bi
+\item Goals for external resources:
+\item Define a probability space (sample space, event space, pmf)
+\item Give some basic properties
+\item Complement
+\item Probability of a union of disjoint events
+\ei
+
+\end{externalresources}
+
+\begin{exercise}
+Here are some diagnostic questions to make sure that you go the basic ideas.
+\bes
+\item What are the components needed to define a probability space?
+\item If $\mathcal{E}$ refers to a particular event that occurs with probability $p(\mathcal{E})$ what is p($\overline{\mathcal{E}}$) (the line over $\mathcal{E}$ means the complement, or the event that $\mathcal{E}$ does not occur).
+\item For any event $\mathcal{E}$, what must be true of $p(\mathcal{E})$?
+\item if $\mathcal{A}$ and $\mathcal{B}$ are disjoint events (they cannot occur simultaneously, what is the probability of at least one of $\mathcal{A}$ or $\mathcal{B}$ occurring in terms of $p(\mathcal{A})$ and $p(\mathcal{B})$.
+\ees
+\end{exercise}
+
+\section{From Basic Definitions to Bayes' Rule}
+
+\begin{externalresources}
+Allen Downey's (ever heard of him?) book Think Bayes is an excellent introduction to Bayesian analysis.  The \href{http://www.greenteapress.com/thinkbayes/html/thinkbayes002.html}{first chapter} (which you should read) starts with a less formal definition of probability than we gave earlier.  The chapter then gives intuitions around conjoint probability (the probability that multiple events occur simultaneously), conditional probability (the probability that some event occurs conditioned on another event having occurred), and finally to Bayes' rule (a surprisingly easy theorem to derive that allows you to write one conditional probability distribution in terms of another).
+
+Allen's treatment of the material is, of course, not the only one out there (we like it for its focus on building intuition and focusing on the key ideas).  Here are some other resources you might consider checking out.
+\bi
+\item \href{https://www.khanacademy.org/partner-content/wi-phi/wiphi-critical-thinking/wiphi-fundamentals/v/bayes-theorem}{Khan Academy Video on Bayes' Theorem}: this shows some simple applications of Bayes' rule and explains why it is a convenient way to reason about the probability of hypothesis given data).
+\item \href{https://www.youtube.com/watch?v=R13BD8qKeTg}{Veritasium Episode on Bayes' Theorem}: this has a bit more history and philosophy of Bayes' Theorem along with some nice visualizations.  It also includes the presenter randomly walking on a very scenic mountain, so there's that if nothing else.
+\item I (Paul) ran across \href{youtube.com/watch?v=nvqXXlz-rx0}{this example of applying Bayes' rule to a real world problem} that was created by a grad school friend of mine.  It's hilarious (lots of Cat Memes).
+\ei
+
+\end{externalresources}
+
+\begin{exercise}
+Here are some exercises to test your understanding of this material.
+\bes
+\item TODO
+\ees
+
+\end{exercise}
+
+\section{Marginalization of Probability Distributions}
+TODO: This was used in some of the previous readings, make it more formal.   Show tree creation as a way to do visualize this.
+
+\begin{exercise}
+TODO
+\end{exercise}
+
+\section{Appying Bayes' Rule}
+
+Have a few options of where Bayes could be applied.  Have them pick one of them and figure out an estimate.
+
+\section{Companion Notebook}
+
+\end{document}
