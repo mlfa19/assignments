@@ -13,6 +13,15 @@ while getopts ":x" o; do
             ;;
     esac
 done
+shift $((OPTIND -1))
+
+if [ $@ ];then
+  # this is a one-off
+  base=${@%.*}
+  jupyter nbconvert  --RegexRemovePreprocessor.patterns="['.*Expand for Solution.*', '.*\*\*\*Solution\*\*\*.*']" --to html "$@" 
+  wkhtmltopdf "${base}.html" "${base}.pdf"
+  exit 0
+fi
 
 FILES=*.ipynb
 for f in $FILES
