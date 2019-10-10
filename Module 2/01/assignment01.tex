@@ -1,5 +1,7 @@
 \documentclass[assignment01_Solutions]{subfiles}
 
+\invalidatemargin
+
 \IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
@@ -30,8 +32,7 @@ We’ve circled around the idea of uncertainty a lot in this class.  For instanc
 
 TODO: fix the rest of this.
 
-We’ve also thought about models that don’t fit the data perfectly (e.g., a line of best fit will usually not perfectly fit out data).  One way we can think of this lack of fit is due to inherent uncertainty in the thing we are trying to predict.
-In this next part of the class we’re going to formalize our notion of uncertainty using various concepts from probability theory.  The major outcomes of this move will be to:
+We’ve also thought about models that don’t fit the data perfectly (e.g., a line of best fit will usually not perfectly fit out data).  One way we can think of this lack of fit is due to inherent uncertainty in the thing we are trying to predict.  In this next part of the class we’re going to formalize our notion of uncertainty using various concepts from probability theory.  The major outcomes of this move will be to:
 
 \bi
 \item make more explicit our assumptions about where data comes from and how uncertainty impacts that data.
@@ -41,20 +42,41 @@ In this next part of the class we’re going to formalize our notion of uncertai
 \ei
 
 \section{Six Big Ideas in (Probabilistic) Machine Learning}
-We're going to reprise the Six Big ideas in ML from our very first assignment with a focus on connections to probabilistic machine learning.  Our intent is to provide a larger framework for you to interpret the content you are learning.
+We're going to reprise the Six Big ideas in ML from our very first assignment with a focus on connections to probabilistic machine learning.  Our intent is to provide a larger framework for you to interpret the content you are learning.  Could potentially point to \href{https://www.nature.com/articles/nature14541.pdf}{this article in Nature Reviews}.
 
 
-\subsection*{Idea 1: Correlations for the Win?}
+The \href{https://docs.pymc.io/nb_examples/index.html}{pymc examples} are also super cool (e.g., \href{https://docs.pymc.io/notebooks/GP-MaunaLoa.html}{GP Mauna Loa})
 
-\subsection*{Idea 2: There's No Such Thing as a Free Lunch}
+\subsection*{Idea 1: Probabilistic Methods Help Us Understand Learning in Artificial Systems and Biological Systems}
 
-\subsection*{Idea 3: It's All About How You Frame the Problem}
+\subsection*{Idea 2: Probabilistic Methods Can Illuminate Hidden Structures}
 
-\subsection*{Idea 4: ML Systems Can Learn Intermediate Representations}
+\bi
+\item Phylogenetic trees
+\item \href{https://homes.cs.washington.edu/~rao/indus.html}{Indus Script}
+\ei
 
-\subsection*{Idea 5: Machine Learning Zoomed Out}
 
-\subsection*{Idea 6: It's Not All Doom and Gloom}
+\subsection*{Idea 3: Probabilistic Methods Give Us a Language for Reasoning about Algorithmic Fairness}
+
+\subsection*{Idea 4: Probabilistic Methods Allow Us to Attach Confidences to Our Predictions}
+
+\href{https://docs.pymc.io/notebooks/GP-MaunaLoa.html}{Mauna Loa CO2 example}
+
+\subsection*{Idea 5: Probabilistic Methods Allow for Learning More Interpretable Models}
+
+https://towardsdatascience.com/what-is-bayesian-statistics-used-for-37b91c2c257c
+
+\subsection*{Idea 6: Probabilistic Methods Let you Learn Hierarchies of Models}
+TODO (clustering or topic modeling?)
+
+
+\subsection*{notes: other ideas}
+\bi
+\item Decision-making under uncertainty
+\item \href{https://arxiv.org/pdf/1809.10756.pdf}{Probabilistic Programming?} (Note: there is an example of inverse computer graphics that is cool)
+\item Compression?
+\ei
 
 \begin{exercise}[\faShareAlt~(60 minutes)]
 Now, we want to hear from you!  
@@ -69,9 +91,11 @@ There's no one right answer here!
 First we'll build some intuition around probability, and then we'll define it formally.
 
 \subsection{Intuition}
-Most of us are used to thinking that observable events can be probabilistic, that is we can attach some probability to whether or not they occur.  Take for example flipping a coin.  We could think of the event that the coin comes up heads as having probability 0.5.  That is, there is an even chance that it happens versus doesn’t happen.
+Most of us are used to thinking that events can be probabilistic, that is we can attach some probability to whether or not they occur.  Take for example flipping a coin.  We could think of the event that the coin comes up heads as having probability 0.5.  That is, there is an even chance that it happens versus doesn’t happen.  Further, we can talk about events as being observable if we are able to ultimately know whether or not they occurred.  For instance, whether a coin comes up heads is an observable event since you can ultimately observe the outcome of the flip.  In contrast, some events would be considered unobservable if they are unable to be directly ascertained by human senses.  A classic example of this would be whether a scientific theory is true or not.  It is impossible to directly observe whether the theory is true, but you might be able to observe events that are consistent or inconsistent with the theory.
+
+\vspace{1em}
 \begin{exercise}
-Come up with some examples of observable events (events are things that either happen or don’t) that are probabilistic in nature.  For each event, either provide the probability or explain what factors would determine the probability.
+Come up with some examples of observable events that are probabilistic in nature.  For each event, either provide the probability or explain what factors would determine the probability.
 
 \begin{boxedsolution}
 TODO
