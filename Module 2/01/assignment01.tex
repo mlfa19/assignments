@@ -98,7 +98,7 @@ Hopefully the previous section left you feeling excited to learn more about the 
 Most of us are used to thinking that events can be probabilistic, that is we can attach some probability to whether or not they occur.  Take for example flipping a coin.  We could think of the event that the coin comes up heads as having probability 0.5.  That is, there is an even chance that it happens versus doesn’t happen.  Further, we can talk about events as being observable if we are able to ultimately know whether or not they occurred.  For instance, whether a coin comes up heads is an observable event since you can ultimately observe the outcome of the flip.  In contrast, some events would be considered unobservable if they are unable to be directly ascertained by human senses.  A classic example of this would be whether a scientific theory is true or not.  It is impossible to directly observe whether the theory is true, but you might be able to observe events that are consistent or inconsistent with the theory.
 
 \vspace{1em}
-\begin{exercise}
+\begin{exercise}[(10 minutes)]
 Come up with some examples of observable events that are probabilistic in nature.  For each event, either provide the probability or explain what factors would determine the probability.  Some potential ideas to get you going: sporting events, elections, weather, etc.
 
 \begin{boxedsolution}
@@ -154,7 +154,7 @@ p(\mathcal{E}') &= 1 - p(\mathcal{E}) \nonumber
 We point out these alternate notations not to confuse you (we'd never do that!) but to help you interpret various external resources you might find on these topics.
 
 \vspace{1em}
-\begin{exercise}
+\begin{exercise}[(10 minutes)]
 Here are some diagnostic questions to make sure that you go the basic ideas. 
 \bes
 \item Suppose $\mathcal{E}_1, \mathcal{E}_2, \mathcal{E}_3$ are disjoint events.  Further, suppose that one of these events must occur.  Which of the following functions are valid probability measure functions?
@@ -181,7 +181,7 @@ p_4(\mathcal{E}_1)=1 , p_4(\mathcal{E}_2)=0, p_4(\mathcal{E}_3)=0 \nonumber
 \end{align}
 
 \begin{boxedsolution}
-TODO
+$p_1$ is a valid probability measure function since the probabilities add up to 1 and all are non-negative.  $p_2$ is not a valid probability measure function since two of the probabilities are outside of the appropriate range $[0,1]$.  $p_3$ is not a valid probability measure function since the probabilities of the three events add up to less than 1. $p_4$ is a valid probability measure function since the probabilities add to 1 and are in the appropriate range.
 \end{boxedsolution}
 
 \item The \href{https://en.wikipedia.org/wiki/Birthday_problem}{Birthday Problem} is a well-known probability problem often used in discrete math courses.  According to the Wikipedia article, the probability that at least two students among the 70 students in machine learning this semester share the same birthday is $0.999$.  What is the probability that no two students share the same birthday?
@@ -202,7 +202,7 @@ p(\mbox{no two students share a birthday}) &= 1 - p( \neg \mbox{no two students 
 
 \section{Bayes' Rule}
 
-\begin{externalresources}[(75 minutes)]
+\begin{externalresources}[(60 minutes)]
 \begin{learningobjectives}
 Note that these learning objectives have been written to be very specific (based on feedback from the course survey).  When you first read them, you probably won't know what they mean in detail.  As you return to them hopefully the more precise statement of these learning objectives will be useful for assessing your understanding of the provided resources.
 
@@ -295,16 +295,15 @@ Solution is embedded in the link.
 \end{exercise}
 
 \begin{exercise}[(30 minutes)]
-Applying Bayes' Rule
+Applying Bayes' Rule.  Have a few options for where Bayes could be applied.  Have them pick one of them and figure out an estimate.
 \end{exercise}
 
-Have a few options for where Bayes could be applied.  Have them pick one of them and figure out an estimate.
 
 \section{Random Variables}
 
 We've talked about the concept of an event that captures whether something happens as a result of some random process.  It turns out that it is very useful in machine learning and probabilistic modeling to talk about a variable that captures some quantity that is a result of some random process.  We call this entity a \emph{random variable}.
 
-\begin{externalresources}[(30 minutes)]
+\begin{externalresources}[(20 minutes)]
 Watch the following two videos from Khan Academy on Random Variables.
 \bi
 \item \href{https://www.khanacademy.org/math/statistics-probability/random-variables-stats-library/random-variables-discrete/v/random-variables}{Khan Academy Video on Random Variables}.
@@ -329,11 +328,11 @@ p(X=0) &= p(\mbox{2 heads come up} = \frac{3}{8} \nonumber \\
 p(X=3) &= p(\mbox{3 heads come up} = \frac{1}{8} \nonumber 
 \end{align}
 
-\begin{exercise}
-Put in an exercise or maybe link to Allen's German tank problem?
-\end{exercise}
 
-\section{Crime}
+\section{Basic Bayes in Python}
+\begin{externalresources}[(30 minutes)]
+Go through the \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%202/01/Assignment_1_Companion_Notebook.ipynb}{assignment 1 companion notebook}.
+\end{externalresources}
 
 
 \end{document}
