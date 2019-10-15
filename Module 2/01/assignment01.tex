@@ -101,9 +101,13 @@ For instance, one of the examples listed for the popular probabilistic programmi
 \includegraphics[width=0.8\linewidth]{figures/maunaloa}
 \end{center}
 
+Another example of probabilistic program was inverse computer graphics ...
+
 
 \subsection*{Idea 4: Probabilistic Methods Give Us a Language for Reasoning about Algorithmic Fairness}
 
+
+https://arxiv.org/pdf/1906.11333.pdf
 
 \subsection*{Idea 5: Probabilistic Methods Allow for Learning More Interpretable Models}
 
@@ -148,31 +152,31 @@ TODO
 
 \subsection{Formal Definition}
 
-Next, we'll define more formally\sidenote{this is not the full definition of a \href{https://en.wikipedia.org/wiki/Probability_space}{probability space} used in modern mathematics.  For the purposes of most people that \emph{use} probability theory on actual problems, this definition is needlessly complex.  Use the following link if you want a more \href{https://m.tau.ac.il/~tsirel/dump/Static/knowino.org/wiki/Probability_space.html}{in-depth discussion of the parts of the formal definition that are tricky} (our expectation is that you won't want this discussion!).} what we mean by a probability.  Having this formal definition will give us the ability to useful rules for manipulating and reasoning about probabilities.  To define the concept of a probability, we'll need to specify two ingredients.
+Next, we'll define more formally\sidenote{this is not the full definition of a \href{https://en.wikipedia.org/wiki/Probability_space}{probability space} used in modern mathematics.  For the purposes of most people that \emph{use} probability theory on actual problems, the full definition is needlessly complex.  Use the following link if you want a more \href{https://m.tau.ac.il/~tsirel/dump/Static/knowino.org/wiki/Probability_space.html}{in-depth discussion of the parts of the formal definition that are tricky} (our expectation is that you won't want this discussion!).} what we mean by a probability.  Having this formal definition will give us the ability to determine useful rules for manipulating and reasoning about probabilities.  To define the concept of a probability, we'll need to specify two ingredients.
 \subsection{Events}
 
-The first is the notion we need to fine is an \textbf{event}.  Think of an event as something that may or may not occur in response to some random process.  For instance, we could define the event that a coin comes up heads when it is flipped.  We often use capital letters to indicate events.  Since we've been using capital letters to also represent matrices, in our materials we'll use a cool mathy-looking calligraphic font to represent events.  For instance, we might use the symbol $\mathcal{H}$ to refer to the event that a coinflip comes up heads. It's important to emphasize that a single random process can have many associated events.   For instance, for the coin flip example we might also define $\mathcal{T}$ to be the event that the coin comes up tails.
+An \emph{event} is something that may or may not occur in response to some random process.  For instance, we could define the event that a coin comes up heads when it is flipped.  We often use capital letters to indicate events.  Since we've been using capital letters to also represent matrices, in our materials we'll use a cool mathy-looking calligraphic font to represent events.  For instance, we might use the symbol $\mathcal{H}$ to refer to the event that a coin flip comes up heads. It's important to emphasize that a single random process can have many associated events.   For instance, for the coin flip example we might also define $\mathcal{T}$ to be the event that the coin comes up tails (or $\mathcal{U}$ to indicate that event that the coin rotated at least 10 times in the air).
 
-Further, events don't necessarily have to be mutually exclusive.  For instance, we might define the $\mathcal{R}_h$ to indicate the event that the Republican party controls the majority in the house of representatives following the 2020 election and $\mathcal{D}_s$ to indicate the event that the Democratic party controls the majority in the senate following the 2020 election.  Both (or none) of these events could occur.
+Further, events don't necessarily have to be mutually exclusive.  For instance, we might define the $\mathcal{R}_h$ to indicate the event that the Republican party controls the majority in the House of Representatives following the 2020 election and $\mathcal{D}_s$ to indicate the event that the Democratic party controls the majority in the Senate following the 2020 election.  Both (or none) of these events could occur.
 
 \subsection{Probability Measure Function}
-The probability measure function assigns a probability to the occurrence of any particular event.  We can think of this probability measure as a function that takes as input an event and outputs a probability.  For instance, $p(\mathcal{E})$ provides the probability that event $\mathcal{E}$ occurs according to probability measure $p$.  All probability measure functions must satisfy the following properties.
+The probability measure function assigns a probability to the occurrence of any particular event.  We can think of this probability measure function as taking as input an event and outputting a probability.  For instance, $p(\mathcal{E})$ provides the probability that event $\mathcal{E}$ occurs according to probability measure $p$.  All probability measure functions must satisfy the following properties.
 
 \bi
-\item $0 \leq p(\mathcal{E}) \leq 1$ (the probability of an event ranges from 0 (for an impossible event) to 1 (an event that will always occur).
+\item $0 \leq p(\mathcal{E}) \leq 1$: the probability of an event ranges from 0 (for an impossible event) to 1 (an event that will always occur).
 \item Given a set of $n$ events $\mathcal{E}_1, \mathcal{E}_2, \ldots, \mathcal{E}_n$ that are disjoint (i.e., no two can occur simultaneously)
 \begin{align}
 p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2~\mbox{or}~\ldots~\mbox{or}~\mathcal{E}_n) = \sum_{i=1}^n p(\mathcal{E}_i) \label{eq:probunion} \enspace .
 \end{align}
 
 
-The equation above specifies what's sometimes called the union rule of probability.  It states that the probability of 1 of these disjoint events occurring must be equal to the sum of the probability of each of the events occurring.  You will also sometimes see Equation~\ref{eq:probunion} written as
+The equation above specifies what's sometimes called the union rule of probability.  It states that the probability of one of these disjoint events occurring must be equal to the sum of the probability of each of the events occurring.  You will also sometimes see Equation~\ref{eq:probunion} written as
 
 \begin{align}
 p(\mathcal{E}_1 \cup \mathcal{E}_2 \cup \ldots \cup \mathcal{E}_n) = \sum_{i=1}^n p(\mathcal{E}_i) \enspace .
 \end{align}
 
-If you're not familiar with the symbol $\cup$ it is the symbol for a union of two sets.  The reason you'll sometimes see this is that in the most rigorous definition of a probability space, an event is defined formally as a set (as stated in the margin note earlier in this section, you need not worry about the most rigorous definition in this course).
+If you're not familiar with the symbol $\cup$ it is the symbol for a union of two sets.  The reason you'll sometimes see this is that in the most rigorous definition of a probability space an event is defined as a set (as stated in the margin note earlier in this section, you need not worry about the most rigorous definition in this course).
 
 \item Given a set of (not necessarily disjoint) events $\mathcal{E}_1, \mathcal{E}_2, \ldots, \mathcal{E}_n$ where at least one of these $n$ events must occur
 \begin{align}
@@ -276,13 +280,13 @@ The application of Bayes' rule often proceeded something like this.  Let's defin
 p(\mathcal{D} | \mathcal{S}) &= \frac{p(\mathcal{S} | \mathcal{D}) p(\mathcal{D})}{p(\mathcal{S})} \label{eq:bayesdenominator}
 \end{align}
 
-In order to calculate $p(\mathcal{S})$, some of the resources simply gave a number (e.g., in the Khan Academy video you Googled and got this value), used a convenient trick to get it (as in Allen's M\&M example), or used the following calculation (as in the Veritasium and Car Alarm videos).
+In order to calculate $p(\mathcal{S})$, some of the resources simply gave a number (e.g., in the Khan Academy video the premise was that you Googled to find this value), used a convenient trick to get it (as in Allen's M\&M example), or used the following calculation (as in the Veritasium and the Car Alarm videos).
 
 \begin{align}
 p(\mathcal{S}) &= p(\mathcal{D}) p(\mathcal{S}|\mathcal{D}) + p(\neg \mathcal{D}) p(\mathcal{S} | \neg \mathcal{D})
 \end{align}
 
-We wanted to revisit this calculation as it is hiding away some pretty powerful and interesting stuff.  This calculation can be derived using the technique of marginalizing a probability measure function.  The basic idea is that you want to compute the probability of some event, $\mathcal{A}$.  However, it may be difficult to directly calculate $p(\mathcal{A})$ instead you can introduce another event, $\mathcal{B}$, and write $p(\mathcal{A})$ as:
+We wanted to revisit this calculation as it is hiding away some pretty powerful and interesting stuff.  This calculation can be derived using the technique of marginalizing a probability measure function.  The basic motivation for this technique is that sometimes you'd like to compute the probability of some event, $\mathcal{A}$, but it is difficult to do so directly.  Instead you can introduce another event, $\mathcal{B}$, and write $p(\mathcal{A})$ as:
 \begin{align}
 p(\mathcal{A}) &= p(\mathcal{A}, \mathcal{B}) + p(\mathcal{A}, \neg \mathcal{B}) \label{eq:marginal}
 \end{align}
