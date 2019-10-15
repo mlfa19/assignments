@@ -28,43 +28,82 @@ TODO: make these more concrete based on Connor's comment in the course feedback 
 \end{learningobjectives}
 
 \section{Motivation}
-We’ve talked about the idea of uncertainty a lot in this class.  For instance, we learned about the logistic regression model, which when given an input, computes the probability that the output is 1.  This model embraces the idea that it is uncertain in its predictions and uses the concept of a probability to express those uncertainties.  We’ve also seen examples of models that don’t fit the data perfectly.  For example, the plot in Figure~\ref{fig:lineofbestfit} shows a line of best fit that doesn't go through all of the data.  The fit might be imperfect because we don't have the right model (a form of uncertainty) or because the thing we are trying to predict is inherently random in some way (another form of uncertainty).
+The theme of uncertainty has cropped up a number of times so far this semester.  For instance, we learned about the logistic regression model, which computes the probability that the output for a given input is 1.  In this way, the logistic regression model explicitly represents the idea of the uncertainty of its predictions and uses the concept of probability to express these uncertainties.  We’ve also seen examples of models that don’t fit the data perfectly.  For example, the plot in Figure~\ref{fig:lineofbestfit} shows a line of best fit that doesn't go through all of the data.  The fit might be imperfect because we don't have the right model (a form of uncertainty) or because the thing we are trying to predict is inherently random in some way (another form of uncertainty).
 \begin{marginfigure}
 \includegraphics[width=\linewidth]{figures/line_of_best_fit.pdf}
 \caption{A dataset with one independent variable (x-axis) and one dependent variable.  Also shown is the line of best fit.\label{fig:lineofbestfit}}
 \end{marginfigure}
 
 
-It turns out the probability theory will give us a precise way to define the concept of uncertainty and reason about all the various forms of uncertainty in a unified way.  Formalizing uncertainty in this way will enable us to do a bunch of really cool things with respect to machine learning, including
+It turns out that the notion of probability provides us with a precise definition of the concept of uncertainty and allows us to reason about all many forms of uncertainty in a unified way.  Formalizing uncertainty using probability theory will enable us to do a bunch of really cool things with respect to machine learning, including
 
 \bi
-\item make more explicit our assumptions about where data comes, the uncertainties present in it, and how uncertainty impacts predictions we might create based on that data.
-\item allow us to quantify our confidence in our model.  For example, instead of returning the one best fitting model, we will be able to assign a confidence (a probability) to each possible model being the right model model.
-\item give us a way to incorporate prior knowledge into our machine learning models.  This prior knowledge will allow for us to more easily interpret machine learning models.
+\item make explicit our assumptions about where data comes, the uncertainties present within it, and the impact of uncertainty on predictions based on that data.
+\item allow us to quantify our confidence in our model.  For example, instead of returning the one best fitting model (as we did in the first module), we assign a probability to each possible model, and models that fit the data better will get a higher probability.
+\item give us a way to incorporate expert knowledge into our machine learning models.  This expert knowledge will allow for us to more easily interpret machine learning models.
 \item give us powerful tools to reason about fairness and bias in machine learning models.
 \ei
 
 \section{Six Big Ideas in (Probabilistic) Machine Learning}
-We're going to reprise the Six Big ideas in ML from our very first assignment with a focus on connections to probabilistic machine learning.  Our intent is to provide a larger framework for you to interpret the content you are learning.  Could potentially point to \href{https://www.nature.com/articles/nature14541.pdf}{this article in Nature Reviews}.
+Back by popular demand\sidenote{there was actually no specific demand for this, but here it is anyway :)}... Six Big ideas in ML!  Here we're going to highlight ideas in ML that have specific connections to probabilistic machine learning.
 
+\begin{notice}
+Our intent is to provide a larger framework for you to interpret the content you are learning.  You should not expect to understand all of these ideas in any sort of detail.  Please take these as a ``wow isn't this cool / interesting,'' and avoid getting too lost in the weeds.
+\end{notice}
+\href{https://www.nature.com/articles/nature14541.pdf}{this article in Nature Reviews}.
 
 The \href{https://docs.pymc.io/nb_examples/index.html}{pymc examples} are also super cool (e.g., \href{https://docs.pymc.io/notebooks/GP-MaunaLoa.html}{GP Mauna Loa})
 
-\subsection*{Idea 1: Probabilistic Methods Help Us Understand Learning in Artificial Systems and Biological Systems}
+\subsection*{Idea 1: Probabilistic Methods Can Help Us Understand Learning in Biological and Artificial Systems}
 
-\subsection*{Idea 2: Probabilistic Methods Can Illuminate Hidden Structures}
+One common challenge that humans and robots (and other animals for that matter) face is the need to reason about and interpret ambiguous information from the world around them.  For instance, the photons of light that hit our retinas create a 2-dimensional map of the 3-dimensional world.  Despite the fact that there are many possible 3D worlds that could have created the same pattern of light on our retinas, our brain has no trouble figuring out the most likely 3-dimensional structure of the world\sidenote{optical illusions are a good example of when this does not hold (i.e., our brain is tricked into inferring the wrong 3D structure).}.
+
+One approach that scientists have taken to understand how humans resolve ambiguities in the world in order to accurately extract structure and meaning is by applying what is known as the \href{https://www.cse.huji.ac.il/~yweiss/intro/node2.html}{computational approach}.  In the computational approach, one formalizes the goal of the agent as well as the constraints facing it.  For example, we might posit that a person is trying to accurately understand the 3D structure of their environment but is constrained to only have access to a 2D projection of that environment (i.e., the 2D projection is what is captured on our retina).  Once we have formalized the problem facing the agent, we can then use computational tools to compute the optimal solution to the problem and compare this solution with what people actually do.  Through this comparison we may learn more about the nature of human cognition and the reasons why humans think and act the way they do.  In David Marr's classic book ``Vision,'' he states the core ideas in the following way,.
+
+\begin{quote}
+Trying to understand perception by studying only neurons is like trying to understand bird flight by studying only feathers: It just cannot be done. In order to understand bird flight, we have to understand aerodynamics; only then do the structure of feathers and the different shapes of birds' wings make sense. [Marr, 1982] p. 27
+ \end{quote}
+
+The science of ``aerodynamics'' is being invoked in the quote to reference a fundamental theory that governs all systems that might try to fly.  When it comes to cognition, the idea of Bayesian inference, which will form the basis of probabilistic machine learning and which you'll start learning about later in this assignment, has increasingly emerged as the ``aerodynamics'' of thought and reasoning.  Scientists and engineers have used Bayesian approaches to understand a vast array of human cognition and behavior.
 
 \bi
-\item Phylogenetic trees
-\item \href{https://homes.cs.washington.edu/~rao/indus.html}{Indus Script}
+\item TODO (millions of ideas to put here)
 \ei
 
 
-\subsection*{Idea 3: Probabilistic Methods Give Us a Language for Reasoning about Algorithmic Fairness}
+\subsection*{Idea 2: Probabilistic Methods Can Illuminate Hidden Structures}
 
-\subsection*{Idea 4: Probabilistic Methods Allow Us to Attach Confidences to Our Predictions}
+One of the places where probabilistic machine learning really shines is in determining the hidden structures that underlie data.  One very cool example of this is in the field of \href{https://en.wikipedia.org/wiki/Bioinformatics}{bioinformatics}.  A key idea in evolutionary biology is the notion of a \href{https://en.wikipedia.org/wiki/Phylogenetic_tree}{phylogenetic tree}.  A phylogenetic tree captures the relationships between various entities (e.g., individual members of a species, different species, genes, etc.) in a hierarchy (or tree).  For instance, the figure below shows a phylogenetic tree of the vertebrates.
 
-\href{https://docs.pymc.io/notebooks/GP-MaunaLoa.html}{Mauna Loa CO2 example}
+\begin{center}
+\includegraphics[width=0.8\linewidth]{figures/vertebrates}
+\end{center}
+
+You might imagine that such a phylogenetic tree would be put together using a combination of the fossil record along with an analysis of modern day versions of these species.  It turns out that probabilistic machine learning has been used to automatically infer phylogenetic trees from a wide variety of data sources.  One example is using \href{https://en.wikipedia.org/wiki/Mitochondrial_DNA}{mitochondrial DNA} collected from people all around the world and then using machine learning analysis to reconstruct the most likely phylogenetic tree that underlies these DNA samples.  The result is an ancestral tree that helps reconstruct the ancient history of humans and snapshot of how they came to inhabit planet Earth.  Reconstructions of this type have given support to the ``out of Africa'' theory of the origin of modern humans (namely that all people alive today can trace their lineage back to a group of people in subsaharan African from about 150,000 - 200,000 years ago).
+
+The usage of Bayesian approaches to inferring phylogenetic trees has been used in a vast number of places.  The abstract of \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5624502/}{A biologist’s guide to Bayesian phylogenetic analysis} describes it in the following way.
+\begin{quote}
+Bayesian phylogenetic methods were introduced in the 1990s and have since revolutionised the way we analyse genomic sequence data3. Examples of such analyses include phylogeographic analysis of virus spread in humans inference of phylogeographic history and migration between species, analysis of species diversification rates, divergence time estimation, and inference of phylogenetic relationships among species or populations.
+\end{quote}
+
+\paragraph{(If You're Interested): More examples of finding hidden structures in data}
+
+\href{https://homes.cs.washington.edu/~rao/ScienceIndus.pdf}{Entropic Evidence for Linguistic Structure in the Indus Script}
+
+
+\subsection*{Idea 3: Probabilistic Methods Allow Us to Write Probabilistic Programs}
+
+One of the key ideas of probabilistic machine learning is that we can take causal models of how hidden structures give rise to the data that we observe and invert these models in order to allow us to reason about the hidden structures that gave rise to our data.  One of the coolest ways in which this fundamental ideas is being leveraged is in the field of \href{https://en.wikipedia.org/wiki/Probabilistic_programming}{probabilistic programming}.  In a probabilistic program, the programmer writes code to implement the causal model (the one that goes from hidden structures to data) and then the probabilistic programming framework automatically can infer the hidden structure given a sample of data!
+
+For instance, one of the examples listed for the popular probabilistic programming Python library \href{https://docs.pymc.io/}{pymc3} shows how a model of CO2 concentration in the atmosphere could be create as a probabilistic program (see \href{https://docs.pymc.io/notebooks/GP-MaunaLoa.html}{Mauna Loa CO2 example}).  The punchline graph from that notebook is reproduced below. The model in this case was trained on the data up to 2004 and had to predict the rest.  In addition to the curve shown, the model also decomposed the curve into various components (including long range and seasonal).
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{figures/maunaloa}
+\end{center}
+
+
+\subsection*{Idea 4: Probabilistic Methods Give Us a Language for Reasoning about Algorithmic Fairness}
+
 
 \subsection*{Idea 5: Probabilistic Methods Allow for Learning More Interpretable Models}
 
@@ -322,10 +361,10 @@ X&= \mbox{the number of coins that come up heads in 3 flips}
 The probability mass function is then defined over all possible values that $X$ could possibly take on.  If don't know how we arrived at these values, that is fine.  These are results that can be derived using basic \href{https://en.wikipedia.org/wiki/Combinatorics}{combinatorics} (go take Sarah Spence Adams' class and learn about how to do this).
 
 \begin{align}
-p(X=0) &= p(\mbox{0 heads come up} = \frac{1}{8} \nonumber \\
-p(X=0) &= p(\mbox{1 heads come up} = \frac{3}{8} \nonumber \\
-p(X=0) &= p(\mbox{2 heads come up} = \frac{3}{8} \nonumber \\
-p(X=3) &= p(\mbox{3 heads come up} = \frac{1}{8} \nonumber 
+p(X=0) &= p(\mbox{0 heads come up}) = \frac{1}{8} \nonumber \\
+p(X=1) &= p(\mbox{1 heads come up}) = \frac{3}{8} \nonumber \\
+p(X=2) &= p(\mbox{2 heads come up}) = \frac{3}{8} \nonumber \\
+p(X=3) &= p(\mbox{3 heads come up}) = \frac{1}{8} \nonumber 
 \end{align}
 
 
