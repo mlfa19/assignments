@@ -101,26 +101,35 @@ For instance, one of the examples listed for the popular probabilistic programmi
 \includegraphics[width=0.8\linewidth]{figures/maunaloa}
 \end{center}
 
-Another example of probabilistic program was inverse computer graphics ...
+\paragraph{(If You're Interested): More examples of probabilistic programming can be found in these links}
+
+
+\bi
+\item TODO fix these links: \href{https://arxiv.org/pdf/1809.10756.pdf}{Probabilistic Programming?} (Note: there is an example of inverse computer graphics that is cool).  Here is \href{https://www.youtube.com/watch?v=DImI6l_0yiM}{one that references 3D computer vision}.  Here is probably the \href{http://mrkulk.github.io/www_cvpr15/}{clearest version}.  Another \href{cool example}{https://arxiv.org/pdf/1607.08128.pdf}.  This one is \href{https://science.sciencemag.org/content/sci/360/6394/1204.full.pdf}{really insane (from Science)}.   It uses a few images to predict what the scene would look like from another viewpoint.
+\ei
 
 
 \subsection*{Idea 4: Probabilistic Methods Give Us a Language for Reasoning about Algorithmic Fairness}
 
+We've talked about bias in machine learning models (e.g., when we discussed Gender Shades, and other related work).  The examples given in the \href{http://gendershades.org/overview.html}{Gender Shades} paper were pretty cut-and-dry --- the gender classification models that many companies have released work very poorly on women and people of color (and especially the intersection of the two).  In other situations, it will not be so straightforward to reason about bias. For instance, the well-known ProPublica piece \href{https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing}{Machine Bias} discussed how a tool for predicting criminal recidivism (whether a criminal would reoffend) was biased against African Americans.  This piece was one of the most important in the field of FAT-ML in that it sparked some work on articulating the various forms of algorithmic fairness.  Most of these models of fairness are articulated using the language of probability.  Further, some of the same formalisms that have been used to develop probabilistic machine learning approaches can be used to understand and reason about bias in an algorithm.
 
-https://arxiv.org/pdf/1906.11333.pdf
+We'll be studying various notions of algorithmic fairness, but if you're interested an in-depth overview of this is provided in \href{https://arxiv.org/pdf/1906.11333.pdf}{Fairness criteria through the lens of directed acyclic graphical models}.  It's also worth mentioning that many of these notions of fairness have also been challenged on the grounds that they are overly abstract and gloss over important context in determining whether something is biased or not.
+
 
 \subsection*{Idea 5: Probabilistic Methods Allow for Learning More Interpretable Models}
 
 https://towardsdatascience.com/what-is-bayesian-statistics-used-for-37b91c2c257c
 
-\subsection*{Idea 6: Probabilistic Methods Let you Learn Hierarchies of Models}
+
+\url{https://alexgkendall.com/computer_vision/bayesian_deep_learning_for_safe_ai/}
+
+\subsection*{Idea 6: Probabilistic Methods Let You Share Data Across Learning Tasks}
 TODO (clustering or topic modeling?)
 
 
 \subsection*{notes: other ideas}
 \bi
 \item Decision-making under uncertainty
-\item \href{https://arxiv.org/pdf/1809.10756.pdf}{Probabilistic Programming?} (Note: there is an example of inverse computer graphics that is cool).  Here is \href{https://www.youtube.com/watch?v=DImI6l_0yiM}{one that references 3D computer vision}.  Here is probably the \href{http://mrkulk.github.io/www_cvpr15/}{clearest version}.  Another \href{cool example}{https://arxiv.org/pdf/1607.08128.pdf}.  This one is \href{https://science.sciencemag.org/content/sci/360/6394/1204.full.pdf}{really insane (from Science)}.   It uses a few images to predict what the scene would look like from another viewpoint.
 \item Compression?
 \ei
 
