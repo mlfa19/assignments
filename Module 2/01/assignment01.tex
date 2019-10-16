@@ -51,7 +51,7 @@ Our intent is to provide a larger framework for you to interpret the content you
 
 
 \begin{exercise}[\faShareAlt~(60 minutes)]
-Read the six big ideas in ML below.  You will choose one of them and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  As a rough guide, you should aim for a response of a 1-2 paragraphs.
+Read the six big ideas in ML below.  You will choose one of them and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  Aim for a response of a 1-2 paragraphs.
 
 \begin{boxedsolution}
 There's no one right answer here!
@@ -148,7 +148,7 @@ Since Bayesian models typically start from a causal model of how observable data
  \end{center}
 
 \subsection*{Idea 6: Bayesian Methods Pose Difficult Computational Challenges}
-While we've painted a fairly rosy picture of Bayesian methods, they are certainly not without their challenges.  One of the biggest challenges is computational (see here for \href{https://link.springer.com/article/10.1007/s11222-015-9574-5}{a summary of current computational challenges in Bayesian learning}).  The key reason that Bayesian methods can be computationally expensive is that they typically involve solving a bunch of challenging problems.
+While we've painted a fairly rosy picture of Bayesian methods, but they are certainly not without their challenges.  One of the biggest challenges is computational (see here for \href{https://link.springer.com/article/10.1007/s11222-015-9574-5}{a summary of current computational challenges in Bayesian learning}).  The key reason that Bayesian methods can be computationally expensive is that they involve solving the following sorts of problems.
 \bi
 \item Bayesian methods involve inverting causal models of the world.  This inversion process may not be well-posed and could result in very inefficient computations.
 \item Bayesian methods involve representing uncertainty over large model spaces.  Just representing this model space, let alone using it for making predictions can be hard.
@@ -160,32 +160,36 @@ Therefore, while Bayesian methods are very attractive (and will pose no signific
 Hopefully the previous section left you feeling excited to learn more about the theory that underlies these big ideas.  Next, we'll take our first steps towards learning this theory.
 
 \subsection{Intuition}
-Most of us are used to thinking that events can be probabilistic, that is we can attach some probability to whether or not they occur.  Take for example flipping a coin.  We could think of the event that the coin comes up heads as having probability 0.5.  That is, there is an even chance that it happens versus doesn’t happen.  Further, we can talk about events as being observable if we are able to ultimately know whether or not they occurred.  For instance, whether a coin comes up heads is an observable event since you can ultimately observe the outcome of the flip.  In contrast, some events would be considered unobservable if they are unable to be directly ascertained by human senses.  A classic example of this would be whether a scientific theory is true or not.  It is impossible to directly observe whether the theory is true, but you might be able to observe events that are consistent or inconsistent with the theory.
+Most of us are used to thinking that events can be probabilistic, that is we can attach some probability to whether or not they occur.  Take for example flipping a coin.  We could think of the event that the coin comes up heads as having probability 0.5.  That is, there is an even chance that it happens versus doesn’t happen.  Further, we can say that an event is \emph{observable} if we are able to directly observe whether it occurred.  For instance, whether a coin comes up heads is an observable event since you can ultimately observe the outcome of the flip.  In contrast, some events would be considered unobservable if they are unable to be directly ascertained by human senses.  A classic example of this would be whether a scientific theory is true or not.  It is impossible to directly observe whether the theory is true, but you might be able to observe events that are consistent or inconsistent with the theory.
 
 \vspace{1em}
 \begin{exercise}[(10 minutes)]
-Come up with some examples of observable events that are probabilistic in nature.  For each event, either provide the probability or explain what factors would determine the probability.  Some potential ideas to get you going: sporting events, elections, weather, etc.
+Come up with some examples (approximately 3 is a good number to go for) of observable events that are probabilistic in nature.  For each event, provide the probability that it occurs or explain what factors would determine the probability.  Some potential ideas to get you going: sporting events, elections, weather, etc.
 
 \begin{boxedsolution}
-TODO
+Here are some possible ideas.
+\bi
+\item The event \emph{The Nationals win the 2019 MLB World Series} is an observable event (we will ultimately find out whether or not this happens).  The probability of this event will depend on the quality of their opponent (currently this is either the Yankees or the Astros, both of whom would be favored in the series) and other factors (such as home field advantage).
+\item The event the movie Joker wins the Academy Award for Best Pictures is an observable event.  The probability that it occurs will depend on the amount of money spent promoting it to academy members, the quality of other movies that are released, etc.
+\ei
 \end{boxedsolution}
 
 \end{exercise}
 
 \subsection{Formal Definition}
 
-Next, we'll define more formally\sidenote{this is not the full definition of a \href{https://en.wikipedia.org/wiki/Probability_space}{probability space} used in modern mathematics.  For the purposes of most people that \emph{use} probability theory on actual problems, the full definition is needlessly complex.  Use the following link if you want a more \href{https://m.tau.ac.il/~tsirel/dump/Static/knowino.org/wiki/Probability_space.html}{in-depth discussion of the parts of the formal definition that are tricky} (our expectation is that you won't want this discussion!).} what we mean by a probability.  Having this formal definition will give us the ability to determine useful rules for manipulating and reasoning about probabilities.  To define the concept of a probability, we'll need to specify two ingredients.
+Next, we'll define more formally\sidenote{this is not the full definition of a \href{https://en.wikipedia.org/wiki/Probability_space}{probability space} used in modern mathematics.  For the purposes of most people that \emph{use} probability theory on actual problems, the full definition is needlessly complex.  For instance, as a grad student I (Paul) never saw the full definition in any of my ML courses.  Use the following link if you want a more \href{https://m.tau.ac.il/~tsirel/dump/Static/knowino.org/wiki/Probability_space.html}{in-depth discussion of the parts of the formal definition that are tricky} (our expectation is that you won't want this discussion!).} what we mean by a probability.  Having this formal definition will give us the ability to determine useful rules for manipulating and reasoning about probabilities.  To define the concept of a probability, we'll need to specify two ingredients.
 \subsection{Events}
 
-An \emph{event} is something that may or may not occur in response to some random process.  For instance, we could define the event that a coin comes up heads when it is flipped.  We often use capital letters to indicate events.  Since we've been using capital letters to also represent matrices, in our materials we'll use a cool mathy-looking calligraphic font to represent events.  For instance, we might use the symbol $\mathcal{H}$ to refer to the event that a coin flip comes up heads. It's important to emphasize that a single random process can have many associated events.   For instance, for the coin flip example we might also define $\mathcal{T}$ to be the event that the coin comes up tails (or $\mathcal{U}$ to indicate that event that the coin rotated at least 10 times in the air).
+An \emph{event} is something that may or may not occur in response to some random process.  For instance, we could define the event that a coin comes up heads when it is flipped.  We often use capital letters to indicate events.  Since we've been using capital letters to also represent matrices, in our materials we'll use a cool mathy-looking calligraphic font to represent events.  For instance, we might use the symbol $\mathcal{H}$ to refer to the event that a coin flip comes up heads. It's important to emphasize that a single random process can have many associated events.   For instance, for the coin flip example we might also define $\mathcal{T}$ to be the event that the coin comes up tails (or $\mathcal{U}$ to indicate that event that the coin rotated at least 10 times in the air when we flipped it).
 
-Further, events don't necessarily have to be mutually exclusive.  For instance, we might define the $\mathcal{R}_h$ to indicate the event that the Republican party controls the majority in the House of Representatives following the 2020 election and $\mathcal{D}_s$ to indicate the event that the Democratic party controls the majority in the Senate following the 2020 election.  Both (or none) of these events could occur.
+Further, events don't necessarily have to be mutually exclusive.  For instance, we might define the event $\mathcal{R}_h$ to indicate the event that the Republican party controls the majority in the House of Representatives following the 2020 election and $\mathcal{D}_s$ to indicate the event that the Democratic party controls the majority in the Senate following the 2020 election.  Both (or none) of these events could occur.
 
 \subsection{Probability Measure Function}
 The probability measure function assigns a probability to the occurrence of any particular event.  We can think of this probability measure function as taking as input an event and outputting a probability.  For instance, $p(\mathcal{E})$ provides the probability that event $\mathcal{E}$ occurs according to probability measure $p$.  All probability measure functions must satisfy the following properties.
 
 \bi
-\item $0 \leq p(\mathcal{E}) \leq 1$: the probability of an event ranges from 0 (for an impossible event) to 1 (an event that will always occur).
+\item $0 \leq p(\mathcal{E}) \leq 1$: the probability of an event ranges from 0 (an impossible event) to 1 (an event that will always occur).
 \item Given a set of $n$ events $\mathcal{E}_1, \mathcal{E}_2, \ldots, \mathcal{E}_n$ that are disjoint (i.e., no two can occur simultaneously)
 \begin{align}
 p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2~\mbox{or}~\ldots~\mbox{or}~\mathcal{E}_n) = \sum_{i=1}^n p(\mathcal{E}_i) \label{eq:probunion} \enspace .
@@ -198,16 +202,19 @@ The equation above specifies what's sometimes called the union rule of probabili
 p(\mathcal{E}_1 \cup \mathcal{E}_2 \cup \ldots \cup \mathcal{E}_n) = \sum_{i=1}^n p(\mathcal{E}_i) \enspace .
 \end{align}
 
-If you're not familiar with the symbol $\cup$ it is the symbol for a union of two sets.  The reason you'll sometimes see this is that in the most rigorous definition of a probability space an event is defined as a set (as stated in the margin note earlier in this section, you need not worry about the most rigorous definition in this course).
+If you're not familiar with the symbol $\cup$ it is the symbol for a union of two sets.  The reason you'll sometimes see this notation is that in the full definition of a probability space, an event is defined as a set (as stated in the margin note earlier in this section, you need not worry about the most rigorous definition in this course).
 
 \item Given a set of (not necessarily disjoint) events $\mathcal{E}_1, \mathcal{E}_2, \ldots, \mathcal{E}_n$ where at least one of these $n$ events must occur
 \begin{align}
 p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2~\mbox{or}~\ldots~\mbox{or}~\mathcal{E}_n) = 1 \enspace .
 \end{align}
 \ei
+
+This rule just states that if we have an exhaustive set of events (that cover all possible cases), at least one of them \emph{must} occur.
+
 \subsection{Complement Rule for Probability}
 
-Given the definition of probability detailed above, it follows that if the probability of an event happening is $p(\mathcal{E})$ then the probability of the event \emph{NOT} happening is $1-p(\mathcal{E})$.   The following are common ways of expression this relationship (we'll use Equation~\ref{eq:complement} in this class).  These all say the same thing (the only difference is notation).
+Given the definition of probability detailed above, it follows that if the probability of an event happening is $p(\mathcal{E})$ then the probability of the event \emph{NOT} happening is $1-p(\mathcal{E})$.   The following are common ways of to express this relationship (we'll use Equation~\ref{eq:complement} in this class).  These all say the same thing (the only difference is notation).
 
 \begin{align}
 p(\neg \mathcal{E}) &= 1 - p(\mathcal{E}) \label{eq:complement} \\
@@ -220,7 +227,7 @@ We point out these alternate notations not to confuse you (we'd never do that!) 
 
 \vspace{1em}
 \begin{exercise}[(10 minutes)]
-Here are some diagnostic questions to make sure that you go the basic ideas. 
+Here are some diagnostic questions to make sure that you got the basic ideas. 
 \bes
 \item Suppose $\mathcal{E}_1, \mathcal{E}_2, \mathcal{E}_3$ are disjoint events.  Further, suppose that one of these events must occur.  Which of the following functions are valid probability measure functions?
 
@@ -249,7 +256,7 @@ p_4(\mathcal{E}_1)=1 , p_4(\mathcal{E}_2)=0, p_4(\mathcal{E}_3)=0 \nonumber
 $p_1$ is a valid probability measure function since the probabilities add up to 1 and all are non-negative.  $p_2$ is not a valid probability measure function since two of the probabilities are outside of the appropriate range $[0,1]$.  $p_3$ is not a valid probability measure function since the probabilities of the three events add up to less than 1. $p_4$ is a valid probability measure function since the probabilities add to 1 and are in the appropriate range.
 \end{boxedsolution}
 
-\item The \href{https://en.wikipedia.org/wiki/Birthday_problem}{Birthday Problem} is a well-known probability problem often used in discrete math courses.  According to the Wikipedia article, the probability that at least two students among the 70 students in machine learning this semester share the same birthday is $0.999$.  What is the probability that no two students share the same birthday?
+\item The Birthday Problem is a well-known probability problem often used in discrete math courses.  According to \href{https://en.wikipedia.org/wiki/Birthday_problem}{the Wikipedia article on the Birthday Problem}, the probability that at least two students among the 70 students in machine learning this semester share the same birthday is $0.999$.  What is the probability that no two students share the same birthday?
 
 \begin{boxedsolution}
 Notice that the event \emph{no two students share a birthday} only happens when the event \emph{at least two students share a birthday} does not happen.  Therefore, these events are complements.
@@ -269,18 +276,18 @@ p(\mbox{no two students share a birthday}) &= 1 - p( \neg \mbox{no two students 
 
 \begin{externalresources}[(60 minutes)]
 \begin{learningobjectives}
-Note that these learning objectives have been written to be very specific (based on feedback from the course survey).  When you first read them, you probably won't know what they mean in detail.  As you return to them hopefully the more precise statement of these learning objectives will be useful for assessing your understanding of the provided resources.
+Note that these learning objectives have been written to be very specific (based on feedback from the course survey).  When you first read them, you probably won't know what they mean in detail.  As you go through the readings, hopefully the more precise statement of these learning objectives will be useful for assessing your understanding of the provided resources.
 
 \bi
 \item When Bayes' rule is useful (i.e., when $p(A|B)$ is easier to work with than $p(B|A)$).
 \item The idea of a conjoint probability $p(\mathcal{A}, \mathcal{B})$ (note: alternate notations include $p(\mathcal{A}~\mbox{and}~\mathcal{B})$ and $p(\mathcal{A} \cap \mathcal{B})$).
-\item The definition of a conditional probability $p(\mathcal{A} | \mathcal{B}) = \frac{p(\mathcal{A}~\mbox{and}~\mathcal{B})}{p(\mathcal{B})}$.
+\item The definition of a conditional probability $p(\mathcal{A} | \mathcal{B}) = \frac{p(\mathcal{A},\mathcal{B})}{p(\mathcal{B})}$.
 \item The equation for Bayes' rule $p(\mathcal{A} | \mathcal{B}) = \frac{p(\mathcal{B} | \mathcal{A}) p(\mathcal{A})}{p(\mathcal{B})}$.
-\item The equation for the product rule $p(\mathcal{A}~\mbox{and}~\mathcal{B}) = p(\mathcal{B}) p(\mathcal{A} | \mathcal{B})$.
+\item The equation for the product rule $p(\mathcal{A}, \mathcal{B}) = p(\mathcal{B}) p(\mathcal{A} | \mathcal{B}) =  p(\mathcal{A}) p(\mathcal{B} | \mathcal{A})$.
 \ei
 \end{learningobjectives}
 
-Allen Downey (ever heard of him?) wrote an excellent book called Think Bayes that introduces Bayesian analysis.  The \href{http://www.greenteapress.com/thinkbayes/html/thinkbayes002.html}{first chapter} starts with a less formal definition of probability than we gave earlier.  The chapter then gives intuitions around conjoint probability (the probability that multiple events occur simultaneously), conditional probability (the probability that some event occurs conditioned on another event having occurred), and finally to Bayes' rule (a surprisingly easy theorem to derive that allows you to write one conditional probability distribution in terms of another).  The Monty Hall problem in section 1.7 is probably okay to gloss over (see Allen's note at the end of that section for why this is the case).
+Allen Downey (ever heard of him?) wrote an excellent book called Think Bayes that introduces Bayesian analysis.  The \href{http://www.greenteapress.com/thinkbayes/html/thinkbayes002.html}{first chapter} (which we highly recommend you read) starts with a less formal definition of probability than the one we gave earlier.  The chapter then gives intuitions around conjoint probability (the probability that multiple events occur simultaneously), conditional probability (the probability that some event occurs conditioned on another event having occurred), and finally to Bayes' rule (a surprisingly easy theorem to derive that allows you to write one conditional probability distribution in terms of another).  The Monty Hall problem in section 1.7 is probably okay to gloss over (see Allen's note at the end of that section for why this is the case).
 
 Allen's treatment of the material is, of course, not the only one out there (we like it for its focus on building intuition and focusing on the key ideas).  Here are some other resources you might consider checking out (they are optional).
 \bi
@@ -291,9 +298,27 @@ Allen's treatment of the material is, of course, not the only one out there (we 
 
 \end{externalresources}
 
-\begin{exercise}
-Put one in words and one in equations (help them internalize what this actually means).
-It would be great to have something.
+\begin{exercise}[(20 minutes)]
+\bes
+\item You are given two coins (let's call the coins $\mathcal{C}_1$ and $\mathcal{C}_2$).  If you flip coin 1, the coin will come up heads with probability 0.8 (i.e., $p(\mathcal{H} | \mathcal{C}_1) = 0.8$). If you flip coin 2, the coin will come up heads with probability 0.5 (i.e., $p(\mathcal{H} | \mathcal{C}_2) = 0.5$).  Suppose you choose one of these coins (there is no way for you to tell them apart), flip it once, and it comes up heads.  What is the probability that you flipped coin 2 (i.e., what is $p(\mathcal{C}_2 | \mathcal{H})$)?
+
+\begin{boxedsolution}
+
+\end{boxedsolution}
+
+
+\item You train a neural network model for identifying whether \href{https://www.freecodecamp.org/news/chihuahua-or-muffin-my-search-for-the-best-computer-vision-api-cbda4d6b425d/}{an image contains a picture of a Chihuahua or a Blueberry Muffin} (you know you want to click the link!).  Let's further assume that there are no images that contain both a muffin and a Chihuahua (of course as we all know Chihuahuas love muffins).  Based the project report you turned in for module 1 you know that if the image contains a Chihuahua, your model will identify it as such with probability 0.9.  Also, you know that if the model contains a muffin, your model will identify it as such with probability 0.8.  You now decide to test your model on a dataset which contains 80\% muffins.  Assuming that your model predicted that an image contained a muffin, what is the probability that it actually contains a muffin? (you can assume that the performance of your model doesn't change when run on this new dataset).
+
+\begin{boxedsolution}
+Let $\mathcal{M}$ represent the event that the image contains a Muffin.  Let $\mathcal{D}_M$ represent that a muffin was detected in the image.
+\begin{align}
+p(\mathcal{M} | \mathcal{D}_M) &= \frac{p(\mathcal{D}_m | \mathcal{M})  p(\mathcal{M})}{\mathcal{D}_M} \\
+&= \frac{p(\mathcal{D}_m | \mathcal{M})  p(\mathcal{M})}{ p(\mathcal{D}_m | \mathcal{M})  p(\mathcal{M}) + p(\mathcal{D}_m | \neg \mathcal{M})  p(\neg \mathcal{M})} \\
+&= \frac{0.8 \times 0.8}{0.8 \times 0.8 + 0.1 \times 0.2} \\
+&= 0.97
+\end{align}
+\end{boxedsolution}
+\ees
 \end{exercise}
 
 \section{Marginalization Rule for Probabilities}
