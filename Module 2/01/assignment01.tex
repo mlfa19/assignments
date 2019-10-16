@@ -16,8 +16,6 @@
 \thispagestyle{firstpage}
 
 
-TODO: make these more concrete based on Connor's comment in the course feedback survey. (note: Perhaps breaking these down in more detail when we get to a particular problem / reading is better).
-
 \begin{learningobjectives}
 \bi
 \item Gain familiarity with key ideas in ML (with a focus on probabilistic methods).
@@ -28,123 +26,138 @@ TODO: make these more concrete based on Connor's comment in the course feedback 
 \end{learningobjectives}
 
 \section{Motivation}
-The theme of uncertainty has cropped up a number of times so far this semester.  For instance, we learned about the logistic regression model, which computes the probability that the output for a given input is 1.  In this way, the logistic regression model explicitly represents the idea of the uncertainty of its predictions and uses the concept of probability to express these uncertainties.  We’ve also seen examples of models that don’t fit the data perfectly.  For example, the plot in Figure~\ref{fig:lineofbestfit} shows a line of best fit that doesn't go through all of the data.  The fit might be imperfect because we don't have the right model (a form of uncertainty) or because the thing we are trying to predict is inherently random in some way (another form of uncertainty).
+The theme of uncertainty has cropped up a number of times so far this semester.  For instance, we learned about the logistic regression model, which computes the probability that the output for a given input is 1.  In this way, the logistic regression model explicitly represents the idea of the uncertainty of its predictions and uses the concept of probability to express these uncertainties.  We’ve also seen examples of models that don’t fit the data perfectly (well that's pretty much every model!).  For example, the plot in Figure~\ref{fig:lineofbestfit} shows a line of best fit that doesn't go through all of the data.  The fit might be imperfect because we don't have the right model (a form of uncertainty) or because the thing we are trying to predict is inherently random in some way (another form of uncertainty).
 \begin{marginfigure}
 \includegraphics[width=\linewidth]{figures/line_of_best_fit.pdf}
 \caption{A dataset with one independent variable (x-axis) and one dependent variable.  Also shown is the line of best fit.\label{fig:lineofbestfit}}
 \end{marginfigure}
 
 
-It turns out that the notion of probability provides us with a precise definition of the concept of uncertainty and allows us to reason about all many forms of uncertainty in a unified way.  Formalizing uncertainty using probability theory will enable us to do a bunch of really cool things with respect to machine learning, including
+It turns out that the notion of probability provides us with a powerful method to formalize the concept of uncertainty and allows us to reason about many types of uncertainty in a unified way.  Formalizing uncertainty using probability theory will enable us to do a bunch of really cool things with respect to machine learning, including
 
 \bi
 \item make explicit our assumptions about where data comes, the uncertainties present within it, and the impact of uncertainty on predictions based on that data.
 \item allow us to quantify our confidence in our model.  For example, instead of returning the one best fitting model (as we did in the first module), we assign a probability to each possible model, and models that fit the data better will get a higher probability.
-\item give us a way to incorporate expert knowledge into our machine learning models.  This expert knowledge will allow for us to more easily interpret machine learning models.
+\item give us a way to incorporate expert knowledge into our machine learning models.  This expert knowledge will allow for us to learn more interpretable models.
 \item give us powerful tools to reason about fairness and bias in machine learning models.
 \ei
 
 \section{Six Big Ideas in (Probabilistic) Machine Learning}
-Back by popular demand\sidenote{there was actually no specific demand for this, but here it is anyway :)}... Six Big ideas in ML!  Here we're going to highlight ideas in ML that have specific connections to probabilistic machine learning.
+Back by popular demand\sidenote{there was actually no specific demand for this, but we couldn't resist :).}... here are Six (more) Big ideas in ML!  Here we're going to highlight ideas in ML that have specific connections to Bayesian machine learning.
 
 \begin{notice}
 Our intent is to provide a larger framework for you to interpret the content you are learning.  You should not expect to understand all of these ideas in any sort of detail.  Please take these as a ``wow isn't this cool / interesting,'' and avoid getting too lost in the weeds.
 \end{notice}
-\href{https://www.nature.com/articles/nature14541.pdf}{this article in Nature Reviews}.
 
-The \href{https://docs.pymc.io/nb_examples/index.html}{pymc examples} are also super cool (e.g., \href{https://docs.pymc.io/notebooks/GP-MaunaLoa.html}{GP Mauna Loa})
-
-\subsection*{Idea 1: Probabilistic Methods Can Help Us Understand Learning in Biological and Artificial Systems}
-
-One common challenge that humans and robots (and other animals for that matter) face is the need to reason about and interpret ambiguous information from the world around them.  For instance, the photons of light that hit our retinas create a 2-dimensional map of the 3-dimensional world.  Despite the fact that there are many possible 3D worlds that could have created the same pattern of light on our retinas, our brain has no trouble figuring out the most likely 3-dimensional structure of the world\sidenote{optical illusions are a good example of when this does not hold (i.e., our brain is tricked into inferring the wrong 3D structure).}.
-
-One approach that scientists have taken to understand how humans resolve ambiguities in the world in order to accurately extract structure and meaning is by applying what is known as the \href{https://www.cse.huji.ac.il/~yweiss/intro/node2.html}{computational approach}.  In the computational approach, one formalizes the goal of the agent as well as the constraints facing it.  For example, we might posit that a person is trying to accurately understand the 3D structure of their environment but is constrained to only have access to a 2D projection of that environment (i.e., the 2D projection is what is captured on our retina).  Once we have formalized the problem facing the agent, we can then use computational tools to compute the optimal solution to the problem and compare this solution with what people actually do.  Through this comparison we may learn more about the nature of human cognition and the reasons why humans think and act the way they do.  In David Marr's classic book ``Vision,'' he states the core ideas in the following way,.
-
-\begin{quote}
-Trying to understand perception by studying only neurons is like trying to understand bird flight by studying only feathers: It just cannot be done. In order to understand bird flight, we have to understand aerodynamics; only then do the structure of feathers and the different shapes of birds' wings make sense. [Marr, 1982] p. 27
- \end{quote}
-
-The science of ``aerodynamics'' is being invoked in the quote to reference a fundamental theory that governs all systems that might try to fly.  When it comes to cognition, the idea of Bayesian inference, which will form the basis of probabilistic machine learning and which you'll start learning about later in this assignment, has increasingly emerged as the ``aerodynamics'' of thought and reasoning.  Scientists and engineers have used Bayesian approaches to understand a vast array of human cognition and behavior.
-
-\bi
-\item TODO (millions of ideas to put here)
-\ei
-
-
-\subsection*{Idea 2: Probabilistic Methods Can Illuminate Hidden Structures}
-
-One of the places where probabilistic machine learning really shines is in determining the hidden structures that underlie data.  One very cool example of this is in the field of \href{https://en.wikipedia.org/wiki/Bioinformatics}{bioinformatics}.  A key idea in evolutionary biology is the notion of a \href{https://en.wikipedia.org/wiki/Phylogenetic_tree}{phylogenetic tree}.  A phylogenetic tree captures the relationships between various entities (e.g., individual members of a species, different species, genes, etc.) in a hierarchy (or tree).  For instance, the figure below shows a phylogenetic tree of the vertebrates.
-
-\begin{center}
-\includegraphics[width=0.8\linewidth]{figures/vertebrates}
-\end{center}
-
-You might imagine that such a phylogenetic tree would be put together using a combination of the fossil record along with an analysis of modern day versions of these species.  It turns out that probabilistic machine learning has been used to automatically infer phylogenetic trees from a wide variety of data sources.  One example is using \href{https://en.wikipedia.org/wiki/Mitochondrial_DNA}{mitochondrial DNA} collected from people all around the world and then using machine learning analysis to reconstruct the most likely phylogenetic tree that underlies these DNA samples.  The result is an ancestral tree that helps reconstruct the ancient history of humans and snapshot of how they came to inhabit planet Earth.  Reconstructions of this type have given support to the ``out of Africa'' theory of the origin of modern humans (namely that all people alive today can trace their lineage back to a group of people in subsaharan African from about 150,000 - 200,000 years ago).
-
-The usage of Bayesian approaches to inferring phylogenetic trees has been used in a vast number of places.  The abstract of \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5624502/}{A biologist’s guide to Bayesian phylogenetic analysis} describes it in the following way.
-\begin{quote}
-Bayesian phylogenetic methods were introduced in the 1990s and have since revolutionised the way we analyse genomic sequence data3. Examples of such analyses include phylogeographic analysis of virus spread in humans inference of phylogeographic history and migration between species, analysis of species diversification rates, divergence time estimation, and inference of phylogenetic relationships among species or populations.
-\end{quote}
-
-\paragraph{(If You're Interested): More examples of finding hidden structures in data}
-
-\href{https://homes.cs.washington.edu/~rao/ScienceIndus.pdf}{Entropic Evidence for Linguistic Structure in the Indus Script}
-
-
-\subsection*{Idea 3: Probabilistic Methods Allow Us to Write Probabilistic Programs}
-
-One of the key ideas of probabilistic machine learning is that we can take causal models of how hidden structures give rise to the data that we observe and invert these models in order to allow us to reason about the hidden structures that gave rise to our data.  One of the coolest ways in which this fundamental ideas is being leveraged is in the field of \href{https://en.wikipedia.org/wiki/Probabilistic_programming}{probabilistic programming}.  In a probabilistic program, the programmer writes code to implement the causal model (the one that goes from hidden structures to data) and then the probabilistic programming framework automatically can infer the hidden structure given a sample of data!
-
-For instance, one of the examples listed for the popular probabilistic programming Python library \href{https://docs.pymc.io/}{pymc3} shows how a model of CO2 concentration in the atmosphere could be create as a probabilistic program (see \href{https://docs.pymc.io/notebooks/GP-MaunaLoa.html}{Mauna Loa CO2 example}).  The punchline graph from that notebook is reproduced below. The model in this case was trained on the data up to 2004 and had to predict the rest.  In addition to the curve shown, the model also decomposed the curve into various components (including long range and seasonal).
-
-\begin{center}
-\includegraphics[width=0.8\linewidth]{figures/maunaloa}
-\end{center}
-
-\paragraph{(If You're Interested): More examples of probabilistic programming can be found in these links}
-
-
-\bi
-\item TODO fix these links: \href{https://arxiv.org/pdf/1809.10756.pdf}{Probabilistic Programming?} (Note: there is an example of inverse computer graphics that is cool).  Here is \href{https://www.youtube.com/watch?v=DImI6l_0yiM}{one that references 3D computer vision}.  Here is probably the \href{http://mrkulk.github.io/www_cvpr15/}{clearest version}.  Another \href{cool example}{https://arxiv.org/pdf/1607.08128.pdf}.  This one is \href{https://science.sciencemag.org/content/sci/360/6394/1204.full.pdf}{really insane (from Science)}.   It uses a few images to predict what the scene would look like from another viewpoint.
-\ei
-
-
-\subsection*{Idea 4: Probabilistic Methods Give Us a Language for Reasoning about Algorithmic Fairness}
-
-We've talked about bias in machine learning models (e.g., when we discussed Gender Shades, and other related work).  The examples given in the \href{http://gendershades.org/overview.html}{Gender Shades} paper were pretty cut-and-dry --- the gender classification models that many companies have released work very poorly on women and people of color (and especially the intersection of the two).  In other situations, it will not be so straightforward to reason about bias. For instance, the well-known ProPublica piece \href{https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing}{Machine Bias} discussed how a tool for predicting criminal recidivism (whether a criminal would reoffend) was biased against African Americans.  This piece was one of the most important in the field of FAT-ML in that it sparked some work on articulating the various forms of algorithmic fairness.  Most of these models of fairness are articulated using the language of probability.  Further, some of the same formalisms that have been used to develop probabilistic machine learning approaches can be used to understand and reason about bias in an algorithm.
-
-We'll be studying various notions of algorithmic fairness, but if you're interested an in-depth overview of this is provided in \href{https://arxiv.org/pdf/1906.11333.pdf}{Fairness criteria through the lens of directed acyclic graphical models}.  It's also worth mentioning that many of these notions of fairness have also been challenged on the grounds that they are overly abstract and gloss over important context in determining whether something is biased or not.
-
-
-\subsection*{Idea 5: Probabilistic Methods Allow for Learning More Interpretable Models}
-
-https://towardsdatascience.com/what-is-bayesian-statistics-used-for-37b91c2c257c
-
-
-\url{https://alexgkendall.com/computer_vision/bayesian_deep_learning_for_safe_ai/}
-
-\subsection*{Idea 6: Probabilistic Methods Let You Share Data Across Learning Tasks}
-TODO (clustering or topic modeling?)
-
-
-\subsection*{notes: other ideas}
-\bi
-\item Decision-making under uncertainty
-\item Compression?
-\ei
 
 \begin{exercise}[\faShareAlt~(60 minutes)]
-Now, we want to hear from you!  
-Choose one of the big ideas above and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  As a rough guide, you should aim for a response of a 1-2 paragraphs.
+Read the six big ideas in ML below.  You will choose one of them and write a short response to it.  Your response could incorporate something surprising you read, a thought-provoking question, your personal experience, an additional resource that builds upon or shifts the discussion.  We hope that this reflection will help scaffold class discussions and get you thinking about your interests in the big space that is ML.  Also, you have license from us to customize the structure of your response as you see fit.  As a rough guide, you should aim for a response of a 1-2 paragraphs.
 
 \begin{boxedsolution}
 There's no one right answer here!
 \end{boxedsolution}
 \end{exercise}
 
+
+\subsection*{Idea 1: Bayesian Methods Can Illuminate Hidden Structures}
+
+One task in which Bayesian machine learning shines is in determining the hidden structures that underlie data.  One very cool example of this is in the field of \href{https://en.wikipedia.org/wiki/Bioinformatics}{bioinformatics}.  A key idea in evolutionary biology is the notion of a \href{https://en.wikipedia.org/wiki/Phylogenetic_tree}{phylogenetic tree}.  A phylogenetic tree captures the relationships between various entities (e.g., individual members of a species, different species, genes, etc.) in a hierarchy (or tree).  For instance, the figure below shows a phylogenetic tree of the vertebrates.
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{figures/vertebrates}
+\end{center}
+
+Such a phylogenetic tree would be put together using a combination of fossil records along with analysis of modern day versions of these species.  It turns out that Bayesian machine learning is a key tool that is used to automatically infer phylogenetic trees from a wide variety of data sources.  One example is using \href{https://en.wikipedia.org/wiki/Mitochondrial_DNA}{mitochondrial DNA} collected from people all around the world and then using machine learning analysis to reconstruct the most likely phylogenetic tree that underlies these DNA samples.  The result is an ancestral tree that helps reconstruct the ancient history of humans and snapshot of how they came to inhabit planet Earth.  Reconstructions of this type have given support to the ``out of Africa'' theory of the origin of modern humans (namely that all people alive today can trace their lineage back to a group of people in sub-Saharan African from about 150,000 - 200,000 years ago).
+
+Bayesian approaches to inferring phylogenetic trees have been used in a vast number of places.  The abstract of \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5624502/}{A biologist’s guide to Bayesian phylogenetic analysis} describes it in the following way.
+\begin{quote}
+Bayesian phylogenetic methods were introduced in the 1990s and have since revolutionised the way we analyse genomic sequence data3. Examples of such analyses include phylogeographic analysis of virus spread in humans inference of phylogeographic history and migration between species, analysis of species diversification rates, divergence time estimation, and inference of phylogenetic relationships among species or populations.
+\end{quote}
+
+The concept of a phylogenetic tree has even been used used in linguistics as a mechanism to study \href{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0180908}{the evolution of languages over time}.
+
+\paragraph{(If You're Interested): More examples of finding hidden structures in data}
+
+\href{https://homes.cs.washington.edu/~rao/ScienceIndus.pdf}{Entropic Evidence for Linguistic Structure in the Indus Script}
+
+\subsection*{Idea 2: Bayesian Methods Allow Us to Write Probabilistic Programs}
+
+The key idea of Bayesian machine learning is that we can take causal models of how hidden structures give rise to observable data and invert them to allow us to use data to reason about the hidden structures that caused that data.  One of the coolest ways in which this fundamental idea is being leveraged is in the field of \href{https://en.wikipedia.org/wiki/Probabilistic_programming}{probabilistic programming}.  In a probabilistic program, the programmer writes code to implement the causal model (the one that goes from hidden structures to data).  In contrast to a typical program where we might take a particular input and produce a single output, a probabilistic program specifies a random process by which data is generated.  Uncertainty is represented explicitly at each step in the program.  Once the programmer has specified the causal model for how data is generated, the probabilistic programming framework can automatically infer the hidden structure given a sample of data!
+
+For instance, one of the examples listed for the popular probabilistic programming library \href{https://docs.pymc.io/}{pymc3} shows how a model of CO2 concentration in the atmosphere could be created using a probabilistic program (see \href{https://docs.pymc.io/notebooks/GP-MaunaLoa.html}{Mauna Loa CO2 example}).  The punchline graph from that notebook is reproduced below.  In this case the programmer had to specify the process by which underlying phenomena (e.g., increases in CO2 levels globally, seasonal factors) give rise to observable data (CO2 measurements).  This probabilistic program was then given atmospheric data up to 2004 and pymc3 automatically generated predictions for the CO2 data from 2004 onwards.  In addition to the curve shown, the model was able to decompose the curve into various components (including long range and seasonal effects).
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{figures/maunaloa}
+\end{center}
+
+\paragraph{(If You're Interested): Here are some more examples of probabilistic programmin}
+Is computer vision really just inverse computer graphics?  If you use probabilistic programming you can simply specify the forward model of how objects in a scene give rise to an image that we would capture on a camera. Probabilistic programming can then take an image and infer the underlying structure that gave rise to a test image.  Examples of this include fitting a  \href{http://mrkulk.github.io/www_cvpr15/}{3D models to human faces} (follow the link to some cool videos) and \href{https://science.sciencemag.org/content/sci/360/6394/1204.full.pdf}{predicting how a geometric scene would look from an arbitrary vantage point from a single training image}.
+
+
+\subsection*{Idea 3: Bayesian Methods Can Help Us Understand Learning and Perception in Humans and Robots}
+
+One common challenge that humans and robots (and other animals for that matter) face is the need to interpret ambiguous information in the world around them.  For instance, the photons of light that hit our retinas create a 2D map of a 3D world.  Despite the fact that there are many possible 3D worlds that could have created the same pattern of light on our retinas, our brain, for the most part, has no trouble figuring out the correct 3D structure of the world\sidenote{optical illusions are a good example of when this does not hold (i.e., our brain is tricked into inferring the wrong 3D structure).}.
+
+One approach that scientists have taken to understand how humans accurately extract structure in the face of ambiguous information is by applying what is known as the \href{https://www.cse.huji.ac.il/~yweiss/intro/node2.html}{computational approach}.  In the computational approach, one formalizes the goal of the agent as well as the constraints facing it.  For example, perhaps a person is trying to accurately understand the 3D structure of their environment but is constrained to only have access to a 2D projection of that environment (i.e., the 2D projection is what is captured on our retina).  Once we have formalized the problem facing the agent, we can then use computational tools to compute the optimal solution to the problem and compare this solution to what people actually do.  Through this comparison we may learn more about the nature of human cognition and the reasons why humans think and act the way they do.  In David Marr's classic work ``Vision,'' he states the core idea in the following way.
+
+\begin{quote}
+Trying to understand perception by studying only neurons is like trying to understand bird flight by studying only feathers: It just cannot be done. In order to understand bird flight, we have to understand aerodynamics; only then do the structure of feathers and the different shapes of birds' wings make sense. [Marr, 1982] p. 27
+ \end{quote}
+
+The science of ``aerodynamics'' is being invoked in the quote to reference a fundamental theory that governs all systems that might try to fly.  When it comes to cognition, the idea of Bayesian inference, which will form the basis of Bayesian machine learning, has increasingly emerged as the ``aerodynamics'' of thought and reasoning.  Scientists and engineers have used Bayesian approaches to understand a vast array of human cognition and behavior.
+
+\bi
+\item \href{https://www.sciencedirect.com/science/article/pii/S0022249615000061}{Sensory perception}
+\item \href{https://www.nature.com/articles/nn963}{Motor control}
+\item \href{http://web.mit.edu/cocosci/Papers/Science-2011-Teglas-1054-9.pdf}{Babies can use Bayesian inference to understand physics... sort of}
+\item \href{https://www.ncbi.nlm.nih.gov/pubmed/24730598}{The tendency of people to with divergent beliefs to become more polarized when presented with the same evidence (think current politics)}
+\item \href{https://www.sciencedirect.com/science/article/pii/S0022249608001090}{How people behave in a simulated gambling environment}
+\item \href{https://arxiv.org/abs/1806.03916}{How people ascribe trust to others}
+\item \href{https://www.sciencedirect.com/science/article/pii/S1364661306001318}{How people acquire language}
+\ei
+
+
+\subsection*{Idea 4: Bayesian Methods Give Us a Language for Reasoning about Algorithmic Fairness}
+
+We've talked about bias in machine learning models (e.g., when we discussed Gender Shades).  The examples given in the \href{http://gendershades.org/overview.html}{Gender Shades} paper were pretty cut-and-dry --- the gender classification models that many companies have released work very poorly on women and people of color (and especially the intersection of the two).  In other situations it is not so straightforward to reason about bias. For instance, in the well-known ProPublica piece \href{https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing}{Machine Bias} the authors describe how a tool for predicting criminal recidivism (whether a criminal would reoffend) was biased against African Americans.  This piece was one of the most important in the field of FAT-ML in that it sparked some work on articulating various definitions of algorithmic fairness.  Most of these models of fairness are articulated using the language of probability.  Further, some of the same formalisms that have been used to develop probabilistic machine learning approaches can be used to understand and reason about bias in an algorithm.
+
+We'll be studying various notions of algorithmic fairness, but if you're interested an in-depth overview of this is provided in \href{https://arxiv.org/pdf/1906.11333.pdf}{Fairness criteria through the lens of directed acyclic graphical models}.  It's also worth mentioning that many of these notions of fairness have also been challenged on the grounds that they are overly abstract and gloss over important context in determining whether something is biased or not.
+
+
+\subsection*{Idea 5: Bayesian Methods Allow for Learning More Interpretable and Flexible Models}
+
+Since Bayesian models typically start from a causal model of how observable data are generated, when this process is inverted, you are left with an understanding of the most probable causes of the data you observed.  Oftentimes this output is easier to interpret than what might be generated by, say, a neural network, which has no explicit causal model of data generation.  As a motivating example, take for example the usage of computers to help doctors diagnose patients (this is sometimes called a \href{https://en.wikipedia.org/wiki/Clinical_decision_support_system}{Clinical Decision Support System}).  Here are two ways in which we might tackle this problem using neural networks versus Bayesian machine learning.
+
+\bi
+\item Neural networks: we would get a dataset of tons of patients, their symptoms, and their diagnoses.  We would train a neural network model to map from symptoms to diagnoses.
+\item We would have an explicit model of how underlying factors (e.g., diseases, age, environmental conditions) give rise to symptoms.  We would fit some of the parameters of that model using clinical data or through prior knowledge (e.g., the intuition of doctors).  When we wanted to diagnose a patient, we would use Bayesian inference to predict the likely underlying disease that contributed to the patient's symptoms.
+\ei
+ 
+ The potential advantages of the Bayesian approach are that they way it makes decisions might be more understandable / familiar to a doctor (since it is not that different from how a doctor might diagnose patients themselves).  Further, if something changed about some aspect of the environment (e.g., the sensitivity of a test for a disease increased or the prevalence of a disease decreased), the predictions would naturally adjust.  It is less easy to see how to incorporate these sorts of changes into the neural network approach.
+ 
+ \begin{marginfigure}
+ \includegraphics[width=\linewidth]{figures/bayesdeepdream}
+ \caption{Bayes (pictured) meets neural networks.  Generated using \href{https://deepdreamgenerator.com}{deepdreamgenerator.com}}
+ \end{marginfigure}
+ This is not to bash neural networks!  There is even a burgeoning field designed to \href{https://alexgkendall.com/computer_vision/bayesian_deep_learning_for_safe_ai/}{bring some of the advantages of Bayesian approaches} to the field of deep learning.  A figure from this work is shown below.  The network in question is able to represent not only its prediction regarding the likely depth map of given a stereo image, but also the uncertainty that the model has for various parts of the image.
+ 
+ \begin{center}
+  \includegraphics[width=0.3\linewidth]{figures/left_stereo}
+    \includegraphics[width=0.3\linewidth]{figures/disparity}
+ \includegraphics[width=0.3\linewidth]{figures/depthuncertainty}
+ \end{center}
+
+\subsection*{Idea 6: Bayesian Methods Pose Difficult Computational Challenges}
+While we've painted a fairly rosy picture of Bayesian methods, they are certainly not without their challenges.  One of the biggest challenges is computational (see here for \href{https://link.springer.com/article/10.1007/s11222-015-9574-5}{a summary of current computational challenges in Bayesian learning}).  The key reason that Bayesian methods can be computationally expensive is that they typically involve solving a bunch of challenging problems.
+\bi
+\item Bayesian methods involve inverting causal models of the world.  This inversion process may not be well-posed and could result in very inefficient computations.
+\item Bayesian methods involve representing uncertainty over large model spaces.  Just representing this model space, let alone using it for making predictions can be hard.
+\ei
+Therefore, while Bayesian methods are very attractive (and will pose no significant computational problems in some important special cases, which we will learn about in this module), efficiently using Bayesian methods is an active area of research.
+
 \section{Probability}
 
-Hopefully the previous section left you feeling excited to learn more about the theory that might underlie these sorts of models and applications.  Next, we'll be taking our first steps towards learning this theory.
+Hopefully the previous section left you feeling excited to learn more about the theory that underlies these big ideas.  Next, we'll take our first steps towards learning this theory.
 
 \subsection{Intuition}
 Most of us are used to thinking that events can be probabilistic, that is we can attach some probability to whether or not they occur.  Take for example flipping a coin.  We could think of the event that the coin comes up heads as having probability 0.5.  That is, there is an even chance that it happens versus doesn’t happen.  Further, we can talk about events as being observable if we are able to ultimately know whether or not they occurred.  For instance, whether a coin comes up heads is an observable event since you can ultimately observe the outcome of the flip.  In contrast, some events would be considered unobservable if they are unable to be directly ascertained by human senses.  A classic example of this would be whether a scientific theory is true or not.  It is impossible to directly observe whether the theory is true, but you might be able to observe events that are consistent or inconsistent with the theory.
@@ -279,6 +292,7 @@ Allen's treatment of the material is, of course, not the only one out there (we 
 \end{externalresources}
 
 \begin{exercise}
+Put one in words and one in equations (help them internalize what this actually means).
 It would be great to have something.
 \end{exercise}
 
@@ -371,7 +385,7 @@ For example, if we were flipping a fair coin 3 times, we might define a random v
 X&= \mbox{the number of coins that come up heads in 3 flips}
 \end{align}
 
-The probability mass function is then defined over all possible values that $X$ could possibly take on.  If don't know how we arrived at these values, that is fine.  These are results that can be derived using basic \href{https://en.wikipedia.org/wiki/Combinatorics}{combinatorics} (go take Sarah Spence Adams' class and learn about how to do this).
+The probability mass function (PMF) is then defined over all possible values that $X$ could possibly take on.  If don't know how we arrived at these values, that is fine.  These are results that can be derived using basic \href{https://en.wikipedia.org/wiki/Combinatorics}{combinatorics} (go take Sarah Spence Adams' class and learn about how to do this).
 
 \begin{align}
 p(X=0) &= p(\mbox{0 heads come up}) = \frac{1}{8} \nonumber \\
