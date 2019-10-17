@@ -282,12 +282,12 @@ Note that these learning objectives have been written to be very specific (based
 \item When Bayes' rule is useful (i.e., when $p(A|B)$ is easier to work with than $p(B|A)$).
 \item The idea of a conjoint probability $p(\mathcal{A}, \mathcal{B})$ (note: alternate notations include $p(\mathcal{A}~\mbox{and}~\mathcal{B})$ and $p(\mathcal{A} \cap \mathcal{B})$).
 \item The definition of a conditional probability $p(\mathcal{A} | \mathcal{B}) = \frac{p(\mathcal{A},\mathcal{B})}{p(\mathcal{B})}$.
+\item The equation for the product rule $p(\mathcal{A}, \mathcal{B}) = p(\mathcal{B}) p(\mathcal{A} | \mathcal{B}) =  p(\mathcal{A}) p(\mathcal{B} | \mathcal{A})$ (Allen calls this the probability of a conjunction).
 \item The equation for Bayes' rule $p(\mathcal{A} | \mathcal{B}) = \frac{p(\mathcal{B} | \mathcal{A}) p(\mathcal{A})}{p(\mathcal{B})}$.
-\item The equation for the product rule $p(\mathcal{A}, \mathcal{B}) = p(\mathcal{B}) p(\mathcal{A} | \mathcal{B}) =  p(\mathcal{A}) p(\mathcal{B} | \mathcal{A})$.
 \ei
 \end{learningobjectives}
 
-Allen Downey (ever heard of him?) wrote an excellent book called Think Bayes that introduces Bayesian analysis.  The \href{http://www.greenteapress.com/thinkbayes/html/thinkbayes002.html}{first chapter} (which we highly recommend you read) starts with a less formal definition of probability than the one we gave earlier.  The chapter then gives intuitions around conjoint probability (the probability that multiple events occur simultaneously), conditional probability (the probability that some event occurs conditioned on another event having occurred), and finally to Bayes' rule (a surprisingly easy theorem to derive that allows you to write one conditional probability distribution in terms of another).  The Monty Hall problem in section 1.7 is probably okay to gloss over (see Allen's note at the end of that section for why this is the case).
+Allen Downey (ever heard of him?) wrote an excellent book called Think Bayes that introduces Bayesian analysis.  The \href{http://www.greenteapress.com/thinkbayes/html/thinkbayes002.html}{first chapter} (which you should read) starts with a less formal definition of probability than the one we gave earlier.  The chapter then gives intuitions around conjoint probability (the probability that multiple events occur simultaneously), conditional probability (the probability that some event occurs conditioned on another event having occurred), and finally to Bayes' rule (a surprisingly easy theorem to derive that allows you to write one conditional probability distribution in terms of another).  The Monty Hall problem in section 1.7 is probably okay to gloss over (see Allen's note at the end of that section for why this is the case).
 
 Allen's treatment of the material is, of course, not the only one out there (we like it for its focus on building intuition and focusing on the key ideas).  Here are some other resources you might consider checking out (they are optional).
 \bi
@@ -299,20 +299,30 @@ Allen's treatment of the material is, of course, not the only one out there (we 
 \end{externalresources}
 
 \begin{exercise}[(20 minutes)]
+\begin{notice}
+If you are having trouble dealing with the denominator that you get when you apply Bayes' rule, you may want to skip ahead to the section on the \emph{Marginalization Rule for Probabilities} and then return to these problems.
+\end{notice}
 \bes
-\item You are given two coins (let's call the coins $\mathcal{C}_1$ and $\mathcal{C}_2$).  If you flip coin 1, the coin will come up heads with probability 0.8 (i.e., $p(\mathcal{H} | \mathcal{C}_1) = 0.8$). If you flip coin 2, the coin will come up heads with probability 0.5 (i.e., $p(\mathcal{H} | \mathcal{C}_2) = 0.5$).  Suppose you choose one of these coins (there is no way for you to tell them apart), flip it once, and it comes up heads.  What is the probability that you flipped coin 2 (i.e., what is $p(\mathcal{C}_2 | \mathcal{H})$)?
+\item You are given three coins.  Two are of type 1, we'll call this type $\mathcal{C}_1$, and one is of type 2, we'll call this type $\mathcal{C}_2$. If you flip a coin of type 1, the coin will come up heads with probability $\frac{4}{5}$ (i.e., $p(\mathcal{H} | \mathcal{C}_1) = \frac{4}{5}$). If you flip a coin of type 2, the coin will come up heads with probability $\frac{1}{2}$ (i.e., $p(\mathcal{H} | \mathcal{C}_2) = \frac{1}{2}$).  Suppose you choose one of the three coins (there is no way for you to tell them apart), flip it once, and it comes up heads.  What is the probability that you flipped a coin of type 2 (i.e., what is $p(\mathcal{C}_2 | \mathcal{H})$)?  After you compute your answer, compare it with the probability that a randomly selected coin was of type 2.  Does the relationship between this prior probability and the posterior probability make sense?
 
 \begin{boxedsolution}
+\begin{align}
+p(\mathcal{C}_2 | \mathcal{H}) &= \frac{p(\mathcal{H} | \mathcal{C}_2) p(\mathcal{C}_2)}{p(\mathcal{H})} & \mbox{Bayes' Rule} \nonumber \\
+&=  \frac{p(\mathcal{H} | \mathcal{C}_2) p(\mathcal{C}_2)}{p(\mathcal{C}_1) p(\mathcal{H}|\mathcal{C}_1) + p(\mathcal{C}_2) p(\mathcal{H}|\mathcal{C}_2)} & \mbox{expand denominator} \nonumber \\
+&= \frac{ \frac{1}{2} \times \frac{1}{3}}{\frac{4}{5} \times \frac{2}{3} + \frac{1}{2} \times \frac{1}{3}} &\mbox{plug in numbers} \nonumber \\
+&= 0.238 \nonumber
+\end{align}
 
+The posterior probability ($0.238$) we computed is less than the prior probability ($\frac{1}{3}$).  This makes sense since a heads is more probable if we have a coin of type 1, so observing a heads should push our beliefs towards the coin being of type 1.
 \end{boxedsolution}
 
 
-\item You train a neural network model for identifying whether \href{https://www.freecodecamp.org/news/chihuahua-or-muffin-my-search-for-the-best-computer-vision-api-cbda4d6b425d/}{an image contains a picture of a Chihuahua or a Blueberry Muffin} (you know you want to click the link!).  Let's further assume that there are no images that contain both a muffin and a Chihuahua (of course as we all know Chihuahuas love muffins).  Based the project report you turned in for module 1 you know that if the image contains a Chihuahua, your model will identify it as such with probability 0.9.  Also, you know that if the model contains a muffin, your model will identify it as such with probability 0.8.  You now decide to test your model on a dataset which contains 80\% muffins.  Assuming that your model predicted that an image contained a muffin, what is the probability that it actually contains a muffin? (you can assume that the performance of your model doesn't change when run on this new dataset).
+\item You train a neural network to identify whether \href{https://www.freecodecamp.org/news/chihuahua-or-muffin-my-search-for-the-best-computer-vision-api-cbda4d6b425d/}{an image contains a picture of a Chihuahua or a Blueberry Muffin} (you know you want to click the link!).  Let's further assume that there are no images that contain both a muffin and a Chihuahua (of course as we all know Chihuahuas love muffins).  Based on your project report for module 1, you know that if the image contains a Chihuahua, your model will identify it as such with probability 0.9.  Also, you know that if the model contains a muffin, your model will identify it as such with probability 0.8.  You now decide to test your model on a dataset which contains 80\% muffins.  Assuming that your model predicted that an image contained a muffin, what is the probability that it actually contains a muffin? (you can assume that the performance of your model doesn't change when run on this new dataset).
 
 \begin{boxedsolution}
 Let $\mathcal{M}$ represent the event that the image contains a Muffin.  Let $\mathcal{D}_M$ represent that a muffin was detected in the image.
 \begin{align}
-p(\mathcal{M} | \mathcal{D}_M) &= \frac{p(\mathcal{D}_m | \mathcal{M})  p(\mathcal{M})}{\mathcal{D}_M} \\
+p(\mathcal{M} | \mathcal{D}_M) &= \frac{p(\mathcal{D}_m | \mathcal{M})  p(\mathcal{M})}{p(\mathcal{D}_M)} \\
 &= \frac{p(\mathcal{D}_m | \mathcal{M})  p(\mathcal{M})}{ p(\mathcal{D}_m | \mathcal{M})  p(\mathcal{M}) + p(\mathcal{D}_m | \neg \mathcal{M})  p(\neg \mathcal{M})} \\
 &= \frac{0.8 \times 0.8}{0.8 \times 0.8 + 0.1 \times 0.2} \\
 &= 0.97
@@ -322,7 +332,7 @@ p(\mathcal{M} | \mathcal{D}_M) &= \frac{p(\mathcal{D}_m | \mathcal{M})  p(\mathc
 \end{exercise}
 
 \section{Marginalization Rule for Probabilities}
-The application of Bayes' rule often proceeded something like this.  Let's define the event $\mathcal{D}$ as whether or not a person has a disease and $\mathcal{S}$ as the event that a particular symptom is observed.  If we want to know $p(\mathcal{D} | \mathcal{S})$ we can apply Bayes' rule.
+The application of Bayes' rule often proceeded according to the following outline.  First, we would define an event we want to reason about. For instance, we might define $\mathcal{D}$ as the event that a person has a disease and $\mathcal{S}$ as the event that a particular symptom is observed.  If we want to know $p(\mathcal{D} | \mathcal{S})$ we apply Bayes' rule like so.
 
 \begin{align}
 p(\mathcal{D} | \mathcal{S}) &= \frac{p(\mathcal{S} | \mathcal{D}) p(\mathcal{D})}{p(\mathcal{S})} \label{eq:bayesdenominator}
@@ -341,7 +351,7 @@ p(\mathcal{A}) &= p(\mathcal{A}, \mathcal{B}) + p(\mathcal{A}, \neg \mathcal{B})
 In the equation above we sometimes say that we are \emph{marginalizing out} $\mathcal{B}$ (by summing over the two possibilities: that $\mathcal{B}$ occurred and that $\mathcal{B}$ did not occur).
 
 \begin{exercise}[(15 minutes)]
-Using Equation~\ref{eq:marginal} and other rules of probability you've learned thus far, show that Equation~\ref{eq:bayesdenominator} is true.
+Using Equation~\ref{eq:marginal} and the product rule of probability, show that Equation~\ref{eq:bayesdenominator} is true.
 
 \begin{boxedsolution}
 \begin{align}
@@ -357,22 +367,21 @@ Note that it was up to us what order we applied the product rule.  If we had fir
 \includegraphics[width=\linewidth]{figures/treenoprobs}
 \caption{A tree diagram of the events $\mathcal{D}$ (has a disease) and $\mathcal{S}$ (has a symptom).\label{fig:treenoprobs}}
 \end{marginfigure}
-Another way to think about marginalization is to draw a tree where you have the event, which you'd like to know the probability of ($\mathcal{S}$ in the previous exercise) and the variable you are marginalizing out ($\mathcal{D}$ in the previous exercise) at the next junction in the tree (see Figure~\ref{fig:treenoprobs}).
+Another way to think about marginalization is to draw a tree where you have the event, which you are marginalizing out ($\mathcal{D}$ in the previous exercise) at the first level of the tree and the variable you want to know the probability of ($\mathcal{S}$ in the previous exercise) at the next junction in the tree (see Figure~\ref{fig:treenoprobs}).
 
 
-
-Further, we can annotate the arrows with the conditional probability of the event conditioned on the things further up in the tree.
+Further, we annotate the arrows with the conditional probability of the event conditioned on the things further up in the tree (note that for $\mathcal{D}$ there is nothing farther up the tree, so we just write $p(\mathcal{D})$ or $p(\neg \mathcal{D})$).
 
 \begin{center}
 \includegraphics[width=0.6\linewidth]{figures/treeprobs}
 \end{center}
 
-If you want to find the probability of anyone joint probability (e.g., $p(\mathcal{D}, \neg \mathcal{S})$), you can follow corresponding path, multiplying probabilities as you go.  For example, from examining the graph above we get
+If you want to find the probability of a joint probability (e.g., $p(\mathcal{D}, \neg \mathcal{S})$), you can follow the corresponding path, multiplying probabilities as you go.  For example, from examining the graph above we get
 \begin{align}
 p(\mathcal{D}, \neg \mathcal{S}) &= p(\mathcal{D}) p(\neg \mathcal{S}|\mathcal{D}) \enspace .
 \end{align}
 
-A marginal probability for an event (e.g., $p(\mathcal{S})$) can be found by summing over all paths that arrive at the event.  For example, from examining the graph above we get
+A marginal probability for an event (e.g., $p(\mathcal{S})$) can be found by summing over all paths that arrive at the event.  For example, from examining the graph above we see that there are two paths to $\mathcal{S}$, which allows us to compute $p(\mathcal{S})$ as
 \begin{align}
 p(\mathcal{S}) &= p(\mathcal{D}) p(\mathcal{S}|\mathcal{D}) + p(\neg \mathcal{D}) p(\mathcal{S}|\neg \mathcal{D})  \enspace .
 \end{align}
@@ -384,11 +393,6 @@ Do problem 2 from \href{http://wwwf.imperial.ac.uk/~atw/Bayes.pdf}{this assignme
 Solution is embedded in the link.
 \end{boxedsolution}
 \end{exercise}
-
-\begin{exercise}[(30 minutes)]
-Applying Bayes' Rule.  Have a few options for where Bayes could be applied.  Have them pick one of them and figure out an estimate.
-\end{exercise}
-
 
 \section{Random Variables}
 
@@ -419,6 +423,7 @@ p(X=2) &= p(\mbox{2 heads come up}) = \frac{3}{8} \nonumber \\
 p(X=3) &= p(\mbox{3 heads come up}) = \frac{1}{8} \nonumber 
 \end{align}
 
+We don't have an exercise for you to do here, but it is important for you to understand what a PMF is when digging into the companion notebook.
 
 \section{Basic Bayes in Python}
 \begin{externalresources}[(30 minutes)]
