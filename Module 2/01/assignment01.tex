@@ -36,8 +36,8 @@ The theme of uncertainty has cropped up a number of times so far this semester. 
 It turns out that the notion of probability provides us with a powerful method to formalize the concept of uncertainty and allows us to reason about many types of uncertainty in a unified way.  Formalizing uncertainty using probability theory will enable us to do a bunch of really cool things with respect to machine learning, including
 
 \bi
-\item make explicit our assumptions about where data comes, the uncertainties present within it, and the impact of uncertainty on predictions based on that data.
-\item allow us to quantify our confidence in our model.  For example, instead of returning the one best fitting model (as we did in the first module), we assign a probability to each possible model, and models that fit the data better will get a higher probability.
+\item make explicit our assumptions about where data comes from, the uncertainties present within it, and the impact of uncertainty on predictions based on that data.
+\item allow us to quantify confidence in our model.  For example, instead of returning the one best fitting model (as we did in the first module), we assign a probability to each possible model, and models that fit the data better will get a higher probability.
 \item give us a way to incorporate expert knowledge into our machine learning models.  This expert knowledge can allow for us to learn more interpretable and accurate models.
 \item give us powerful tools to reason about fairness and bias in machine learning models.
 \ei
@@ -337,13 +337,13 @@ p(\mathcal{M} | \mathcal{D}_M) &= \frac{p(\mathcal{D}_m | \mathcal{M})  p(\mathc
 The application of Bayes' rule often proceeded according to the following outline.  First, we would define an event we want to reason about. For instance, we might define $\mathcal{D}$ as the event that a person has a disease and $\mathcal{S}$ as the event that a particular symptom is observed.  If we want to know $p(\mathcal{D} | \mathcal{S})$ we apply Bayes' rule like so.
 
 \begin{align}
-p(\mathcal{D} | \mathcal{S}) &= \frac{p(\mathcal{S} | \mathcal{D}) p(\mathcal{D})}{p(\mathcal{S})} \label{eq:bayesdenominator}
+p(\mathcal{D} | \mathcal{S}) &= \frac{p(\mathcal{S} | \mathcal{D}) p(\mathcal{D})}{p(\mathcal{S})}
 \end{align}
 
 In order to calculate $p(\mathcal{S})$, some of the resources simply gave a number (e.g., in the Khan Academy video the premise was that you Googled to find this value), used a convenient trick to get it (as in Allen's M\&M example), or used the following calculation (as in the Veritasium and the Car Alarm videos).
 
 \begin{align}
-p(\mathcal{S}) &= p(\mathcal{D}) p(\mathcal{S}|\mathcal{D}) + p(\neg \mathcal{D}) p(\mathcal{S} | \neg \mathcal{D})
+p(\mathcal{S}) &= p(\mathcal{D}) p(\mathcal{S}|\mathcal{D}) + p(\neg \mathcal{D}) p(\mathcal{S} | \neg \mathcal{D}) \label{eq:bayesdenominator}
 \end{align}
 
 We wanted to revisit this calculation as it is hiding away some pretty powerful and interesting stuff.  This calculation can be derived using the technique of marginalizing a probability measure function.  The basic motivation for this technique is that sometimes you'd like to compute the probability of some event, $\mathcal{A}$, but it is difficult to do so directly.  Instead you can introduce another event, $\mathcal{B}$, and write $p(\mathcal{A})$ as:
