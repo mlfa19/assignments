@@ -20,7 +20,10 @@
 
 \begin{learningobjectives}
 \bi
-\item TODO
+\item The concept of independence and conditional independence
+\item The basic components of a Bayesian Networks (BN)
+\item The rules of d-separation to compute conditional independence relationships in a BN
+\item The Compas recidivism risk algorithm controversy
 \ei
 \end{learningobjectives}
 
@@ -40,54 +43,90 @@
 \begin{recall}[Product Rule and Marginalization for Events]
 Last assignment we learned about two very powerful techniques for computing the probability of events.
 \bi
-\item The first technique we learned was the product rule (or conjunction rule), which states that for any two events $\mathcal{A}$ and $\mathcal{B}$,
+\item We learned the product rule (or conjunction rule), which states that for any two events $\mathcal{A}$ and $\mathcal{B}$,
 \begin{align}
 p(\mathcal{A}, \mathcal{B}) &= p(\mathcal{A}) p(\mathcal{B}|\mathcal{A}) \label{eq:prodcutruleevents} \\
 &= p(\mathcal{B}) p(\mathcal{A}|\mathcal{B}) \enspace  . \nonumber
 \end{align}
-\item The second technique we learned was marginalization.  This technique states that for any two events $\mathcal{A}$ and $\mathcal{B}$,
+\item We learned the rule of marginalization, which states that for any two events $\mathcal{A}$ and $\mathcal{B}$,
 \begin{align}
-p(\mathcal{A}) &= p(\mathcal{A}, \mathcal{B}) + p(\mathcal{A}, \neg \mathcal{B}) \label{eq:marginalizationevents}
+p(\mathcal{A}) &= p(\mathcal{A}, \mathcal{B}) + p(\mathcal{A}, \neg \mathcal{B}) \label{eq:marginalizationevents} \enspace .
 \end{align}
 \ei
+It turns out that these rules can modified slightly to apply to random variables as well (instead of just events).
 \end{recall}
 
-It turns out that these rules can modified slightly to apply to random variables as well (instead of just events).
 
 \subsection{Product Rule for Random Variables}
 Suppose we have two random variables $X$ and $Y$.  If we want to know the probability of random variable $X$ taking on value $x$ (it is common to use a lower case letter to refer to a particular value of a random variable) and random variable $Y$ simultaneously taking on value $y$ we can decompose it using the product rule in the following way.
 
 \begin{align}
-p(X = x, Y = y) &= p(X=x)p(Y=y | X=x) \\
+p(X = x, Y = y) &= p(X=x)p(Y=y | X=x) & \mbox{or equivalently,}\\
 &= p(Y=y)p(X=x|Y=y) \nonumber
 \end{align}
 
-Notice that this looks pretty much identical to Equation~\ref{eq:prodcutruleevents} with the exception that instead of referencing whether an event happens, we are now referencing a random variable taking on a particular value.
+Notice that this looks pretty much identical to Equation~\ref{eq:prodcutruleevents} except that instead of referencing whether an event happens, we are now referencing a random variable taking on a particular value.
 
-\begin{exercise}
-Include some questions, perhaps on rolling dice or something of that nature.  Maybe something where things aren't conditionally independent could be cool to motivate the next section.
-\end{exercise}
+\begin{notice}
+It's very common to use the shorthand $p(x, y)$ to refer to $p(X = x, Y = y)$.  The motivation for this shorthand is that it is obvious from the context that $p(x, y)$ really means the probability of random variable $X$ taking on value $x$ and random variable $Y$ taking on value $y$.  In this assignment we're going to avoid using this shorthand, but we will start using the shorthand in future assignments (we'll warn you when we start using it).
+
+You may also see this notation used in external resources, so it helps to know about it.
+\end{notice}
 
 \subsection{Marginalization for Random Variables}
-Again, suppose we have two random variables $X$ and $Y$.  We are interested in computing $p(X = x)$ through by marginalizing out the random variable $Y$.  For simplicity, let's assume that $Y$ can only take on integer values from 1 to $k$.  We can write marginal distribution $p(X=x)$ in the following way.
+Again, suppose we have two random variables $X$ and $Y$.  We are interested in computing $p(X = x)$, but it is difficult to compute this probability directly.  Just as we did for events in the last assignment, we can compute $p(X=x)$ by marginalizing out the random variable $Y$.  For simplicity, let's assume that $Y$ can only take on integer values from 1 to $k$.  We can write the marginal distribution $p(X=x)$ in the following way.
 
 \begin{align}
-p(X=x) &= \sum_{i=1}^k p(X=x, Y=i)\label{eq:rvmarginal}
+p(X=x) &= \sum_{y=1}^k p(X=x, Y=y)\label{eq:rvmarginal}
 \end{align}
 
-You should notice that this equation is very similar to Equation~\ref{eq:marginalizationevents} except instead of summing over the probability for the two possible outcomes with respect to the event $\mathcal{B}$ (it could either happen or not), we are now summing over the $k$ possible values that $Y$ could take.  Of course random variables don't necessarily have to take on values from 1 to $k$.  In general if the random variable $Y$ can take on any value from some discrete set of values $\mathcal{Y}$ (we are using the calligraphic font because we are referring to a set), then the margin distribution of $X$ can be written as:
+You should notice that this equation is very similar to Equation~\ref{eq:marginalizationevents} except that instead of summing over the probability for the two possible outcomes with respect to the event $\mathcal{B}$ (i.e., $\mathcal{B}$ either happens or it does not), we are now summing over the $k$ possible values that $Y$ could take.  Random variables don't necessarily have to take on values from 1 to $k$.  In general if the random variable $Y$ can take on any value from some discrete set of values $\mathcal{Y}$ (we are using the calligraphic font because we are referring to a set), then the marginal distribution of $X$ can be written as:
 \begin{align}
-p(X=x) &= \sum_{y \in \mathcal{Y}} p(X=x, Y=y) \enspace .
+p(X=x) &= \sum_{y \in \mathcal{Y}} p(X=x, Y=y) \enspace . \label{eq:rvmarginalgeneral}
 \end{align}
-Notice that Equation~\ref{eq:rvmarginal} is a special case of the preceding equation where $\mathcal{Y} = \{1, 2, \ldots, k\}$.
+Notice that Equation~\ref{eq:rvmarginal} is a special case of the Equation~\ref{eq:rvmarginalgeneral} where $\mathcal{Y} = \{1, 2, \ldots, k\}$.
 
-\begin{exercise}
-TODO
+\begin{exercise}[(15 minutes)]
+This exercise is based off of the example given in the \href{https://en.wikipedia.org/wiki/Marginal_distribution\#Real-world_example}{Wikipedia article on marginal distribution}.
+\begin{notice}
+Strictly speaking a random variable only takes on real numbers as its value (i.e., a random variable cannot take on the value of ``blue'').  That said, it's common to see folks bend this rule a bit by allowing the random variable to take on values that are not real numbers (e.g., you will see that in the Wikipedia article linked above).  Allowing for random variables to have non-numeric values doesn't really change the math except it makes it meaningless to compute quantities such as the mean.  Since in many cases allowing random variables to take on non-numeric values will make things clearer, we will allow this in our materials.
+\end{notice} 
+\vspace{1em}
+
+Suppose that you want to compute the probability that a pedestrian will be hit by a car, while crossing the road at a pedestrian crossing, without paying attention to the traffic light (a bit morbid, we know).  Let $H$ be a discrete random variable taking on the value $\mbox{hit}$ if the pedestrian is struck and $\mbox{not hit}$ if the pedestrian makes it safely across.  Let $L$ (for traffic light) be a discrete random variable taking on the value $\mbox{red}$ when the light is red, $\mbox{yellow}$ when the light is yellow, and $\mbox{green}$ when the light is green.
+
+The model that governs the prior probability of the light ($L$) is as follows.
+\begin{align}
+p(L = \mbox{red}) = 0.2 \nonumber \\
+p(L = \mbox{yellow}) = 0.1 \nonumber \\
+p(L = \mbox{green}) = 0.7
+\end{align}
+The model that governs the conditional probability of $H$ given $L$ is as follows.
+\begin{align}
+p(H = \mbox{hit} | L = \mbox{red}) = 0.01 \nonumber \\
+p(H = \mbox{not hit} | L = \mbox{red}) = 0.99 &~~~~\mbox{Note: the not hit is always 1 - prob. of hit} \nonumber \\
+p(H = \mbox{hit} | L = \mbox{yellow}) = 0.1 \nonumber \\
+p(H = \mbox{not hit} | L = \mbox{yellow}) = 0.9 \nonumber \\
+p(H = \mbox{hit} | L = \mbox{green}) = 0.8  \nonumber \\
+p(H = \mbox{not hit} | L = \mbox{green}) = 0.2 \nonumber
+\end{align}
+
+What is $p(H=\mbox{hit})$?
+
+\begin{boxedsolution}
+\begin{align}
+p(H = \mbox{hit}) &= p(H = \mbox{hit}, L = \mbox{red}) +  p(H = \mbox{hit}, L = \mbox{yellow}) +  p(H = \mbox{hit}, L = \mbox{green}) \nonumber \\
+&= p(L = \mbox{red}) p(H = \mbox{hit} | L = \mbox{red}) + p(L = \mbox{yellow}) p(H = \mbox{hit} | L = \mbox{yellow}) \nonumber \\
+&\hspace{0.5in}+ p(L = \mbox{green}) p(H = \mbox{hit} | L = \mbox{green}) \nonumber\\
+&= (0.2 \times 0.01) + (0.1 \times 0.1) + (0.7 \times 0.8) \nonumber \\
+&= 0.572 \nonumber
+\end{align}
+\end{boxedsolution}
 \end{exercise}
 
 \section{Some Twists on Bayes' Rule}
 
-You should be pretty proficient with the vanilla form of Bayes' rule.  There are a few variants that we'd like to point out.  There are on exercises to do here, just add these to your bag of tricks (you'll be leveraging them later in this assignment).
+You should be pretty proficient with the vanilla form of Bayes' rule.  There are a few variants that we'd like to point out.  There are no exercises for you to do here, just add these to your bag of tricks (you'll be leveraging them later in this assignment, so you'll have a chance to solidify them then).
 
 \begin{align}
 p(\mathcal{A} | \mathcal{B}) &= \frac{p(\mathcal{B}|\mathcal{A}) p(\mathcal{A})}{p(\mathcal{B})} & \mbox{vanilla Bayes' rule} \\
@@ -97,26 +136,51 @@ p(\mathcal{A} | \mathcal{B}, \mathcal{C}) &= \frac{p(\mathcal{B} | \mathcal{A}, 
 
 \section{Independence and Conditional Independence}
 
-TODO Write intro explaining, in brief, what these two things are.
+Two of the most important concepts in probability theory are independence and the closely related concept of conditional independence.  The reason that these ideas are important is that they let you analyze probabilistic quantities in isolation.  For instance, if you know that two events that you are interested in predicting are independent of each other, then you can make a model of each event in isolation.  This saves makes your life much, much easier since you don't have to consider how the two events interact.  Next, we'll make this high-level idea precise.
 
 \subsection{Independence}
-The product rule of probability can often be simplified when two events, $\mathcal{A}$ and $\mathcal{B}$ are independent.  As an example, suppose $\mathcal{A}$ represents the event that the first flip of a coin comes up heads and event $\mathcal{B}$ is the event that the second flip of the same coin comes up heads.  Since whether or not $\mathcal{A}$ occurs tells us nothing about whether $\mathcal{B}$ would occur, we say that $\mathcal{A}$ and $\mathcal{B}$ are independent events (we use the notation $\mathcal{A} \condindep \mathcal{B}$ to indicate that $\mathcal{A}$ is independent of $\mathcal{B}$).  An event $\mathcal{A}$ is independent of another event $\mathcal{B}$ if and only if the following condition holds.
+The product rule of probability can be simplified when two events, $\mathcal{A}$ and $\mathcal{B}$ are independent.  As an example, suppose $\mathcal{A}$ represents the event that the first flip of a coin comes up heads and event $\mathcal{B}$ is the event that the second flip of the same coin comes up heads.  Since whether or not $\mathcal{A}$ occurs tells us nothing about whether $\mathcal{B}$ would occur, we say that $\mathcal{A}$ and $\mathcal{B}$ are independent events (we use the notation $\mathcal{A} \condindep \mathcal{B}$ to indicate that $\mathcal{A}$ is independent of $\mathcal{B}$).  An event $\mathcal{A}$ is independent of another event $\mathcal{B}$ if and only if the following condition holds.
 \begin{align}
 p(\mathcal{A}, \mathcal{B}) &= p(\mathcal{A}) p(\mathcal{B}) \label{eq:indepevents}
 \end{align}
 
-Another way to think about this is that if we hard started with the product rule $p(\mathcal{A}, \mathcal{B}) = p(\mathcal{A}) p(\mathcal{B} | \mathcal{A})$ we could have crossed out the conditioning on $\mathcal{A}$ from the second term since if two events are independent, knowing whether one happened doesn't change the probability of the other happening.
+A direct consequence of Equation~\ref{eq:indepevents} is that if $\mathcal{A} \condindep \mathcal{B}$, then
+\begin{align}
+p(\mathcal{A} | \mathcal{B}) &= p(\mathcal{A}) & \mbox{and} \nonumber \\
+p(\mathcal{B} | \mathcal{A}) &= p(\mathcal{B}) \enspace . \nonumber
+\end{align}
 
 A very similar equation to Equation~\ref{eq:indepevents} can be defined for random variables.  Two random variables $X$ and $Y$ are independent if and only if the following condition holds for any values $x$ and $y$.
 
 \begin{align}
-p(X=x, Y=y) &= P(X=x) p(Y=y | X=x)
+p(X=x, Y=y) &= P(X=x) p(Y=y)
 \end{align}
+Similar to the rule for events, $p(X=x | Y=y) = P(X=x)$ if $X \condindep Y$.
 
-\begin{exercise}
-Give examples of events that are or are not independent.
+\begin{exercise}[(10 minutes)]
+\bes
+\item Provide at least 3 examples of events or random variables that are independent of each other.
 
-Give examples of random variables that are or are not independent.
+\begin{boxedsolution}
+\bi
+\item The event that a coin comes up heads on the first throw and the event that the coin comes up heads on the second throw.
+\item A random variable that represents that last digit on a car's license plate and a random variable that represents the last digit on another car's license plate.
+\item The event that captures whether or not it rains tomorrow in Boston and a random variable that represents the number of people who attend a rock concert in California tomorrow night (at least it seems that these things are unrelated).
+\ei
+\end{boxedsolution}
+
+\item Provide at least 3 examples of events or random variables that are not independent of each other.
+
+\begin{boxedsolution}
+Here are some ideas.
+\bi
+\item The daily increase in the Dow Jones Industrial average and the daily increase in the NASDAQ.
+\item The event that the American League wins the World Series in 2019 and the event that the National League wins the World Series in 2019.
+\item Testing positive for a disease and having that disease.
+\ei
+\end{boxedsolution}
+
+\ees
 \end{exercise}
 
 \subsection{Conditional Independence}
