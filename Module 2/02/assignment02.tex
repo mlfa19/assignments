@@ -8,7 +8,7 @@
 
 {\rhead{Assignment 2 \linebreak \textit{Version: \today}}}
 
-\title{Assignment 2: Probabilistic Graphical Models}
+\title{Assignment 2: Bayesian Networks}
 \author{Machine Learning}
 \date{Fall 2019}
 
@@ -332,7 +332,7 @@ While the graphical structure of the BN is useful for decomposing the joint dist
 
 \begin{externalresources}[(30 minutes)]
 \bi
-\item Read \href{http://bayes.cs.ucla.edu/BOOK-09/ch11-1-2-final.pdf}{d-Separation without Tears} (don't worry about the third page).
+\item Read \href{http://nb.mit.edu/f/56085}{d-Separation without Tears} (don't worry about the third page).
 \item These videos are pretty good, but the reading seems clearer (let us know what you think on NB) \href{https://www.youtube.com/watch?v=IjoWqnH6HmU}{part 1}, \href{https://www.youtube.com/watch?v=zJIK5uOyJi0}{part 2}.
 \ei
 \end{externalresources}
@@ -567,6 +567,50 @@ p(\mathcal{S}|\mathcal{Y}, \mathcal{C}=1, \mathcal{M}) &> p(\neg \mathcal{S}|\ma
 
 
 \section{Compas Model of Recidivism}
+
+We've referenced the Compas Model of Recidivism quite a few times this semester.  Next, we'll be doing a deep dive into this case study.
+
+\begin{notice}
+We are going to read a bit about race and criminal justice in the United States. Before we dive into this, we want to acknowledge some important things:
+
+\bi
+\item This is a very complex and intricate issue that involves policy, society, technology, individual beliefs/values, and history, and this topic directly (but not equally) impacts the lives of many people.
+\item We all have our own lenses through which we view the world, and we can all expand our own thinking. 
+\item In this class, we are only scratching the surface of this complex topic. We (Paul/Sam) claim no expertise in this area, and we are also continuing to learn more.
+\item This topic will likely be uncomfortable to grapple with regardless of your background and identity, and it may resonate differently with each of us. We (Paul/Sam) are available in person and via email, if you would like to discuss how we can best support you in class. We are planning to have some group discussion in class. One method of support could be pairing you with a partner of your choosing for this discussion. Another could be including your ideas about how class discussion can be informative and challenging without creating unnecessary pain. Please reach out to us if you have any concerns or want to discuss this more.
+\ei
+\end{notice}
+
+\begin{exercise}[\faShareAlt~(90 minutes total for all parts)]
+\bes
+\item (10 minutes for this part) Read the Report of \href{http://nb.mit.edu/f/56086}{The Sentencing Project to the United Nations Special Rapporteur on Contemporary Forms of Racism, Racial Discrimination, Xenophobia, and Related Intolerance}. 
+
+This article is intended to provide some background information on criminal justice and race in the US. 
+
+\item (50 minutes for this part) The next set of readings show a debate between NorthPointe and ProPublica about COMPAS,  to assess the risk that a given defendant will commit a crime after release. 
+
+Below we will provide you a list of resources about this debate. There are extensive resources on the topic, and we don’t expect you to be able to read them all thoroughly.  As you engage with these, please prepare to reflect on the following themes:
+\bi
+\item Social justice in a non-ideal world.
+\item The roles of machine learning engineers and the roles of other professional roles in the application of ML in our society.
+\item The major things that you would want to consider in this type of undertaking.
+\item Framing things mathematically versus from a social justice standpoint.
+\item The level of technical debate in model choices that is brought up in this discussion (especially in the technical responses). 
+\ei
+
+Here are the resources we'd like you to be familiar with.
+\bi
+\item \href{http://nb.mit.edu/f/56084}{How We Analyzed the COMPAS Recidivism Algorithm}
+\item \href{http://nb.mit.edu/f/56087}{Northpointe rebuttal} (this is long, so try to extract the main point without reading the whole thing… NB will be vital to achieving this)
+\item \href{http://nb.mit.edu/f/56088}{ProPublica's Technical Rebuttal to the Rebuttal}
+\ei
+
+\item (10 minutes for this part) \href{http://nb.mit.edu/f/56089}{Read the Injustice Ex Machina: Predictive Algorithms in Criminal Sentencing} for a high-level perspective.
+\item (20 minutes for this part) Reflect on what you've just read.  We think the themes brought up in part (b) will provide good fodder for your response, but please feel free to take it in any direction.  Aim for around two paragraphs in your response.
+\ees
+
+\end{exercise}
+
 
 
 \end{document}
