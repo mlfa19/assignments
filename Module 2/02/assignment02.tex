@@ -2,7 +2,7 @@
 
 \invalidatemargin
 
-\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
 
@@ -27,17 +27,14 @@
 \ei
 \end{learningobjectives}
 
-\section{Todo}
-
-\bi
-\item It would be nice to standardize on random variables instead of events and random variables (events are just a special case).
-\ei
-
 \section{Motivation and Context}
+In the last assignment we learned the basic definition of a probability and acquired some very powerful rules for working with probabilities.  In this assignment you'll be taking these ideas and extending them in the following significant ways.
+
 \bi
-\item We’ve learned how probabilities can be used to describe uncertainty in the world
-\item We’ve learned how Bayes' rule can be used to reason about hypotheses, models, or other things that cannot be directly observed.
+\item You'll learn a graphical way to represent the relationships between probabilities that will make it much easier to work with large probabilistic models.
+\item You'll be taking the ideas of probability using them to derive a whole new way of approaching the classification problem in machine learning.
 \ei
+
 
 \section{Product Rule and Marginalization for Random Variables}
 \begin{recall}[Product Rule and Marginalization for Events]
@@ -58,7 +55,7 @@ It turns out that these rules can modified slightly to apply to random variables
 
 
 \subsection{Product Rule for Random Variables}
-Suppose we have two random variables $X$ and $Y$.  If we want to know the probability of random variable $X$ taking on value $x$ (it is common to use a lower case letter to refer to a particular value of a random variable) and random variable $Y$ simultaneously taking on value $y$ we can decompose it using the product rule in the following way.
+Suppose we have two random variables $X$ and $Y$.  If we want to know the probability of random variable $X$ taking on value $x$ (it is common to use a lower case letter to refer to a particular value of a random variable) and random variable $Y$ simultaneously taking on value $y$, we can decompose the joint probability (the probability of both of these things occurring simultaneously) using the product rule.
 
 \begin{align}
 p(X = x, Y = y) &= p(X=x)p(Y=y | X=x) & \mbox{or equivalently,}\\
@@ -68,32 +65,33 @@ p(X = x, Y = y) &= p(X=x)p(Y=y | X=x) & \mbox{or equivalently,}\\
 Notice that this looks pretty much identical to Equation~\ref{eq:prodcutruleevents} except that instead of referencing whether an event happens, we are now referencing a random variable taking on a particular value.
 
 \begin{notice}
-It's very common to use the shorthand $p(x, y)$ to refer to $p(X = x, Y = y)$.  The motivation for this shorthand is that it is obvious from the context that $p(x, y)$ really means the probability of random variable $X$ taking on value $x$ and random variable $Y$ taking on value $y$.  In this assignment we're going to avoid using this shorthand, but we will start using the shorthand in future assignments (we'll warn you when we start using it).
-
-You may also see this notation used in external resources, so it helps to know about it.
+It's very common to use the shorthand $p(x, y)$ to refer to $p(X = x, Y = y)$.  The motivation for this shorthand is that it is obvious from the context that $p(x, y)$ really means the probability of random variable $X$ taking on value $x$ and random variable $Y$ taking on value $y$.  In this assignment we're going to avoid using this shorthand, but we will start using the shorthand in future assignments (we'll warn you when we start using it).  Also, you may see this notation used in external resources, so it helps to know about it.
 \end{notice}
 
 \subsection{Marginalization for Random Variables}
-Again, suppose we have two random variables $X$ and $Y$.  We are interested in computing $p(X = x)$, but it is difficult to compute this probability directly.  Just as we did for events in the last assignment, we can compute $p(X=x)$ by marginalizing out the random variable $Y$.  For simplicity, let's assume that $Y$ can only take on integer values from 1 to $k$.  We can write the marginal distribution $p(X=x)$ in the following way.
+Again, suppose we have two random variables $X$ and $Y$.  We are interested in computing $p(X = x)$, but suppose it is difficult to compute this probability directly.  Just as we did for events in the last assignment, we can compute $p(X=x)$ by marginalizing out the random variable $Y$.  For simplicity, let's assume that $Y$ can only take on integer values from 1 to $k$.  We can write the marginal distribution $p(X=x)$ in the following way.
 
 \begin{align}
 p(X=x) &= \sum_{y=1}^k p(X=x, Y=y)\label{eq:rvmarginal}
 \end{align}
 
-You should notice that this equation is very similar to Equation~\ref{eq:marginalizationevents} except that instead of summing over the probability for the two possible outcomes with respect to the event $\mathcal{B}$ (i.e., $\mathcal{B}$ either happens or it does not), we are now summing over the $k$ possible values that $Y$ could take.  Random variables don't necessarily have to take on values from 1 to $k$.  In general if the random variable $Y$ can take on any value from some discrete set of values $\mathcal{Y}$ (we are using the calligraphic font because we are referring to a set), then the marginal distribution of $X$ can be written as:
+You should notice that this equation is very similar to Equation~\ref{eq:marginalizationevents} except that instead of summing over the probability for the two possible outcomes with respect to the event $\mathcal{B}$ (i.e., $\mathcal{B}$ either happens or it does not), we are now summing over the $k$ possible values that $Y$ could take.  Random variables don't necessarily have to take on values from 1 to $k$.  In general, if the random variable $Y$ can take on any value from some discrete set of values $\mathcal{Y}$ (we are using the calligraphic font because we are referring to a set), then the marginal distribution of $X$ can be written as:
 \begin{align}
 p(X=x) &= \sum_{y \in \mathcal{Y}} p(X=x, Y=y) \enspace . \label{eq:rvmarginalgeneral}
 \end{align}
-Notice that Equation~\ref{eq:rvmarginal} is a special case of the Equation~\ref{eq:rvmarginalgeneral} where $\mathcal{Y} = \{1, 2, \ldots, k\}$.
+Notice that Equation~\ref{eq:rvmarginal} is a special case of Equation~\ref{eq:rvmarginalgeneral} where $\mathcal{Y} = \{1, 2, \ldots, k\}$.
 
 \begin{exercise}[(15 minutes)]
-This exercise is based off of the example given in the \href{https://en.wikipedia.org/wiki/Marginal_distribution\#Real-world_example}{Wikipedia article on marginal distribution}.
+This exercise is from the \href{https://en.wikipedia.org/wiki/Marginal_distribution\#Real-world_example}{Wikipedia article on marginal distribution}.
+
+\vspace{1em}
+
 \begin{notice}
 Strictly speaking a random variable only takes on real numbers as its value (i.e., a random variable cannot take on the value of ``blue'').  That said, it's common to see folks bend this rule a bit by allowing the random variable to take on values that are not real numbers (e.g., you will see that in the Wikipedia article linked above).  Allowing for random variables to have non-numeric values doesn't really change the math except it makes it meaningless to compute quantities such as the mean.  Since in many cases allowing random variables to take on non-numeric values will make things clearer, we will allow this in our materials.
 \end{notice} 
 \vspace{1em}
 
-Suppose that you want to compute the probability that a pedestrian will be hit by a car, while crossing the road at a pedestrian crossing, without paying attention to the traffic light (a bit morbid, we know).  Let $H$ be a discrete random variable taking on the value $\mbox{hit}$ if the pedestrian is struck and $\mbox{not hit}$ if the pedestrian makes it safely across.  Let $L$ (for traffic light) be a discrete random variable taking on the value $\mbox{red}$ when the light is red, $\mbox{yellow}$ when the light is yellow, and $\mbox{green}$ when the light is green.
+Suppose you want to compute the probability that a pedestrian will be hit by a car, while crossing the road at a pedestrian crossing, without paying attention to the traffic light (a bit morbid, we know).  Let $H$ be a discrete random variable taking on the value ``$\mbox{hit}$'' if the pedestrian is struck and ``$\mbox{not hit}$'' if the pedestrian makes it safely across.  Let $L$ (for traffic light) be a discrete random variable taking on the value ``$\mbox{red}$'' when the light is red, ``$\mbox{yellow}$'' when the light is yellow, and ``$\mbox{green}$'' when the light is green.
 
 The model that governs the prior probability of the light ($L$) is as follows.
 \begin{align}
@@ -104,7 +102,7 @@ p(L = \mbox{green}) = 0.7
 The model that governs the conditional probability of $H$ given $L$ is as follows.
 \begin{align}
 p(H = \mbox{hit} | L = \mbox{red}) = 0.01 \nonumber \\
-p(H = \mbox{not hit} | L = \mbox{red}) = 0.99 &~~~~\mbox{Note: the not hit is always 1 - prob. of hit} \nonumber \\
+p(H = \mbox{not hit} | L = \mbox{red}) = 0.99 &~~~~\mbox{Note: the probability of ``not hit'' is always 1 - probability of hit} \nonumber \\
 p(H = \mbox{hit} | L = \mbox{yellow}) = 0.1 \nonumber \\
 p(H = \mbox{not hit} | L = \mbox{yellow}) = 0.9 \nonumber \\
 p(H = \mbox{hit} | L = \mbox{green}) = 0.8  \nonumber \\
@@ -115,8 +113,8 @@ What is $p(H=\mbox{hit})$?
 
 \begin{boxedsolution}
 \begin{align}
-p(H = \mbox{hit}) &= p(H = \mbox{hit}, L = \mbox{red}) +  p(H = \mbox{hit}, L = \mbox{yellow}) +  p(H = \mbox{hit}, L = \mbox{green}) \nonumber \\
-&= p(L = \mbox{red}) p(H = \mbox{hit} | L = \mbox{red}) + p(L = \mbox{yellow}) p(H = \mbox{hit} | L = \mbox{yellow}) \nonumber \\
+p(H = \mbox{hit}) &= p(H = \mbox{hit}, L = \mbox{red}) +  p(H = \mbox{hit}, L = \mbox{yellow}) +  p(H = \mbox{hit}, L = \mbox{green}) &\mbox{marginalization} \nonumber \\
+&= p(L = \mbox{red}) p(H = \mbox{hit} | L = \mbox{red}) + p(L = \mbox{yellow}) p(H = \mbox{hit} | L = \mbox{yellow}) &\mbox{product rule}\nonumber \\
 &\hspace{0.5in}+ p(L = \mbox{green}) p(H = \mbox{hit} | L = \mbox{green}) \nonumber\\
 &= (0.2 \times 0.01) + (0.1 \times 0.1) + (0.7 \times 0.8) \nonumber \\
 &= 0.572 \nonumber
@@ -126,17 +124,17 @@ p(H = \mbox{hit}) &= p(H = \mbox{hit}, L = \mbox{red}) +  p(H = \mbox{hit}, L = 
 
 \section{Some Twists on Bayes' Rule}
 
-You should be pretty proficient with the vanilla form of Bayes' rule.  There are a few variants that we'd like to point out.  There are no exercises for you to do here, just add these to your bag of tricks (you'll be leveraging them later in this assignment, so you'll have a chance to solidify them then).
+By now hopefully you are starting to feel comfortable with the vanilla form of Bayes' rule.  There are a few quite useful variants that we'd like to point out.  There are no exercises for you to do here, just add these to your bag of tricks (you'll be leveraging them later in this assignment, so you'll have a chance to solidify them then).
 
 \begin{align}
-p(\mathcal{A} | \mathcal{B}) &= \frac{p(\mathcal{B}|\mathcal{A}) p(\mathcal{A})}{p(\mathcal{B})} & \mbox{vanilla Bayes' rule} \\
+p(\mathcal{A} | \mathcal{B}) &= \frac{p(\mathcal{B}|\mathcal{A}) p(\mathcal{A})}{p(\mathcal{B})} & \mbox{as a reminder, here is vanilla Bayes' rule} \\
 p(\mathcal{A}, \mathcal{B} | \mathcal{C}) &= \frac{p(\mathcal{C}|\mathcal{A}, \mathcal{B}) p(\mathcal{A, B})}{p(\mathcal{C})} & \mbox{you can bring over multiple events} \\
 p(\mathcal{A} | \mathcal{B}, \mathcal{C}) &= \frac{p(\mathcal{B} | \mathcal{A}, \mathcal{C}) p(\mathcal{A}|\mathcal{C})}{p(\mathcal{B}|\mathcal{C})} & \mbox{you can leave an event to the right of the conditioning bar}
 \end{align}
 
 \section{Independence and Conditional Independence}
 
-Two of the most important concepts in probability theory are independence and the closely related concept of conditional independence.  The reason that these ideas are important is that they let you analyze probabilistic quantities in isolation.  For instance, if you know that two events that you are interested in predicting are independent of each other, then you can make a model of each event in isolation.  This saves makes your life much, much easier since you don't have to consider how the two events interact.  Next, we'll make this high-level idea precise.
+Two of the most important concepts in probability theory are independence and the closely related concept of conditional independence.  these ideas are important because they let you analyze probabilistic quantities in isolation.  For instance, if you know that two events that you are interested in predicting are independent of each other, then you can make a model of each event in isolation.  This saves makes your life much, much easier since you don't have to consider how the two events interact.  Next, we'll make this high-level idea precise.
 
 \subsection{Independence}
 The product rule of probability can be simplified when two events, $\mathcal{A}$ and $\mathcal{B}$ are independent.  As an example, suppose $\mathcal{A}$ represents the event that the first flip of a coin comes up heads and event $\mathcal{B}$ is the event that the second flip of the same coin comes up heads.  Since whether or not $\mathcal{A}$ occurs tells us nothing about whether $\mathcal{B}$ would occur, we say that $\mathcal{A}$ and $\mathcal{B}$ are independent events (we use the notation $\mathcal{A} \condindep \mathcal{B}$ to indicate that $\mathcal{A}$ is independent of $\mathcal{B}$).  An event $\mathcal{A}$ is independent of another event $\mathcal{B}$ if and only if the following condition holds.
@@ -184,22 +182,28 @@ Here are some ideas.
 \end{exercise}
 
 \subsection{Conditional Independence}
-Sometimes two events (or two random variables) that are not independent might become independent when conditioned on another event.  As a motivating example, consider a variant of the coin problem we saw last assignment.  A bag contains two coins ($\mathcal{C}_1$ and $\mathcal{C}_2$).  Coin 1 is fair $p(\mathcal{H} | \mathcal{C}_1) = \frac{1}{2}$.  Coin 2 is not fair ($p(\mathcal{H} | \mathcal{C}_2) = \frac{4}{5}$).  Suppose we choose one of the two coins with equal probability.  Let $\mathcal{C}_1$ represents the event that we choose coin 1 and $\mathcal{C}_2$ represent the event that we choose coin 2.  We then flip the coin twice.  Let $\mathcal{H}_1$ represent the event that the first flip comes up heads and $\mathcal{H}_2$ represent the event that the second flip comes up heads.  The question is are $\mathcal{H}_1$ and $\mathcal{H}_2$ independent (i.e., is $\mathcal{H}_1 \condindep \mathcal{H}_2$)?
+Sometimes two events (or two random variables) that are not independent might become independent when conditioned on another event.
 
 \begin{exercise}[(20 minutes)]
-In order to determine whether $\mathcal{H}_1 \condindep \mathcal{H}_2$, let's make a tree diagram.
+
+As a motivating example for the concept of conditional independence, consider a variant of the coin problem we saw last assignment.  A bag contains two coins.  Suppose we choose one of the two coins with equal probability.  Let $\mathcal{C}_1$ represents the event that we choose coin 1 and $\mathcal{C}_2$ represent the event that we choose coin 2.  Coin 1 is fair $p(\mathcal{H} | \mathcal{C}_1) = \frac{1}{2}$.  Coin 2 is not fair ($p(\mathcal{H} | \mathcal{C}_2) = \frac{4}{5}$).   We then flip the coin twice (we don't pick a new coin for the second flip).  Let $\mathcal{H}_1$ represent the event that the first flip comes up heads and $\mathcal{H}_2$ represent the event that the second flip comes up heads.  Are $\mathcal{H}_1$ and $\mathcal{H}_2$ independent (i.e., is $\mathcal{H}_1 \condindep \mathcal{H}_2$)?
+
+To help you get started, here is a tree diagram illustrating the problem.
+
 \begin{center}
 \includegraphics[width=\linewidth]{figures/twocoins}
 \end{center}
 Given the tree diagram above, is $\mathcal{H}_1 \condindep \mathcal{H}_2$?
 
 \begin{boxedsolution}
+
 In order to test $\mathcal{H}_1 \condindep \mathcal{H}_2$ we need to check the following condition:
 \begin{align}
 p(\mathcal{H}_1, \mathcal{H}_2) \stackrel{?}{=} p(\mathcal{H}_1) p(\mathcal{H}_2)
 \end{align}
 
 We can compute each of the terms in the preceding equation using the tree diagram.  In total there are 8 possible paths through the tree.  Recall that we can find the probability of a path by multiplying the numbers on the arrows.  To find the probability of a particular event, say $p(\mathcal{H}_1)$ we just add up the probability of all of the paths that include $\mathcal{H}_1$.  We can apply this technique to each of the events we care about.
+
 \begin{align}
 p(\mathcal{H}_1) &= p(\mathcal{C}_1, \mathcal{H}_1, \mathcal{H}_2) +  p(\mathcal{C}_1, \mathcal{H}_1, \neg \mathcal{H}_2)+  p(\mathcal{C}_2, \mathcal{H}_1, \mathcal{H}_2) +  p(\mathcal{C}_2, \mathcal{H}_1, \neg \mathcal{H}_2) \nonumber \\
 &= \left ( \frac{1}{2} \times \frac{1}{2} \times \frac{1}{2}  \right) + \left ( \frac{1}{2} \times \frac{1}{2} \times \frac{1}{2} \right ) + \left ( \frac{1}{2} \times \frac{4}{5} \times \frac{4}{5}  \right) + \left ( \frac{1}{2} \times \frac{4}{5} \times \frac{1}{5} \right )\nonumber \\
@@ -213,10 +217,11 @@ p(\mathcal{H}_1, \mathcal{H}_2) &=  p(\mathcal{C}_1, \mathcal{H}_1, \mathcal{H}_
 p(\mathcal{H}_1) p(\mathcal{H}_2) &= \frac{13}{20} \times \frac{13}{20} = \frac{169}{400} \neq \frac{89}{200} = p(\mathcal{H}_1, \mathcal{H}_2) \nonumber
 \end{align}
 Since $p(\mathcal{H}_1, \mathcal{H}_2) \neq p(\mathcal{H}_1) p(\mathcal{H}_2)$, $\mathcal{H}_1$ is not independent of $\mathcal{H}_2$.
+
 \end{boxedsolution}
 \end{exercise}
 
-It turns out that even though $\mathcal{H}_1$ and $\mathcal{H}_2$ are not independent, we can state that they are what's called \emph{conditionally independent} given $\mathcal{C}_1$ (or $\mathcal{C}_2$).  More formally, events $\mathcal{A}$ and $\mathcal{B}$ are considered conditionally independent given $\mathcal{C}$ (written as $\mathcal{A} \condindep \mathcal{B}~|~\mathcal{C}$) if and only if
+It turns out that even though $\mathcal{H}_1$ and $\mathcal{H}_2$ are not independent, they are what's called \emph{conditionally independent} given $\mathcal{C}_1$ (or $\mathcal{C}_2$).  Formally, events $\mathcal{A}$ and $\mathcal{B}$ are considered conditionally independent given $\mathcal{C}$ (written $\mathcal{A} \condindep \mathcal{B}~|~\mathcal{C}$) if and only if
 
 \begin{align}
 p(\mathcal{A}, \mathcal{B} | \mathcal{C}) &= p(\mathcal{A} | \mathcal{C}) p(\mathcal{B} | \mathcal{C}) \nonumber
@@ -254,7 +259,7 @@ p(\mathcal{H}_1 , \mathcal{H}_2 | \mathcal{C}_1) &=  \frac{4}{5} \times \frac{4}
 \ees
 \end{exercise}
 
-The definition of the conditional independence of events can be easily extended to random variables.  We say that random variables $X$ and $Y$ are conditionally independent given random variable $Z$ (i.e., $X \condindep Y ~|~ Z$) if and only if the following equation holds for all $x, y, z$.
+The definition of the conditional independence of events extends to random variables.  Random variables $X$ and $Y$ are conditionally independent given random variable $Z$ (i.e., $X \condindep Y ~|~ Z$) if and only if the following holds for all $x, y, z$.
 
 \begin{align}
 p(X=x,Y=y | Z=z) &= p(X=x|Z=z) p(Y=y|Z=z)
@@ -262,33 +267,38 @@ p(X=x,Y=y | Z=z) &= p(X=x|Z=z) p(Y=y|Z=z)
 
 \section{Bayesian Networks}
 
-The calculations in the previous section were a bit tedious.  It would be great if there was some way to reason about the conditional independence properties of two random variables conditioned on some other random variable.  Luckily... drum roll... there is!  A Bayesian network (sometimes called a Bayesian belief network or a probabilistic directed acyclic graphical model) represents the conditional independence relationships between random variables through a graphical, causal structure.  We'll use BN as shorthand for ``Bayesian network.''  Take for instance, the BN that represents the coin problem that we did in the last section. (TODO: maybe redo this notation to remove the T's and F's).
+The calculations in the previous section were a bit tedious.  It would be great if there was some way to reason about the conditional independence properties of two random variables conditioned on some other random variable.  Luckily... drum roll... there is!  A Bayesian network (sometimes called a Bayesian belief network or a probabilistic directed acyclic graphical model) represents the conditional independence relationships between random variables through a graphical, causal structure.  We'll use BN as shorthand for ``Bayesian network.''  Take for instance, the BN that represents the coin problem that we did in the last section.
 
 \begin{center}
 \includegraphics[width=0.6\linewidth]{figures/coinbn}
 \end{center}
 
-The graphical structure (edges and nodes in the graph) tell us everything we need to infer the conditional independence properties in the graph (Note that we haven't told you how you can extract this information from the graph.  That's coming later in the assignment).  The tables that are listed by each node tell us the probability of the event happening versus not happening conditioned on whether or not the events listed on the nodes parents (a ``parent'' of a node, $A$, is a node $B$ where there is an edge pointing from $A$ to $B$) happened (happening \emph{T} stands for \emph{True} or that the event does happen and \emph{F} stands for \emph{False} or that the event does not happen).
+The graphical structure (edges and nodes in the graph) tell us everything we need to infer the conditional independence properties in the graph (Note that we haven't told you \emph{how} you can extract the conditional independence properties from the graph; that's coming later in the assignment).  The tables by each node provide the probability of the event conditioned on whether or not the node's parents (a ``parent'' of a node, $A$, is a node $B$ where there is an edge pointing from $A$ to $B$) happened (\emph{T} stands for \emph{True} or that the event happens and \emph{F} stands for \emph{False} or that the event doesn't happen).
 
-The BN provides us with a way of computing any relevant probability (e.g., marginal, conditional, joint) for the nodes in the network.  The condition that must hold for any BN is that if we want to write the joint distribution of all of the events or random variables (the relationship is the same for either) in the network, it must factorize in the following way.  We'll use $X_1, X_2, \ldots X_n$ to represent random variables in the network and we'll define the function $Pa(X_i)$ to return all of the random variables that are parents of $X_i$.
+The BN provides us with a way of computing any relevant probability (e.g., marginal, conditional, joint) for the nodes in the network.  The condition that must hold for any BN is that if we write the joint distribution of all of the random variables (or events, the relationship is the same for either) in the network, it must factorize in the following way (we'll use $X_1, X_2, \ldots X_n$ to represent random variables in the network and we'll define the function $Pa(X_i)$ to return all of the random variables that are parents of $X_i$).
 
 \begin{align}
-p(X_1, X_2, \ldots, X_n) &= p(X_1 | Pa(X_1)) \times p(X_2 | PaX_2)) \times \ldots p(X_n | Pa(X_n)) 
+p(X_1, X_2, \ldots, X_n) &= p(X_1 | Pa(X_1)) \times p(X_2 | Pa(X_2)) \times \ldots p(X_n | Pa(X_n)) \label{eq:bnparents}
 \end{align}
 
 Back to our coin BN, this means that we can write the joint distribution like so.
 
 \begin{align}
-p(\mathcal{C}_1, \mathcal{H}_1, \mathcal{H}_2) = p(\mathcal{C}_1) p(\mathcal{H}_1 | \mathcal{C}_1) p(\mathcal{H}_2 | \mathcal{C}_1) \nonumber
+p(\mathcal{C}_1, \mathcal{H}_1, \mathcal{H}_2) = p(\mathcal{C}_1) p(\mathcal{H}_1 | \mathcal{C}_1) p(\mathcal{H}_2 | \mathcal{C}_1) \label{eq:coinbnjoint}
 \end{align}
 
+\begin{understandingcheck}
+Make sure you understand how we arrived at Equation~\ref{eq:coinbnjoint}.  Refer back to Equation~\ref{eq:bnparents} and hopefully you will see the connection.ne
+\end{understandingcheck}
+
 \begin{exercise}[(20 minutes)]
-Consider the belief network below (source: \url{https://en.wikipedia.org/wiki/Bayesian_network\#Example}). (TODO: not crazy about this notation)
+Consider the BN below (source: \url{https://en.wikipedia.org/wiki/Bayesian_network\#Example}).
+
 \begin{center}
 \includegraphics[width=0.7\linewidth]{figures/SimpleBayesNet}
 \end{center}
 
-Compute the following probabilities (for brevity we'll use the first letter of each node to indicate that the corresponding event happens (i.e., is true)).
+Compute the following probabilities.  For brevity we'll use the first letter of each node to indicate that the corresponding event happens (e.g., we'll use $\mathcal{R}$ to refer to the event ``rain'').
 \bes
 \item $p(\mathcal{R}, \mathcal{G}, \neg \mathcal{S})$
 \begin{boxedsolution}
@@ -300,7 +310,7 @@ p(\mathcal{R}, \mathcal{G}, \neg \mathcal{S}) &= p(\mathcal{R}) p(\neg \mathcal{
 \end{boxedsolution}
 \item $p(\mathcal{R})$
 \begin{boxedsolution}
-This one is kind of a trick question.  Since $\mathcal{R}$ has no parents, we can just read the probability right off the probability table for the $\mathcal{R}$ node.  The answer is $0.2$.
+This one is kind of a trick question.  Since $\mathcal{R}$ has no parents, we can just read the probability right off the probability table for $\mathcal{R}$.  The answer is $0.2$.
 \end{boxedsolution}
 \item $p(\neg \mathcal{G}, \neg \mathcal{S})$ (hint: marginalize over $\mathcal{R}$)
 
@@ -318,25 +328,24 @@ p(\neg \mathcal{G}, \neg \mathcal{S}) &= p(\neg \mathcal{G}, \neg \mathcal{S}, \
 \end{exercise}
 
 \subsection{D-separation}
-While the graphical structure of the BN is useful for decomposing the joint distribution of the random variables in the graph, it can also be used to reason about the conditional independence relationships in the graph.  For instance, it's possible that given the BN for the coin problem that we can determine that $\mathcal{H}_1 \condindep \mathcal{H}_2~|~\mathcal{C}_1$ simply by looking at the graph.  In order to figure out these sorts of conditional independence relationships, we need to learn about the concept of d-separation.
+While the graphical structure of the BN is useful for decomposing the joint distribution of the random variables in the graph, it can also be used to reason about the conditional independence relationships in the graph.  For instance, it's possible that simply by looking at the graph structure in the BN for the coin problem, we can determine $\mathcal{H}_1 \condindep \mathcal{H}_2~|~\mathcal{C}_1$.  In order to figure out conditional independence relationships from a BN, we need to learn about the concept of d-separation.
 
 \begin{externalresources}[(30 minutes)]
 \bi
 \item Read \href{http://bayes.cs.ucla.edu/BOOK-09/ch11-1-2-final.pdf}{d-Separation without Tears} (don't worry about the third page).
-\item \href{https://www.youtube.com/watch?v=IjoWqnH6HmU}{This one seems pretty good}
-\item \href{https://www.youtube.com/watch?v=yDs_q6jKHb0}{Pieter Abbeel Lecture} (not sure how clear this is)
+\item These videos are pretty good, but the reading seems clearer (let us know what you think on NB) \href{https://www.youtube.com/watch?v=IjoWqnH6HmU}{part 1}, \href{https://www.youtube.com/watch?v=zJIK5uOyJi0}{part 2}.
 \ei
 \end{externalresources}
 
 \begin{exercise}[(15 minutes)]
 
-Consider the following BN that describes how two people John and Mary respond to an alarm going off in their apartment building.  In this case the alarm is triggered either by an earthquake, a burglary, or might go off on accident.
+Consider the following BN that describes how two people John and Mary respond to an alarm in their apartment building.  In this case the alarm is triggered either by an earthquake, a burglary, or might go off on accident.
 \vspace{1em}
 \begin{center}
 \includegraphics[width=0.8\linewidth]{figures/maryjohn}
 \end{center}
 
-For each of the following statements of conditional independence, state whether they are true or false (justify your answer).  You should use the rules of d-separation to determine your answers.  Hint: the specific probability values given in the BN are not relevant for answering this question.  The connections between the nodes are all you need to determine conditional independence (we will use the probability tables in the next exercise).
+For each of the following potential conditional independence relationships, state whether they are true or false (justify your answer).  You should use the rules of d-separation to determine your answers.  Hint: the specific probability values given in the BN are not relevant for answering this question.  The connections between the nodes are all you need to determine conditional independence (we will use the probability tables in the next exercise).
 
 \bes
 \item $\mathcal{B} \condindep \mathcal{E}$
@@ -357,23 +366,21 @@ False. There is a collider-free path between the two nodes (through $\mathcal{A}
 \end{boxedsolution}
 \item $\mathcal{J} \condindep \mathcal{M}~|~\mathcal{A}$
 \begin{boxedsolution}
-True. Conditioning on $\mathcal{A}$ breaks the one path between these nodes.
+True. Conditioning on $\mathcal{A}$ breaks the only path between these nodes.
 \end{boxedsolution}
 \ees
 \end{exercise}
 
-\begin{exercise}[(45 minutes)]
-Consider the following BN from the previous problem that describes how two people John and Mary respond to an alarm going off in their apartment building.
-
-Compute the following probabilities (for some problems you will be able to simplify your calculations by testing for the independence (or conditional independence) using d-separation.
+\begin{exercise}[(60 minutes)]
+Consider the following BN from the previous problem that describes how two people John and Mary respond to an alarm in their apartment building.  Compute the following probabilities (for some problems you will be able to simplify your calculations by testing for the independence (or conditional independence) using d-separation.
 
 \bes
 \item $p(\mathcal{B}, \mathcal{E})$
 
 \begin{boxedsolution}
-As we saw in the previous exercise, $\mathcal{B}$ and $\mathcal{E}$ are d-separated when conditioning on $\mathcal{A}$.  Therefore, $\mathcal{B} \condindep \mathcal{E}$.
+As we saw in the previous exercise, $\mathcal{B}$ and $\mathcal{E}$ are d-separated.  Therefore, $\mathcal{B} \condindep \mathcal{E}$.
 \begin{align}
-p(\mathcal{B}, \mathcal{E}) &= p(\mathcal{B}) p(\mathcal{A}) \nonumber \\
+p(\mathcal{B}, \mathcal{E}) &= p(\mathcal{B}) p(\mathcal{E}) \nonumber \\
 &= 0.001 \times 0.002 \nonumber \\
 &= 0.000002 \nonumber
 \end{align}
@@ -382,7 +389,7 @@ p(\mathcal{B}, \mathcal{E}) &= p(\mathcal{B}) p(\mathcal{A}) \nonumber \\
 \item $p(\mathcal{J}, \mathcal{M} | \mathcal{A})$
 
 \begin{boxedsolution}
-As we saw in the previous exercise, $\mathcal{J}$ and $\mathcal{M}$ are d-separated when conditioning on $\mathcal{A}$ (since it breaks path connecting them).  Therefore $\mathcal{J} \condindep \mathcal{M}~|~\mathcal{A}$.
+As we saw in the previous exercise, $\mathcal{J}$ and $\mathcal{M}$ are d-separated when conditioning on $\mathcal{A}$ (since it breaks the path connecting them).  Therefore $\mathcal{J} \condindep \mathcal{M}~|~\mathcal{A}$.
 
 \begin{align}
 p(\mathcal{J}, \mathcal{M} | \mathcal{A}) &= p(\mathcal{J} | \mathcal{A}) p(\mathcal{M} | \mathcal{A}) \nonumber \\
@@ -400,18 +407,22 @@ First, we apply Bayes' rule.
 p(\mathcal{B} | \mathcal{A}) &= \frac{p(\mathcal{A} | \mathcal{B}) p(\mathcal{B})}{p(\mathcal{A})} \nonumber 
 \end{align}
 
-If we marginalize out $\mathcal{E}$ we are left with the following.
+The only one of those terms that is easy to get is $p(\mathcal{B})$.  To compute $p(\mathcal{A} | \mathcal{B})$ we marginalize out $\mathcal{E}$.
 \begin{align}
 p(\mathcal{A} | \mathcal{B}) &= p(\mathcal{A}, \mathcal{E} | \mathcal{B}) + p(\mathcal{A}, \neg \mathcal{E} | \mathcal{B}) \nonumber \\
-&= p(\mathcal{E} | \mathcal{B}) p(\mathcal{A} | \mathcal{E}, \mathcal{B}) + p(\neg \mathcal{E} | \mathcal{B}) p(\mathcal{A} | \neg \mathcal{E}, \mathcal{B}) \nonumber \\
-&=  p(\mathcal{E}) p(\mathcal{A} | \mathcal{E}, \mathcal{B}) + p(\neg \mathcal{E}) p(\mathcal{A} | \neg \mathcal{E}, \mathcal{B}) \nonumber \\
+&= p(\mathcal{E} | \mathcal{B}) p(\mathcal{A} | \mathcal{E}, \mathcal{B}) + p(\neg \mathcal{E} | \mathcal{B}) p(\mathcal{A} | \neg \mathcal{E}, \mathcal{B}) & \mbox{product rule} \nonumber \\
+&=  p(\mathcal{E}) p(\mathcal{A} | \mathcal{E}, \mathcal{B}) + p(\neg \mathcal{E}) p(\mathcal{A} | \neg \mathcal{E}, \mathcal{B})  &  \mathcal{E} \condindep \mathcal{B} \nonumber \\
 &= 0.002 \times 0.95 + 0.998 \times 0.94 \nonumber \\
-&= 0.94002 \nonumber \\
+&= 0.94002 \nonumber
+\end{align}
+
+Next, we concentrate on $p(\mathcal{A})$.  To tackle this one, we marginalize over two events ($\mathcal{B}$ and $\mathcal{E}$).
+\begin{align}
 p(\mathcal{A}) &= p(\mathcal{B}, \mathcal{E}, \mathcal{A}) +  p(\mathcal{B}, \neg \mathcal{E}, \mathcal{A}) + p(\neg \mathcal{B}, \mathcal{E}, \mathcal{A}) + p(\neg \mathcal{B}, \neg \mathcal{E}, \mathcal{A}) \nonumber \\
 &= p(\mathcal{B}) p(\mathcal{E} | \mathcal{B}) p(\mathcal{A} | \mathcal{B}, \mathcal{E}) +   p(\mathcal{B}) p(\neg \mathcal{E} | \mathcal{B}) p(\mathcal{A} | \mathcal{B}, \neg \mathcal{E}) \nonumber \\
- &\hspace{0.5in} + p(\neg \mathcal{B}) p(\mathcal{E} | \neg \mathcal{B}) p(\mathcal{A} | \neg \mathcal{B}, \mathcal{E}) +  p(\neg \mathcal{B}) p(\neg \mathcal{E} | \neg \mathcal{B}) p(\mathcal{A} | \neg \mathcal{B}, \neg \mathcal{E}) \nonumber \\
- &= p(\mathcal{B}) p(\mathcal{E}) p(\mathcal{A} | \mathcal{B}, \mathcal{E}) +   p(\mathcal{B}) p(\neg \mathcal{E}) p(\mathcal{A} | \mathcal{B}, \neg \mathcal{E}) \nonumber \\
- &\hspace{0.5in} + p(\neg \mathcal{B}) p(\mathcal{E}) p(\mathcal{A} | \neg \mathcal{B}, \mathcal{E}) +  p(\neg \mathcal{B}) p(\neg \mathcal{E}) p(\mathcal{A} | \neg \mathcal{B}, \neg \mathcal{E}) \nonumber \\
+ &\hspace{0.5in} + p(\neg \mathcal{B}) p(\mathcal{E} | \neg \mathcal{B}) p(\mathcal{A} | \neg \mathcal{B}, \mathcal{E}) +  p(\neg \mathcal{B}) p(\neg \mathcal{E} | \neg \mathcal{B}) p(\mathcal{A} | \neg \mathcal{B}, \neg \mathcal{E}) &\mbox{product rule} \nonumber \\
+ &= p(\mathcal{B}) p(\mathcal{E}) p(\mathcal{A} | \mathcal{B}, \mathcal{E}) +   p(\mathcal{B}) p(\neg \mathcal{E}) p(\mathcal{A} | \mathcal{B}, \neg \mathcal{E})  \nonumber \\
+ &\hspace{0.5in} + p(\neg \mathcal{B}) p(\mathcal{E}) p(\mathcal{A} | \neg \mathcal{B}, \mathcal{E}) +  p(\neg \mathcal{B}) p(\neg \mathcal{E}) p(\mathcal{A} | \neg \mathcal{B}, \neg \mathcal{E})  & \mathcal{E} \condindep \mathcal{B}  \nonumber \\
  &= 0.001 \times 0.002 \times 0.95 + 0.001 \times 0.998 \times 0.94 \nonumber \\
  &\hspace{0.5in} + 0.999 \times 0.002 \times 0.29 + 0.999 \times 0.998 \times 0.001 \nonumber \\
  &= 0.002516 \nonumber \\
@@ -420,7 +431,7 @@ p(\mathcal{A} | \mathcal{B}) &= \frac{0.94002 \times 0.001}{0.002516} \nonumber 
 \end{align}
 \end{boxedsolution}
 
-\item $p(\mathcal{B} | \mathcal{A}, \mathcal{E})$ (this is known as the phenomenon of \emph{explaining away}).  Hint: when you apply Bayes' rule, you can leave some of the events on the right hand side of the conditioning bar (the $|$ symbol).  To get you started, try applying the following version of Bayes' rule.
+\item $p(\mathcal{B} | \mathcal{A}, \mathcal{E})$ (this is known as the phenomenon of \emph{explaining away}).  Hint: when you apply Bayes' rule, you can leave some of the events on the right hand side of the conditioning bar (look back at the earlier section ``Some Twists on Bayes' Rule''.  If you need a hint to get you started, try applying the following version of Bayes' rule.
 \begin{align}
 p(\mathcal{B} | \mathcal{A}, \mathcal{E}) &= \frac{p(\mathcal{A} | \mathcal{B}, \mathcal{E}) p(\mathcal{B} | \mathcal{E})}{p(\mathcal{A} | \mathcal{E})} \nonumber
 \end{align}
@@ -434,8 +445,8 @@ p(\mathcal{B} | \mathcal{A}, \mathcal{E}) &= \frac{p(\mathcal{A} | \mathcal{B}, 
 The two terms in the numerator can be read right from the BN, but the denominator requires a little bit more work.  We'll follow the same step we did in part (c), except this time we'll marginalize out $\mathcal{B}$.
 \begin{align}
 p(\mathcal{A} | \mathcal{E}) &= p(\mathcal{A}, \mathcal{B} | \mathcal{E}) + p(\mathcal{A}, \neg \mathcal{B} | \mathcal{E}) \nonumber \\
-&= p(\mathcal{B} | \mathcal{E}) p(\mathcal{A} | \mathcal{B}, \mathcal{E}) + p(\neg \mathcal{B} | \mathcal{E}) p(\mathcal{A} | \neg \mathcal{B}, \mathcal{E}) \nonumber \\
-&=  p(\mathcal{B}) p(\mathcal{A} | \mathcal{B}, \mathcal{E}) + p(\neg \mathcal{B}) p(\mathcal{A} | \neg \mathcal{B}, \mathcal{E}) \nonumber \\
+&= p(\mathcal{B} | \mathcal{E}) p(\mathcal{A} | \mathcal{B}, \mathcal{E}) + p(\neg \mathcal{B} | \mathcal{E}) p(\mathcal{A} | \neg \mathcal{B}, \mathcal{E}) & \mbox{product rule}\nonumber \\
+&=  p(\mathcal{B}) p(\mathcal{A} | \mathcal{B}, \mathcal{E}) + p(\neg \mathcal{B}) p(\mathcal{A} | \neg \mathcal{B}, \mathcal{E})  & \mathcal{B} \condindep \mathcal{E} \nonumber \\
 &= 0.29066 \nonumber \\
 p(\mathcal{B} | \mathcal{A}, \mathcal{E}) &= \frac{0.95 \times 0.001}{0.29066} \nonumber \\
 &= 0.003268 \nonumber
@@ -447,54 +458,61 @@ p(\mathcal{B} | \mathcal{A}, \mathcal{E}) &= \frac{0.95 \times 0.001}{0.29066} \
 \end{exercise}
 
 \section{Generative versus Discriminative Models}
-TODO: write some intro here
+In this assignment and the previous one we've built up a lot of machinery that allows us to work with probabilities.  Next we're going to take this machinery and turn back towards machine learning.  Specifically, we'll be looking at the classification problem and using probability theory to see it in a whole new light (who's excited?!?).
 
-\subsection{Discriminative Models: a Look Back at Logistic Regression}
 
-Let's think back to the logistic regression model for binary classification that we learned about in module 1.  Given an input point $\mathbf{x_i}$, the logistic regression utilized a weight vector $\mathbf{w}$ to compute the probability that the corresponding output $y_i$ was 1 using the $\sigma(\mathbf{w}^\top \mathbf{x_i}) = \frac{1}{1+e^{-\mathbf{w}^\top \mathbf{x_i}}}$ (recall that $\sigma$ is known as the sigmoid function and serves to squash its input into a number between 0 and 1, which can serve as a valid probability).  While we didn't quite have the vocabulary for it then, what we really doing at the time was computing a conditional probability.  We can think of $Y_i$ as a random variable that represents the output that corresponds to the the input point $\mathbf{x_i}$ ($Y_i$ is either 0 or 1 since we are dealing with binary classification).  We can also think of the input as a random variable $\mathbf{X_i}$ (thinking of the input in this way will be helpful later in this section).  In this way, we can think of what the logistic regression algorithm is doing as computing the following conditional probability:
+\subsection{Discriminative Models: a Look Back at Logistic Regression (10 minute read)}
+
+Let's think back to the logistic regression model for binary classification that we learned about in module 1.  Given an input point $\mathbf{x_i}$, the logistic regression algorithm applied a weight vector $\mathbf{w}$ to compute the probability that the corresponding output $y_i$ was 1 via the formula $\sigma(\mathbf{w}^\top \mathbf{x_i}) = \frac{1}{1+e^{-\mathbf{w}^\top \mathbf{x_i}}}$ (recall that $\sigma$ is known as the sigmoid function and serves to squash its input into a number between 0 and 1, which can serve as a valid probability).  While we didn't quite have the vocabulary for it then, what we were really doing was computing a conditional probability.  We can think of $Y_i$ as a random variable that represents the output corresponding to the input $\mathbf{x_i}$ (in the case of binary classification $Y_i$ is either 0 or 1).  We can also think of the input as a random variable $X_i$ (thinking of the input as a random variable will be helpful later in this section).  Framed in this way the logistic algorithm regression computes the following conditional probability:
 \begin{align}
 p(Y_i = 1 | X_i = \mathbf{x_i}) &= \sigma(\mathbf{w}^\top \mathbf{x_i}) \enspace .
 \end{align}
 
-We then defined a loss function that would let us find the best weights, $\mathbf{w}$, given a training set of corresponding input output pairs $(\mathbf{x_1}, y_1), (\mathbf{x_2}, y_2), \ldots, (\mathbf{x_n}, y_n)$.  The details of how we did this are not important to the point we are trying to make now, so it'll suffice to say that learning in a logistic regression model meant tuning the conditional distribution of the outputs (the $Y_i$'s) given the inputs ($\mathbf{x_i}$'s) to fit the training data the best.  This type of model is what is known as a \emph{discriminative model} (the \href{https://en.wikipedia.org/wiki/Discriminative_model}{Wikipedia article on discriminative models} has more details if you are interested).
+We defined a loss function to specify which weights were better or worse given a training set $(\mathbf{x_1}, y_1), (\mathbf{x_2}, y_2), \ldots, (\mathbf{x_n}, y_n)$.  The details of how we did this are not important to the point we are trying to make now, so it'll suffice to say that learning in a logistic regression model meant tuning the conditional distribution of the outputs (the $Y_i$'s) given the inputs ($\mathbf{x_i}$'s) to fit the training data the best.  This type of model is what is known as a \emph{discriminative model} (the \href{https://en.wikipedia.org/wiki/Discriminative_model}{Wikipedia article on discriminative models} has more details if you are interested).
 
 \vspace{1em}
 
 \begin{understandingcheck}
-TODO
+Intuitively, why does being able to accurately estimate $p(Y = 1 | X = \mathbf{x})$ allow you to classify unseen test data?
+
+\begin{boxedsolution}
+In a classification problem we are interested in predicting the output for a given input, $\mathbf{x}$.  If we can accurately calculate $p(Y=1|X = \mathbf{x})$, then we can simply threshold this value at $0.5$ (or whatever makes sense given our application) and predict $Y = 1$ if this condition is met and $Y = 0$ otherwise.
+\end{boxedsolution}
 \end{understandingcheck}
 
-\subsection{Generative Models}
-While the approach outlined above is totally logical, it is not the only way to approach supervised machine learning.  Using a simple application of Bayes' rule, we can derive a whole new approach to the problem!  Since we are interested in predicting $Y_i$ given some inputs $\mathbf{x_i}$ it of course makes sense, for example for a binary classification problem, to want to determine $p(Y_i = 1 | \mathbf{x_i})$.  Instead of modeling that distribution directly, we can instead use Bayes' rule to transform this probability distribution.
-
-TODO: not sure if we should introduce a convention along the lines of $p(\mathbf{x_i}) = p(X_i = \mathbf{x_i})$.
+\subsection{Generative Models (10 minute read)}
+The approach outlined above is great, but it's not the only way to approach binary classification (and supervised learning in general).  Since we are interested in predicting $Y_i$ given some inputs $\mathbf{x_i}$, it of course makes sense, for example for a binary classification problem, to want to determine $p(Y_i = 1 | \mathbf{x_i})$.  However, Instead of modeling that distribution directly, we can use Bayes' rule.
 
 \begin{align}
 p(Y_i  = 1 | X_i = \mathbf{x_i}) &= \frac{p(X_i = \mathbf{x_i} | Y_i = 1) p(Y_i = 1)}{p(X_i = \mathbf{x_i})} \label{eq:pgm} \\
 &= \frac{p(X_i = \mathbf{x_i} | Y_i = 1) p(Y_i = 1)}{p(X_i =  \mathbf{x_i} | Y_i = 1) p(Y_i = 1) + p(X_i = \mathbf{x_i} | Y_i = 0) p(Y_i = 0)} \nonumber
 \end{align}
 
-What these equations are telling us is that if we have a model of the probability of the output being 1 \emph{a priori} ($p(Y_i = 1)$) along with a model of the inputs $\mathbf{x_i}$ given the output $Y_i$ ($p(Y_i | \mathbf{x_i})$), then we have all the information we need to compute $p(Y_i = 1 | \mathbf{x}_i)$.  In a way this amounts to adopting the perspective that the hidden output $Y_i$ causes the input $X_i$ (see Figure~\ref{fig:pgm}).  We call this sort of model a \href{https://en.wikipedia.org/wiki/Generative_model}{probabilistic generative model} (PGM).  The BN corresponding to this model is given below.
+These equations tell us is that if we have a model of the probability of the output being 1 \emph{a priori}, $p(Y_i = 1)$, and a model of the inputs $\mathbf{x_i}$ given the output $y_i$, $p(X_i = \mathbf{x_i} | Y_i = y_i)$, then we can compute $p(Y_i = 1 | X_i = \mathbf{x}_i)$.  This amounts to adopting the perspective that the hidden output $Y_i$ causes the input $X_i$.  We call this sort of model a \href{https://en.wikipedia.org/wiki/Generative_model}{probabilistic generative model} (PGM).  The BN corresponding to this model is given below.
 
 \begin{center}
 \includegraphics[width=0.05\linewidth]{figures/pgm}
 \end{center}
 
 
-The natural question you might ask yourself is \emph{why?} Here are some potential advantages of using probabilistic generative models.
+The natural question is \emph{why?} Here are some potential advantages of using probabilistic generative models.
 \bi
-\item Suppose you found out that $p(Y_i)$ changed for some reason (any thoughts on when this might happen?  Post here on NB).  Incorporating this change into a probabilistic graphical model would be very straight forward (just modify $p(Y_i =1)$ in Equation~\ref{eq:pgm}).
-\item Suppose you found out that $p(X_i | Y_i)$ changed for some reason.  For example, if one of the elements of $X_i$ represents a result obtained by running some sort of medical test, the sensitivity of that medical test might change (any other examples on when this might happen? Post here on NB.).
-\item Suppose that instead of classifying data (i.e., predicting $Y_i$), you instead wanted to generate samples $X_i$ conditioned on a particular value of $Y_i$ (e.g., you might want to \href{https://www.youtube.com/watch?v=LzE1fF0_3q0}{synthesize samples of hand written digits} based on training a probabilistic graphical model).  More modern versions of this idea are generative adversarial networks (GANs), which are behind such work as this \href{https://thispersondoesnotexist.com/}{person does not exist} and \href{https://openai.com/blog/better-language-models/}{better language models and their implications} (the second link is the work of a former Oliner!).
+\item Suppose you found out that $p(Y_i)$ changed for some reason (any thoughts on when this might happen?  Post here on NB).  Incorporating this change into a probabilistic graphical model would be very straightforward (just modify $p(Y_i =1)$ in Equation~\ref{eq:pgm}).
+\item Suppose you found out that $p(X_i  = \mathbf{x_i} | Y_i = y_i)$ changed for some reason.  For example, if one of the elements of $X_i$ represents a result obtained by running some sort of medical test, the sensitivity of that medical test might change (any other examples on when this might happen? Post here on NB.).
+\item Suppose that instead of classifying data (i.e., predicting $Y_i$), you instead wanted to generate samples $\mathbf{x_i}$ conditioned on a particular value of $Y_i$ (e.g., you might want to \href{https://www.youtube.com/watch?v=LzE1fF0_3q0}{synthesize samples of hand written digits} based on training a probabilistic graphical model).  This can be done naturally with a PGM.  More modern versions of this idea are generative adversarial networks (GANs), which are behind such work as this \href{https://thispersondoesnotexist.com/}{person does not exist} and \href{https://openai.com/blog/better-language-models/}{better language models and their implications} (the second link is the work of a former Oliner!).
 \ei
 
 \begin{understandingcheck}
-TODO
+What are the probabilities needed to classify input data in a discriminative model?  What are the probabilities needed to classify input data in a generative model?  How does Bayes' rule connect these two models?
+
+\begin{boxedsolution}
+For a discriminative model you need $p(Y=1 | X = \mathbf{X})$.  For a generative model you need $p(Y=1)$ and $p(X = \mathbf{x} | Y=1)$.  Bayes' rule provides the linkage between these two models since one can be transformed into the other simply by applying Bayes' rule.
+\end{boxedsolution}
 \end{understandingcheck}
 
 
-\section{Na\"ive Bayes: from the top down (maybe do the whole thing...)}
-Now that we've learned the basic idea of PGMs, let's actually learn about one.  Your first PGM is going to be the Na\"ive Bayes algorithm.  The reason it is called Na\"ive Bayes is that it assumes that all of the observed data ($X_1, X_2, \ldots, X_n$) are conditionally independent given $\mathcal{Y}$.  The BN for the Na\"ive Bayes algorithm is shown below.
+\section{Meet the Na\"ive Bayes Algorithm}
+Now that we've learned the basic concept of a probabilistic graphical model, let's make things concrete and learn about a specific PGM.  For our first PGM, we're going to learn about the Na\"ive Bayes algorithm (we'll be doing some work with Na\"ive Bayes in the next assignment as well, so you'll have some time to get accustomed to it).  The reason it is called Na\"ive Bayes is that it assumes that all of the observed data ($X_1, X_2, \ldots, X_n$) are conditionally independent given $\mathcal{Y}$.  The BN for the Na\"ive Bayes algorithm is shown below.
 \begin{center}
 \includegraphics[width=0.3\linewidth]{figures/naivebayesgm}
 \end{center}
@@ -505,10 +523,12 @@ As a motivating example, let's look back at the Titanic dataset from the last mo
 \includegraphics[width=0.8\linewidth]{figures/titanicbn}
 \end{center}
 
-\subsection{Inference}
-While the Na\"ive Bayes Algorithm might sound fancy, once we have the BN, all we need to do to run the algorithm is use Bayes' rule.  We'll let you work through this on your own via an exercise.
+The probabilities in this BN were computed by looking at the training set and counting the appropriate passengers that fell into each category.  For instance, to compute $p(\mathcal{Y}|\mathcal{S})$ since $p(\mathcal{Y}|\mathcal{S}) = \frac{p(\mathcal{Y}, \mathcal{S})}{p(\mathcal{S})}$, we can approximate this probability by counting the number of passengers under 5 who survived and dividing by the total number who survived (note that there are some subtle and important modifications to this method of fitting these probabilities that we'll discuss in the next assignment).  This process was repeated for each conditional probability.  Since we assume that all of the features are conditionally independent given the output ($\mathcal{S}$ in this case), this process is done independently for each feature.
 
-\begin{exercise}
+\subsection{Inference}
+While the Na\"ive Bayes Algorithm might sound fancy, once we have the BN, all we need to do to run the algorithm is to use Bayes' rule.  We'll let you work through this on your own via an exercise.
+
+\begin{exercise}[(45 minutes)]
 
 \bes
 \item Using the BN shown above, what is the probability that a young, male in first class would survive the Titanic disaster?  Hint: write this as a conditional probability and then use Bayes' rule.  Hint 2: leverage the fact that $\mathcal{C}, \mathcal{Y}, \mathcal{M}$ are all conditionally independent of each other given $\mathcal{S}$.
@@ -544,14 +564,7 @@ p(\mathcal{S}|\mathcal{Y}, \mathcal{C}=1, \mathcal{M}) &> p(\neg \mathcal{S}|\ma
 \ees
 \end{exercise}
 
-\subsection{Fitting the Probabilities}
 
-In this case, the probabilities were simply computed by looking at the training set and counting the appropriate passengers that fell into each category.  For instance, to compute $p(\mathcal{Y}|\mathcal{S})$ since $p(\mathcal{Y}|\mathcal{S}) = \frac{p(\mathcal{Y}, \mathcal{S})}{p(\mathcal{S})}$, we can approximate this probability by simply taking the number of passengers under 5 who survived and dividing by the total number who survived.  There are some subtle and important modifications to this method of fitting these probabilities that we'll discuss in the companion notebook.  This process can be repeated for each relevant conditional probability.  Since we assume all of the features are conditionally independent given the output ($\mathcal{S}$ in this case), this process can be done independently for each feature.
-
-
-\subsection{Na\"ive Bayes for Text Classification}
-
-(punted, almost definitely)
 
 \section{Compas Model of Recidivism}
 
