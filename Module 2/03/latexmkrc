@@ -1,0 +1,7 @@
+use Cwd;
+$dir = getcwd;
+$assignment_number =  basename($dir);
+$pdf_mode = 4;
+$bibtex_use = 0;
+
+@default_files = ('assignment' . $assignment_number . '.tex', 'assignment' . $assignment_number . '_Solutions.tex');
