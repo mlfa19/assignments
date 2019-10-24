@@ -1,6 +1,6 @@
 \documentclass[assignment03_Solutions]{subfiles}
 
-\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\toggletrue{solutions}}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
 
@@ -19,14 +19,15 @@
 
 \begin{learningobjectives}
 \bi
-\item TODO
+\item Learn about the connection between probabilistic criteria for algorithmic fairness and Bayesian Networks.
+\item Solidify your understanding of the Na\"ive Bayes algorithm by applying it to movie review sentiment classification.
 \ei
 \end{learningobjectives}
 
 \section{Bayesian Networks and Algorithmic Fairness}
 
 
-In assignment 1 of this module we discussed how Bayesian methods can be used to reason about algorithmic fairness.  We've just had some lengthy discussions about fairness within the context of the Compas algorithm.  We touched upon some of the limitations of statistically based notions of fairness.  Nevertheless, they do have a potential role to play, and you should know what the most common definitions of fairness are and what assumptions they make.
+In assignment 1 of this module we discussed how Bayesian methods can be used to reason about algorithmic fairness.  We've just had some lengthy discussions about fairness within the context of the COMPAS algorithm.  We touched upon some of the limitations of statistically based notions of fairness.  Nevertheless, they do have a potential role to play, and you should know what the most common definitions of fairness are and what assumptions they make.
 
 As context for the reading and to help us have common notation, suppose we have the following random variables.
 
@@ -36,7 +37,7 @@ As context for the reading and to help us have common notation, suppose we have 
 \item $Y$ is the thing we're trying to predict (we want $R = Y$ if we are predicting accurately)
 \ei
 
-\begin{externalresources}[(30 minutes)]
+\begin{externalresources}[(40 minutes)]
 Read \href{https://fairmlbook.org/classification.html}{Fairness and Machine Learning Chapter 2}.  Start at the section \emph{Formal non-discrimination criteria} and read up to (but not including) the section \emph{Calibration and sufficiency}.
 \begin{notice}
 \bi
@@ -47,7 +48,7 @@ Read \href{https://fairmlbook.org/classification.html}{Fairness and Machine Lear
 \end{externalresources}
 
 
-\begin{exercise}[(5 minutes)]
+\begin{exercise}[(10 minutes)]
 Thinking back to the COMPAS example, which definition of fairness given in the reading was Propublica using?  Which definition of fairness was Northpointe using?
 
 \begin{boxedsolution}
@@ -58,18 +59,27 @@ Thinking back to the COMPAS example, which definition of fairness given in the r
 \end{boxedsolution}
 \end{exercise}
 
-TODO: possibly present the data from COMPAS in \href{https://colab.research.google.com/drive/1HMX0GJAF0PcCn6INfCoeqNOASJri_V_s}{a notebook}.
+If you're interested in playing around with the COMPAS data more extensively, we have put together \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%202/03/Exploring_COMPAS_Data.ipynb}{a notebook that reproduces the calculation that are at the heart of the two competing notions of fairness}.  The notebook is written with a couple of notebook exercises, but these are totally optional.  We expect the default will be that folks will just take a look if they want to (or skip this if they don't). If you want to spend some extra time and solidify your understanding of true positive rate, false positive rate, positive predictive value, etc., then it might be worth doing it as a set of exercises.
 
+For the purposes of posting on NB, the conversion of the notebook is at the end of the document.
 
 \section{Text Classification with Bag of Words}
 Next we'll be applying Na\"ive Bayes to the task of classifying text.
 
-\begin{externalresources}[(45 minutes)]
+\begin{externalresources}[(60 minutes)]
 This will be done in the \href{https://colab.research.google.com/github/mlfa19/assignments/blob/master/Module\%202/03/Assignment_3_Companion_Notebook.ipynb}{Assignment 3 companion notebook}.
 \end{externalresources}
+
+(to make this more readable, we have included the PDF of the companion notebook at the end).
 
 \section{The Intelligent Design of Jenny Chow}
 
 This assignment is fully described on the \href{https://canvas.instructure.com/courses/1659968/assignments/12785465?module_item_id=26196347}{Intelligent Design of Jenny Chow Canvas page}.  There is also an alternative described on the assignment page if you can't attend.  Make sure to look at the assignment before going to the play since we are asking you to capture some of your reactions / thoughts so that you can bring them to class on Monday for discussion.
+
+\companionnotebook{Exploring_COMPAS_Data}
+
+
+\companionnotebook{Assignment_3_Companion_Notebook}
+
 
 \end{document}
