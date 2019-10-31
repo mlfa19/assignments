@@ -171,8 +171,8 @@ Warning: spoiler alert if you look at part c.
 To help understand the logic of what we're going to do in this solution, consider the summation $\sum_{i=1}^n  \log p(Y = y_i  | \mathbf{\Theta})$.  The value of the term we are summing will depend on $\mathbf{\Theta}(y_i)$ (the probability that our model assigns to the $Y=y_i$.  Similarly, the term in the second part of the equation we are simplifying,  $\sum_{i=1}^n  \sum_{j=1}^d \log p(X_j = x_{i,j} | Y = y_i,  \mathbf{\Theta})$, only depends on $\mathbf{\Theta}_j(x_{i,j}~|~y_i)$.  Given these observations, we can rewrite the equation in the following way.
 
 \begin{align}
-\mathbf{\Theta^\star} &= \argmax_{\mathbf{\Theta}} \sum_{i=1}^n  \left ( \log  \mathbf{\Theta}(y_i)  + \sum_{j=1}^d \log \mathbf{\Theta}_j(x_{i,j}~|~y_i) \right ) \nonumber \\
-&=  \argmax_{\mathbf{\Theta}} \left ( \sum_{i=1}^n \log  \mathbf{\Theta}(y_i) \right) + \left ( \sum_{i=1}^n  \sum_{j=1}^d \log \mathbf{\Theta}_j(x_{i,j}~|~y_i) \right)  &\mbox{break it apart to make it easier to deal with} \nonumber
+\mathbf{\Theta^\star} &= \argmax_{\mathbf{\Theta}} \sum_{i=1}^n  \left ( \log  \mathbf{\Theta}(y_i)  + \sum_{j=1}^d \log \Theta_j(x_{i,j}~|~y_i) \right ) \nonumber \\
+&=  \argmax_{\mathbf{\Theta}} \left ( \sum_{i=1}^n \log  \Theta(y_i) \right) + \left ( \sum_{i=1}^n  \sum_{j=1}^d \log \Theta_j(x_{i,j}~|~y_i) \right)  &\mbox{break it apart to make it easier to deal with} \nonumber
 \end{align}
 
 We can further change these equations by removing the summations over the $n$ training points and instead summing over each of the possible values of $y_i$ (weighting by the count) and each possible combination of the values of $(y_i, x_{i,j})$ (again weighting by the count). We already defined the relevant counts above, so now we'll just substitute them into the equation.
