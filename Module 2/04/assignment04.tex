@@ -157,7 +157,7 @@ We know that each of the variables in a BN is conditionally independent given it
 Suppose, $\mathbf{\Theta}$ consists of the following parameters.
 \bi
 \item $\Theta(1), \Theta(2), \ldots, \Theta(c)$ represent the prior probability that $y$ takes on a particular value (e.g., $\Theta(i) = p(Y = i)$).  Note that in order for $\Theta(1), \ldots, \Theta(c)$ to represent a valid probability mass function $\sum_{i=1}^c \Theta(i) = 1$.
-\item $\Theta_{j}(k | i)$ represents the conditional probability that feature $X_j = k$ given $Y = i$.  That is $\Theta_{j}(k | j) = p(X_j = k | Y = i)$.  In order for the $\Theta_j(k|i)$'s to represent valid PMFs, $\sum_{k=1}^{r} \Theta_{j}(k | j) = 1$ for all $j$ and $i$.
+\item $\Theta_{j}(k | i)$ represents the conditional probability that feature $X_j = k$ given $Y = i$.  That is $\Theta_{j}(k | i) = p(X_j = k | Y = i)$.  In order for the $\Theta_j(k|i)$'s to represent valid PMFs, $\sum_{k=1}^{r} \Theta_{j}(k | i) = 1$ for all $j$ and $i$.
 \ei
 
 Suppose that $\mbox{ycount}(i)$ represents the number of training points where $y = i$ (i.e., $\mbox{ycount}(i) = \sum_{j=1}^n \mathbb{I} \left [y_j = i \right]$ where $\mathbb{I}$ is the indicator function, which returns 1 if the condition is true and 0 otherwise).
