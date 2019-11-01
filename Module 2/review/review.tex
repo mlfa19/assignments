@@ -119,6 +119,8 @@ It's worth giving the translation of this to random variables explicitly.  If $X
 p(Y=y) &= \sum_{x \in V} p(Y=y, X=x) \enspace .
 \end{align}
 
+TODO: we can also think of marginalization using tree.
+
 \subsection{Product Rule}
 
 We can decompose the joint probability of a bunch of events into a product of probabilities.  Suppose $\mathcal{E}_1, \mathcal{E}_2, \ldots, \mathcal{E}_n$ represent events, then
@@ -135,8 +137,32 @@ p(\mathcal{E}_1, \mathcal{E}_2, \mathcal{E}_3) &= p(\mathcal{E}_1) p(\mathcal{E}
 
 \subsection{Bayes' Rule}
 
+Bayes' rule lets you take a conditional probability $p(\mathcal{A}|\mathcal{B})$ and flip the order of the events across the conditioning bar.
+\begin{align}
+p(\mathcal{A}|\mathcal{B}) &= \frac{p(\mathcal{B}|\mathcal{A}) p(\mathcal{A})}{p(\mathcal{B})}
+\end{align}
+
+There are a few alternate forms of Bayes' rule.
+\bi
+\item You can move multiple events through the conditioning bar (here are two examples where we move two events, but you can move any number of events).
+\begin{align}
+p(\mathcal{A}, \mathcal{B} | \mathcal{C}) &= \frac{p(\mathcal{C}|\mathcal{A}, \mathcal{B}) p(\mathcal{A}, \mathcal{B})}{p(\mathcal{C})} \\
+p(\mathcal{A} |  \mathcal{B}, \mathcal{C}) &= \frac{p(\mathcal{B}, \mathcal{C}|\mathcal{A}) p(\mathcal{A})}{p(\mathcal{B}, \mathcal{C})}
+\end{align}
+\item You don't have to swap all of the events across the conditioning bar (e.g., below, we leave $\mathcal{C}$ on the righthand side of the bar).
+\begin{align}
+p(\mathcal{A}|\mathcal{B},\mathcal{C}) &= \frac{p(\mathcal{B} | \mathcal{A}, \mathcal{C}) p(\mathcal{A}|\mathcal{C})}{p(\mathcal{B}|\mathcal{C})}
+\end{align}
+\ei
+
+
 \paragraph{What's the big deal about Bayes?}
-TODO
+Here are two potential answers to this.
+\bi
+\item It helps us compute probabilities of interest.  Sometimes it is much more natural to compute $p(\mathcal{B} | \mathcal{A})$, then $p(\mathcal{A} | \mathcal{B})$.  For example, if $\mathcal{A}$ represents the event that someone has a particular disease and $\mathcal{B}$ represents someone exhibiting a particular symptom, since we think of the disease as causing the symptom it may be easier to model the probability of the symptom given the disease.  It is less natural to think of the probability of the disease given the symptom since we don't typically think of a symptom as causing a disease.
+\item Consider watching Julia Galef's \href{https://www.youtube.com/watch?v=za7RqnT7CM0}{Bayes: How one equation changed the way I think}
+\ei
+
 
 \subsection{Independence}
 
@@ -148,7 +174,7 @@ This equation also implies the following very useful rule.
 \begin{align}
 p(\mathcal{A} | \mathcal{B}) = p(\mathcal{A}) \enspace .
 \end{align}
-The intuition is that we can drop $\mathcal{B}$ from the right side of the conditioning bar since it doesn't change the probability of $\mathcal{A}$.
+Intuitively, we can drop $\mathcal{B}$ from the right side of the conditioning bar since it doesn't change the probability of $\mathcal{A}$.
 
 
 \subsection{Conditional Independence}
