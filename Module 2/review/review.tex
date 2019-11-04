@@ -26,11 +26,11 @@
 
 \section{Motivation for the Creation of this Document}
 
-Some folks have expressed that they are having a hard time remembering all of the things they've learned this module.  We are putting together this document to have a single place that lists all of the mathematical and algorithms content we've learned in this module.  We are aiming for a relatively concise resource, so we are avoiding long explanations.  Eventually, we might (or you might via NB?) add pointers to the original assignments that explain this stuff more fully.  An exception to this is that in some cases we have put additional worked examples into the document.
+Some folks have expressed that they are having a hard time remembering all of the things that they've learned this module.  We are putting this document together to have a single place that lists the main mathematical and algorithms content from this module.  We are aiming for a relatively concise resource, so we are avoiding long explanations.  Eventually, we might (or you might via NB?) add pointers to the original assignments or external resources that explain this stuff more fully.  An exception to this is that in some cases we have put an additional worked example (e.g., in the maximum likelihood estimation section).
 
 \vspace{1em}
 \begin{notice}
-By creating this document we are not elevating the math / algs portion of this class over the context and ethics or programming parts.  We are creating this resource in response to specific request from a subset of students for more opportunities to reinforce the math / algs for this module.
+By creating this document we are not trying to elevate the importance of the math / algorithms portion of this class over the context and ethics or programming parts.  We are creating this resource in response to specific requests from students who wanted more opportunities to reinforce the math and algorithms content.
 \end{notice}
 
 \section{Probability}
@@ -38,22 +38,22 @@ By creating this document we are not elevating the math / algs portion of this c
 Probability gives us a formal language to express various forms of uncertainty.  This is hugely valuable when doing machine learning, which often involves many forms of uncertainty (e.g., missing data, model uncertainty, noise in training data, etc.).
 
 \subsection{Probability Space}
-Suppose we want to describe some random process in terms of probability.  In order to do so we define a \emph{probability space}.
+Suppose we want to describe some random process in terms of probability.  In order to do so, we define a \emph{probability space}.
 
 A probability space consists of two things.
 \bi
-\item \textbf{Events:} these are things that may or may not occur as a result of our random process.  For example, the event $\mathcal{H}$ might represent the event that when a coin is flipped it comes up heads.
+\item \textbf{Events:} these are things that may or may not occur as a result a random process.  For example, the event $\mathcal{H}$ might represent the event that when a coin is flipped it comes up heads.
 \item \textbf{Probability measure:} this is a function, often called $p$, that assigns a probability to any event.
 \ei
 
-In order for $p$ to be a valid probability measure function it must satisfy these three properties.
+In order for $p$ to be a valid probability measure, it must satisfy these three properties.
 \be
 \item For any event $\mathcal{E}$, $0 \leq p(\mathcal{E}) \leq 1$ (probabilities range from 0, for an impossible event, to 1, for a certain event).
 \item For any set of disjoint events, $\mathcal{E}_1, \mathcal{E}_2, \ldots \mathcal{E}_n$ (disjoint events are those that cannot co-occur),
 \begin{align}
 p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2 \ldots ~\mbox{or}~\mathcal{E}_n) = \sum_{i=1}^n p(\mathcal{E}_i) \enspace .
 \end{align}
-\item For any set of exhaustive events, $\mathcal{E}_1, \mathcal{E}_2, \ldots \mathcal{E}_n$, (an exhaustive set of events means at least one \emph{must} occur),
+\item For any set of exhaustive events, $\mathcal{E}_1, \mathcal{E}_2, \ldots \mathcal{E}_n$ (an exhaustive set of events means at least one \emph{must} occur),
 \begin{align}
 p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2 \ldots ~\mbox{or}~\mathcal{E}_n) = 1 \enspace .
 \end{align}
@@ -61,13 +61,13 @@ p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2 \ldots ~\mbox{or}~\mathcal{E}_n) = 1 \en
 \ee
 
 \subsection{Random Variables}
-A random variable is a generalization of an event.  Think of a random variable as an entity that takes on a value as a result of a random process.  For instance, one might define a random variable $D$ that captures the rolling a 6-sided die ($D$ would take on a value from the set $\{1, 2, 3, 4, 5, 6\}$.  A random variable consists of two things.
+A random variable is a generalization of an event.  A random variable is an entity that takes on a value as a result of a random process.  For instance, one might define a random variable $D$ that captures rolling a 6-sided die ($D$ would take on a value from the set $\{1, 2, 3, 4, 5, 6\}$).  A random variable consists of two things.
 \bi
-\item A mapping from each possible outcomes of a random process to a value for the random variable (e.g., our random variable $D$ takes on the value 1 when the roll has comes up 1, value 2 when the roll comes up 2, etc.).
+\item A mapping from each possible outcome of the random process to a value for the random variable (e.g., our random variable $D$ takes on the value 1 when die roll comes up 1, value 2 when the die roll comes up 2, etc.).
 \item A probability mass function (PMF), which provides the probability that a random variable takes on a particular value.  For example, $p(D = 1)$ is the probability that our 6-sided die comes up 1.  Further, if our die is fair, $p(D=1)=\frac{1}{6}$.
 \ei
 
-Similar to the conditions for outlined for a probability measure function, a PMF must satisfy the following conditions.
+Similar to the conditions outlined for a probability measure, a PMF must satisfy the following conditions.
 \be
 \item If $V$ is the set of all possible values that the random variable $X$ can take on, then $0 \leq p(X = x) \leq 1$ for any value $x$ in the set $V$.
 \item If we add the probability of all possible values that $X$ can take on, we should get $1$.  That is, $\sum_{x \in V} p(X = x) = 1$.
@@ -114,12 +114,29 @@ If we can easily compute the joint distribution of two events (that is $p(\mathc
 p(\mathcal{A}) &= p(\mathcal{A}, \mathcal{B}) + p(\mathcal{A}, \neg \mathcal{B})
 \end{align}
 
+
+Another way to think about marginalization is to draw a tree.
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{../02/figures/twocoins}
+\end{center}
+
+If we want to compute the marginal probability of any of the events $\mathcal{H}_1, \mathcal{H}_2, \mathcal{C}_1, \mathcal{C}_2$, we can simply add the probability of each path that contains the event of interest.  The probability of a path is the product of the probabilities along it.
+
+For example,
+\begin{align}
+p(\mathcal{H}_2) &= p(\mathcal{C}_1, \mathcal{H}_1, \mathcal{H}_2) + p(\mathcal{C}_1, \neg \mathcal{H}_1, \mathcal{H}_2) + p(\mathcal{C}_2, \mathcal{H}_1, \mathcal{H}_2) + p(\mathcal{C}_2, \neg \mathcal{H}_1, \mathcal{H}_2) \nonumber \\
+&= \left ( \frac{1}{2} \times \frac{1}{2} \times \frac{1}{2} \right) + \left ( \frac{1}{2} \times \frac{1}{2} \times \frac{1}{2} \right) + \left ( \frac{1}{2} \times \frac{4}{5} \times \frac{4}{5} \right) + \left ( \frac{1}{2} \times \frac{1}{5} \times \frac{4}{5} \right) \nonumber \\
+&= \frac{1}{8} + \frac{1}{8} + \frac{8}{25} + \frac{2}{25} \nonumber \\
+&= \frac{13}{20} \nonumber
+\end{align}
+
+
 It's worth giving the translation of this to random variables explicitly.  If $X$ and $Y$ are random variables and $V$ contains all possible values that $X$ can take on, then
 \begin{align}
 p(Y=y) &= \sum_{x \in V} p(Y=y, X=x) \enspace .
 \end{align}
 
-TODO: we can also think of marginalization using tree.
 
 \subsection{Product Rule}
 
@@ -160,7 +177,7 @@ p(\mathcal{A}|\mathcal{B},\mathcal{C}) &= \frac{p(\mathcal{B} | \mathcal{A}, \ma
 Here are two potential answers to this.
 \bi
 \item It helps us compute probabilities of interest.  Sometimes it is much more natural to compute $p(\mathcal{B} | \mathcal{A})$, then $p(\mathcal{A} | \mathcal{B})$.  For example, if $\mathcal{A}$ represents the event that someone has a particular disease and $\mathcal{B}$ represents someone exhibiting a particular symptom, since we think of the disease as causing the symptom it may be easier to model the probability of the symptom given the disease.  It is less natural to think of the probability of the disease given the symptom since we don't typically think of a symptom as causing a disease.
-\item Consider watching Julia Galef's \href{https://www.youtube.com/watch?v=za7RqnT7CM0}{Bayes: How one equation changed the way I think}
+\item Consider watching Julia Galef's \href{https://www.youtube.com/watch?v=za7RqnT7CM0}{Bayes: How one equation changed the way I think}.
 \ei
 
 
@@ -196,7 +213,7 @@ The intuition is that we can drop $\mathcal{B}$ from the right side of the condi
 A Bayesian Network (BN) defines a model consisting of one or more events or random variables.  A BN consists of the following components.
 \bi
 \item A graph, that encodes the dependencies between the random variables and events.  This graph contains nodes and directed edges.  We can think of an edge that goes from node $A$ to node $B$ as indicating that $A$ causes $B$.
-\item A conditional probability table that indicates the probability that a node takes on a particular value given the values of its parents.  Note: that on the next assignment when we generalize these networks to contain continuous values, these probability tables will be modified.
+\item A conditional probability table that indicates the probability that a node takes on a particular value given the values of its parents.  Note: in the next assignment when we generalize these networks to contain continuous values, these probability tables will need to be generalized as well.
 \ei
 
 Here is an example of a BN that represents how two people, Mary and John, respond to an alarm in their apartment complex.  The alarm is triggered by earthquakes and burglaries.
@@ -207,7 +224,7 @@ Here is an example of a BN that represents how two people, Mary and John, respon
 
 The circles in this graph (called nodes) are the various events.  Each of these can either be true or false (as stated before, nodes can also represent random variables that can take on multiple values).  The arrows indicate causal relationships (e.g., the alarm going off is caused by burglaries and earthquakes).  The tables next to each node give us the probability of the node conditioned on its parents.
 
- The condition that must hold for any BN is that if we write the joint distribution of all of the random variables (or events, the relationship is the same for either) in the network, it must factorize in the following way (we'll use $X_1, X_2, \ldots X_n$ to represent random variables in the network and we'll define the function $Pa(X_i)$ to return all of the random variables that are parents of $X_i$).
+ The condition that must hold for any BN is that if we write the joint distribution of all of the random variables (or events, since the relationship is the same for either) in the network, it must factorize in the following way (we'll use $X_1, X_2, \ldots X_n$ to represent random variables in the network and we'll define the function $Pa(X_i)$ to return all of the random variables that are parents of $X_i$).
 
 \begin{align}
 p(X_1, X_2, \ldots, X_n) &= p(X_1 | Pa(X_1)) p(X_2 | Pa(X_2)) \ldots p(X_n | Pa(X_n)) \label{eq:bnparents}
@@ -218,10 +235,10 @@ For practice, use Equation~\ref{eq:bnparents} to factor $p(\mathcal{B}, \mathcal
 \end{exercise}
 
 \subsection{D-Separation}
-One of the beautiful things at BNs is that they allow us to infer independence relationships from the graph structure.  In assignment 2 we gave some resources to learn about d-separation.  We encourage you to take a second look at those if you are having trouble (one was a video and one was a document).  If you find any other good resources on d-separation, please share them here.  Next, we'll try to state the rules of d-separation as clearly and concisely as possible.
+One of the beautiful things about BNs is that they allow us to infer independence relationships from the graph structure.  In assignment 2 we gave some resources to learn about d-separation.  We encourage you to take a second look at those if you are having trouble (one was a video and one was a document).  If you find any other good resources on d-separation, please share them here.  Next, we'll try to state the rules of d-separation as clearly and concisely as possible.
 
 \begin{recall}[Definition of D-Separation]
-Two nodes, $\mathcal{A}$ and $\mathcal{B}$, in a BN are d-separated when conditioning on a set of nodes, $\mathcal{C}$, if and only if \emph{all} paths between  $\mathcal{A}$ and $\mathcal{B}$ are blocked when conditioning on $\mathcal{C}$ (the concept of \emph{blocked} will be defined below).  Note that a path consists of traversing one or more edges, in sequence, of a BN (irrespective of the direction of the edge).  A path between $\mathcal{A}$ and $\mathcal{B}$ conditioned on nodes $\mathcal{C}$ if any of the following conditions are met.
+Two nodes, $\mathcal{A}$ and $\mathcal{B}$, in a BN are d-separated when conditioning on a set of nodes, $\mathcal{C}$, if and only if \emph{all} paths between  $\mathcal{A}$ and $\mathcal{B}$ are blocked when conditioning on $\mathcal{C}$ (the concept of \emph{blocked} will be defined below).  Note that a path consists of traversing one or more edges, in sequence, of a BN (irrespective of the direction of the edge).  A path between $\mathcal{A}$ and $\mathcal{B}$ conditioned on nodes $\mathcal{C}$ \textbf{is blocked if any of the following conditions are met}.
 \be
 \item The path contains a collider and neither the collider nor any of its descendants are in the set $\mathcal{C}$ (a collider is a node where the path consists of two incoming arrows, e.g., $\mathcal{D} \rightarrow \mathcal{E} \leftarrow \mathcal{F}$).
 \item The path contains a segment that looks like $\mathcal{D} \rightarrow \mathcal{E} \rightarrow \mathcal{F}$ and $\mathcal{E}$ is in the set $\mathcal{C}$ (i.e., we are conditioning on $\mathcal{E}$).
@@ -240,7 +257,43 @@ Choose two nodes in the alarm network.  Are they independent?  How would this ch
 
 \section{Fairness Criteria for ML}
 
-TODO
+\href{https://fairmlbook.org/classification.html}{Chapter 2} from \emph{Fairness and machine learning} laid out some formal frameworks for fairness.  In all of these definitions, we refer to the following random variables.
+
+\vspace{1em}
+\begin{tabular}{c | c}
+\textbf{Variable} & \textbf{Meaning} \\
+\hline
+$R$ & This is the prediction, or response, of the algorithm (e.g., predict recidivate) \\
+$Y$ & This is the actual outcome (e.g., did the person recidivate or not) \\
+$A$ & This is a sensitive attribute (e.g., it might encode the race of the person being evaluated)
+\end{tabular}
+
+
+\bi
+\item Independence: $R \condindep A$.  This requires that the prediction is independent of the sensitive attribute (without conditioning on anything).  Suppose $R$ is binary (e.g., $R=1$ if you approve someone for a loan and $R=0$ otherwise).  Further, suppose $A$ can take on two values $A=a$ corresponds to some group of people and $A=b$ corresponds to another group of people.
+\begin{align}
+p(R=1\mid A=a) = P(R=1 \mid A=b)
+\end{align}
+This means that the loan approval rate must be identical for both groups (irrespective of any correlations between being a member of these groups and other variables that may be relevant for predicting the riskiness of a loan).
+
+\item Separation: $R \condindep A \mid Y$.  This condition requires that the response and the sensitive attribute must be independent given the actual outcome.  Supposing that $R$ is binary (e.g., loan approved or not), $A$ can take on two values ($a$ or $b$), and $Y$ is binary (e.g., $Y=1$ means loan was repaid, $Y=0$ means loan was defaulted upon), we require the following must hold.
+
+\begin{align}
+p(R=1 \mid A=a, Y=1) &= p(R=1 \mid A=b, Y=1) \label{eq:tpr} \\
+p(R=1 \mid A=a, Y=0) &= p(R=1 \mid A=b, Y=0) \label{eq:fpr} \\
+p(R=0 \mid A=a, Y=1) &= p(R=0 \mid A=b, Y=1) \label{eq:fnr} \\
+p(R=0 \mid A=a, Y=0) &= p(R=0 \mid A=b, Y=0) \label{eq:tnr}
+\end{align}
+These equations state that the true positive rate (Equation~\ref{eq:tpr}), false positive rate (Equation~\ref{eq:fpr}), false negative rate (Equation~\ref{eq:fnr}), and true negative rate (Equation~\ref{eq:tnr}) must be equal for group $A=a$ and group $A=b$.  This was the definition of fairness that Propublica used in their analysis.
+
+\item Sufficiency: $Y \condindep A\mid R$.  This condition requires that the outcome and the attribute must be conditionally independent given the algorithm's prediction.   Supposing that $R$ is binary (e.g., loan approved or not), $A$ can take on two values ($a$ or $b$), and $Y$ is binary (e.g., $Y=1$ means loan was repaid, $Y=0$ means loan was defaulted upon), we require the following must hold.
+
+\begin{align}
+p(Y=1 \mid A=a, R=1) &= p(Y=1 \mid A=b, R=1) \label{eq:ppv} \\
+p(Y=0 \mid A=a, R=0) &= p(Y=0 \mid A=b, R=0) \label{eq:npv}
+\end{align}
+These equations state that the positive predictive value (Equation~\ref{eq:ppv}) and negative predictive value (Equation~\ref{eq:npv}) must be equal for group $A=a$ and group $A=b$.  This was the definition of fairness that NorthPointe used in their analysis
+\ei
 
 \section{Na\"ive Bayes}
 
@@ -253,8 +306,8 @@ The Na\"ive Bayes model can be described using the following BN.
 Remember, that in order to define the BN we need to also specify the conditional probability tables (the probability of each node conditioned on its parents).  For the Na\"ive Bayes model this consists of the following probabilities.
 
 \bi
-\item If $Y$ is a random variable, you need $p(Y=i)$ (for all possible values, $i$, that $Y$ could take on).  If $\mathcal{Y}$ is an event, you would need $p(\mathcal{Y})$.
-\item If the $X_i$'s are random variables, you need $p(X_i=j | Y=k)$ (for all values, $k$, that $Y$ can take on and all possible values, $j$, that the $X_i$ can take on).
+\item If $Y$ is a random variable, we need $p(Y=i)$ (for all possible values, $i$, that $Y$ could take on).  If $\mathcal{Y}$ is an event, we would need $p(\mathcal{Y})$.
+\item If the $X_i$'s are random variables, we need $p(X_i=j | Y=k)$ (for all values, $k$, that $Y$ can take on and all possible values, $j$, that the $X_i$ can take on).  If $\mathcal{X}_i$ is an event, we would need $p(\mathcal{X}_i \mid \mathcal{Y})$ and $p(\mathcal{X}_i \mid \neg \mathcal{Y})$.
 \ei
 
 As a motivating example, let's look back at the Titanic dataset from the last module.  A potential BN for the Titanic dataset is shown below.
@@ -263,11 +316,11 @@ As a motivating example, let's look back at the Titanic dataset from the last mo
 \includegraphics[width=0.8\linewidth]{../02/figures/titanicbn}
 \end{center}
 
-You'll notice that one of the nodes in this graph is a random variables (\emph{fare class}) and some are events (\emph{survived}, \emph{male}, and \emph{young}).  The conditional probabilities were determined using the technique of maximum likelihood estimation (MLE) (which we will describe later).  In this case, MLE simply consists of counting the number of times one of the nodes takes on a particular value when the parent also takes a particular value and normalizing over all possible values the node can take on (more on this in the next section).
+You'll notice that one of the nodes in this graph is a random variables (\emph{fare class}) and the rest are events (\emph{survived}, \emph{male}, and \emph{young}).  The conditional probabilities were determined using the technique of maximum likelihood estimation (MLE) (which we will describe later).  In this case, MLE simply consists of counting the number of times one of the nodes takes on a particular value when the parent also takes a particular value and normalizing over all possible values the node can take on (more on this in the next section).
 
 \section{Maximum Likelihood Estimation}
 
-In assignment 4, we derived the maximum likelihood estimates for the parameters of the Na\"ive Bayes model.  Rather than redo the derivation here, we're going to do two things.  First, we're going to derive maximum likelihood estimates for an even simpler problem.  Next, we're going to apply the maximum likelihood technique to a specific example of data from the Titanic network.  We hope that by these two strategies provide new ways for you to understand MLE.
+In assignment 4, we derived the maximum likelihood estimates for the parameters of the Na\"ive Bayes model.  Rather than redo the derivation here, we're going to do two things.  First, we're going to derive maximum likelihood estimates for a simpler problem.  Next, we're going to apply the maximum likelihood technique to data from the Titanic network.  We hope that by these two strategies provide new ways for you to understand MLE.
 
 \subsection{Flipping Coins}
 
@@ -298,19 +351,18 @@ The term $p(X_i = x_i | \Theta)$ will either be $\Theta$ if $x_i$ is 1 or $1-\Th
 \Theta^\star &= \argmax_{\Theta} \sum_{i=1}^n \left ( \mathbb{I} [ x_i =1] \log \Theta  + \mathbb{I}[x_i = 0]  \log\left (1-  \Theta \right) \right) \label{eq:mlecoin}
 \end{align}
 
-Examining Equation~\ref{eq:mlecoin}, we can see that the value inside the summation only depends on whether $x_i$ is 1 or 0.  Therefore, if $n_{H}$ ($x_i = 1$) is the number of heads we observed and $n_{T}$ is the number of tails we observed ($x_i = 0$), we can rewrite Equation~\ref{eq:mlecoin} as
+Examining Equation~\ref{eq:mlecoin}, we can see that the value inside the summation only depends on whether $x_i$ is 1 or 0.  Therefore, if $n_{H}$ is the number of heads we observed ($x_i = 1$) and $n_{T}$ is the number of tails we observed ($x_i = 0$), we can rewrite Equation~\ref{eq:mlecoin} as
 
 
 \begin{align}
 \Theta^\star &= \argmax_{\Theta} n_H \log \Theta  + n_T  \log\left (1-  \Theta \right) \label{eq:mlecoincount} \enspace .
 \end{align}
 
-We can solve this equation by taking the derivative with respect to $\Theta$ and setting it to 0 (on Exercise 1 on assignment 4, we had to use LaGrange multipliers since it was a harder problem; we don't need to do that here).
+We can solve this equation by taking the derivative with respect to $\Theta$ and setting it to 0 (in Exercise 1 on assignment 4 we had to use Lagrange multipliers since it was a harder problem; we don't need to do that here).
 
 \begin{align}
 \frac{d}{d\Theta} \left ( n_H \log \Theta  + n_T  \log\left (1-  \Theta \right) \right) &=  \frac{n_H}{\Theta} - \frac{n_T}{1-\Theta} \nonumber \\
 0 &= \frac{n_H}{\Theta^\star} - \frac{n_T}{1-\Theta^\star} \nonumber & \mbox{$\Theta^\star$ occurs at a critical point}\\
-&= \frac{n_H(1-\Theta^\star)}{\Theta^\star(1-\Theta^\star)} - \frac{n_T \Theta^\star}{\Theta^\star(1-\Theta^\star)}&\mbox{put over a common denominator}\nonumber\\
 0 &=  n_H(1-\Theta^\star) - n_T \Theta^\star &\mbox{assuming $\Theta^\star$ is not 0 or 1, we can multiply by $\Theta^\star(1-\Theta^\star)$} \nonumber \\
 0&= n_H - n_H \Theta^\star -  n_T \Theta^\star \nonumber \\
 (n_H + n_T) \Theta^\star &= n_H \nonumber \\
@@ -321,24 +373,24 @@ While there's a lot of math to get to this final answer (which, tells us to esti
 \be
 \item Write down likelihood of data given parameters.
 \item Simplify likelihood and substitute in parameters (the parameters will be symbolic at this point, e.g., $\Theta$).
-\item Solve for the optimal value of the parameters (e.g., using Lagrange multipliers or solving for a critical point).
+\item Solve for the optimal value of the parameters (e.g., using Lagrange multipliers or setting derivative to 0 to find a critical point).
 \ee
 
 \subsection{MLE and the Titanic}
 
-Some of you requested an example of applying the equations that we worked out in assignment 4 to an actual example fo Na\"ive Bayes.  In that spirit, we will use training data to fir the parameters of our Titanic BN.
+Some of you requested an example of applying the equations that we worked out in assignment 4 to an actual example of Na\"ive Bayes.  In that spirit, we will use training data to fit the parameters of our Titanic BN.
 
 
 The MLE equations that we derived in assignment 4 are as follows.
 
 \bi
-\item In order to fit the parameters for the outcome variables $Y$, we can use this equation.
+\item To fit the parameters for the outcome variables $Y$, we can use this equation.
 \begin{align}
-\Theta^\star(i) &= \frac{\mbox{ycount}(i)}{\sum_{j=1}^c \mbox{ycount}(j)}
+p(Y=i |  \mathbf{\Theta^\star}) = \Theta^\star(i) &= \frac{\mbox{ycount}(i)}{\sum_{j=1}^c \mbox{ycount}(j)}
 \end{align}
-\item  In order to fit the conditional probabilities of the features (in this case young, male, and fare class), we can use the following equation.
+\item  To fit the conditional probabilities of the features (e.g., young, male, and fare class), we can use the following equation.
 \begin{align}
-\Theta_j^\star(k|i) &= \frac{\mbox{xcount}_j(k|i)}{\sum_{u=1}^r \mbox{xcount}_j(u|i)}
+p(X_j = k \mid Y=i , \mathbf{\Theta^\star}) = \Theta_j^\star(k|i) &= \frac{\mbox{xcount}_j(k|i)}{\sum_{u=1}^r \mbox{xcount}_j(u|i)}
 \end{align}
 \ei
 
@@ -353,7 +405,7 @@ p(\mathcal{S}) &= \frac{\mbox{ycount}(\mathcal{S})}{\mbox{ycount}(\mathcal{S}) +
 \end{align}
 $p(\neg \mathcal{S})$ could be determined similarly, or you could just use $1-p(\mathcal{S})$.
 
-\item In order to determine $p(\mathcal{M} | \mathcal{S})$, we need to know four counts $\mbox{xcount}(\mathcal{M}| \mathcal{S}), \mbox{xcount}(\neg \mathcal{M}| \mathcal{S}), \mbox{xcount}(\mathcal{M}|\neg \mathcal{S}), \mbox{and}, \mbox{xcount}(\neg \mathcal{M}|\neg \mathcal{S})$ (note: we dropped the subscripts on $\mbox{xcount}$ since it is clear from the arguments which node in the BN we're talking about).
+\item In order to determine $p(\mathcal{M} | \mathcal{S})$, we need to know four counts: $\mbox{xcount}(\mathcal{M}| \mathcal{S}), \mbox{xcount}(\neg \mathcal{M}| \mathcal{S}), \mbox{xcount}(\mathcal{M}|\neg \mathcal{S})$, and $\mbox{xcount}(\neg \mathcal{M}|\neg \mathcal{S})$ (note: we dropped the subscripts on $\mbox{xcount}$ since it is clear from the arguments which node in the BN we're talking about).
 
 \begin{align}
 \Theta^\star(\mathcal{M}|  \mathcal{S}) &= \frac{\mbox{xcount}(\mathcal{M}| \mathcal{S})}{\mbox{xcount}(\mathcal{M}| \mathcal{S}) + \mbox{xcount}(\neg \mathcal{M}|  \mathcal{S}) } \nonumber \\
