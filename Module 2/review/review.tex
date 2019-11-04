@@ -26,7 +26,7 @@
 
 \section{Motivation for the Creation of this Document}
 
-Some folks have expressed that they are having a hard time remembering all of the things they've learned this module.  We are putting together this document to have a single place that lists all of the mathematical and algorithms content we've learned in this module.  We are aiming for a relatively concise resource, so we are avoiding long explanations.  Eventually, we might (or you might via NB?) add pointers to the original assignments that explain this stuff more fully.  An exception to this is that in some cases we have put additional worked examples as appendices to this document (these will be referenced in the text).
+Some folks have expressed that they are having a hard time remembering all of the things they've learned this module.  We are putting together this document to have a single place that lists all of the mathematical and algorithms content we've learned in this module.  We are aiming for a relatively concise resource, so we are avoiding long explanations.  Eventually, we might (or you might via NB?) add pointers to the original assignments that explain this stuff more fully.  An exception to this is that in some cases we have put additional worked examples into the document.
 
 \vspace{1em}
 \begin{notice}
@@ -267,9 +267,124 @@ You'll notice that one of the nodes in this graph is a random variables (\emph{f
 
 \section{Maximum Likelihood Estimation}
 
+In assignment 4, we derived the maximum likelihood estimates for the parameters of the Na\"ive Bayes model.  Rather than redo the derivation here, we're going to do two things.  First, we're going to derive maximum likelihood estimates for an even simpler problem.  Next, we're going to apply the maximum likelihood technique to a specific example of data from the Titanic network.  We hope that by these two strategies provide new ways for you to understand MLE.
 
-\section{N-Grams and Sequence Analysis}
+\subsection{Flipping Coins}
 
+Suppose we have a coin and we want to know what the probability of it coming up heads is.  Let's call the probability that the coin comes up heads $\Theta$.  Suppose we flip the coin $n$ times.  Let's define a random variable $X_i$ that takes on value $1$ when the coin comes up heads and value $0$ when the coin comes up tails.  We'll use lower case $x_i$'s to reference the specific values that we observed for the $n$ flips.  We'd like to determine the maximum likelihood estimate of $\Theta$.  We can write this goal formally using the following equation.
+
+
+\begin{align}
+\Theta^\star &= \argmax_{\Theta} p(X_1 = x_1, X_2 = x_2, \ldots, X_n = x_n | \Theta)
+\end{align} 
+
+We can simplify the equation above by making the \href{https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables}{independently and identically distributed (i.i.d.) assumption}.  That is, we'll assume that once we know our model parameter, $\Theta$, each of the random variables $X_i$ is conditionally independent of any other random variable $X_j$.  More formally, we have $X_i \condindep X_j~|~\Theta$ for all $i \neq j$.  Applying that assumption gives us
+
+\begin{align}
+\Theta^\star &= \argmax_{\Theta} p(X_1 = x_1 | \Theta) p(X_2 = x_2 | \Theta) \ldots p(X_n = x_n | \Theta) \enspace .
+\end{align}
+
+We can now take the log of the expression inside of our $\argmax$ without affecting the maximum value.
+
+
+\begin{align}
+\Theta^\star &= \argmax_{\Theta} \log \left ( p(X_1 = x_1 | \Theta) p(X_2 = x_2 | \Theta) \ldots p(X_n = x_n | \Theta) \right) \nonumber \\
+&= \argmax_{\Theta} \sum_{i=1}^n \log  p(X_i = x_i | \Theta)
+\end{align}
+
+The term $p(X_i = x_i | \Theta)$ will either be $\Theta$ if $x_i$ is 1 or $1-\Theta$ if $x_i$ is 0.
+
+\begin{align}
+\Theta^\star &= \argmax_{\Theta} \sum_{i=1}^n \left ( \mathbb{I} [ x_i =1] \log \Theta  + \mathbb{I}[x_i = 0]  \log\left (1-  \Theta \right) \right) \label{eq:mlecoin}
+\end{align}
+
+Examining Equation~\ref{eq:mlecoin}, we can see that the value inside the summation only depends on whether $x_i$ is 1 or 0.  Therefore, if $n_{H}$ ($x_i = 1$) is the number of heads we observed and $n_{T}$ is the number of tails we observed ($x_i = 0$), we can rewrite Equation~\ref{eq:mlecoin} as
+
+
+\begin{align}
+\Theta^\star &= \argmax_{\Theta} n_H \log \Theta  + n_T  \log\left (1-  \Theta \right) \label{eq:mlecoincount} \enspace .
+\end{align}
+
+We can solve this equation by taking the derivative with respect to $\Theta$ and setting it to 0 (on Exercise 1 on assignment 4, we had to use LaGrange multipliers since it was a harder problem; we don't need to do that here).
+
+\begin{align}
+\frac{d}{d\Theta} \left ( n_H \log \Theta  + n_T  \log\left (1-  \Theta \right) \right) &=  \frac{n_H}{\Theta} - \frac{n_T}{1-\Theta} \nonumber \\
+0 &= \frac{n_H}{\Theta^\star} - \frac{n_T}{1-\Theta^\star} \nonumber & \mbox{$\Theta^\star$ occurs at a critical point}\\
+&= \frac{n_H(1-\Theta^\star)}{\Theta^\star(1-\Theta^\star)} - \frac{n_T \Theta^\star}{\Theta^\star(1-\Theta^\star)}&\mbox{put over a common denominator}\nonumber\\
+0 &=  n_H(1-\Theta^\star) - n_T \Theta^\star &\mbox{assuming $\Theta^\star$ is not 0 or 1, we can multiply by $\Theta^\star(1-\Theta^\star)$} \nonumber \\
+0&= n_H - n_H \Theta^\star -  n_T \Theta^\star \nonumber \\
+(n_H + n_T) \Theta^\star &= n_H \nonumber \\
+\Theta^\star &= \frac{n_H}{n_H + n_T} \nonumber \\
+\end{align}
+
+While there's a lot of math to get to this final answer (which, tells us to estimate $\Theta^\star$ as the fraction of heads observed in the training data... pretty reasonable!) the steps are very formulaic.
+\be
+\item Write down likelihood of data given parameters.
+\item Simplify likelihood and substitute in parameters (the parameters will be symbolic at this point, e.g., $\Theta$).
+\item Solve for the optimal value of the parameters (e.g., using Lagrange multipliers or solving for a critical point).
+\ee
+
+\subsection{MLE and the Titanic}
+
+Some of you requested an example of applying the equations that we worked out in assignment 4 to an actual example fo Na\"ive Bayes.  In that spirit, we will use training data to fir the parameters of our Titanic BN.
+
+
+The MLE equations that we derived in assignment 4 are as follows.
+
+\bi
+\item In order to fit the parameters for the outcome variables $Y$, we can use this equation.
+\begin{align}
+\Theta^\star(i) &= \frac{\mbox{ycount}(i)}{\sum_{j=1}^c \mbox{ycount}(j)}
+\end{align}
+\item  In order to fit the conditional probabilities of the features (in this case young, male, and fare class), we can use the following equation.
+\begin{align}
+\Theta_j^\star(k|i) &= \frac{\mbox{xcount}_j(k|i)}{\sum_{u=1}^r \mbox{xcount}_j(u|i)}
+\end{align}
+\ei
+
+Let's apply these equations to the Titanic BN (the BN is shown earlier in this document).
+
+\bi
+\item To determine $p(\mathcal{S})$ we need to count up the number of times each possible outcome occurred.  We can use $\mbox{ycount}(\mathcal{S})$ and  $\mbox{ycount}(\neg \mathcal{S})$ to denote the number of passengers who survived versus didn't survive.
+\begin{align}
+p(\mathcal{S}) &= \frac{\mbox{ycount}(\mathcal{S})}{\mbox{ycount}(\mathcal{S}) + \mbox{ycount}(\neg \mathcal{S})} \nonumber \\
+&= \frac{342}{342+549} \nonumber \\
+&= \frac{342}{891} \nonumber
+\end{align}
+$p(\neg \mathcal{S})$ could be determined similarly, or you could just use $1-p(\mathcal{S})$.
+
+\item In order to determine $p(\mathcal{M} | \mathcal{S})$, we need to know four counts $\mbox{xcount}(\mathcal{M}| \mathcal{S}), \mbox{xcount}(\neg \mathcal{M}| \mathcal{S}), \mbox{xcount}(\mathcal{M}|\neg \mathcal{S}), \mbox{and}, \mbox{xcount}(\neg \mathcal{M}|\neg \mathcal{S})$ (note: we dropped the subscripts on $\mbox{xcount}$ since it is clear from the arguments which node in the BN we're talking about).
+
+\begin{align}
+\Theta^\star(\mathcal{M}|  \mathcal{S}) &= \frac{\mbox{xcount}(\mathcal{M}| \mathcal{S})}{\mbox{xcount}(\mathcal{M}| \mathcal{S}) + \mbox{xcount}(\neg \mathcal{M}|  \mathcal{S}) } \nonumber \\
+&= \frac{109}{109+233} \nonumber \\
+&= \frac{109}{342} \nonumber
+\end{align}
+
+\begin{align}
+\Theta^\star(\mathcal{M}| \neg \mathcal{S}) &= \frac{\mbox{xcount}(\mathcal{M}| \neg \mathcal{S})}{\mbox{xcount}(\mathcal{M}| \neg \mathcal{S}) + \mbox{xcount}(\neg \mathcal{M}| \neg \mathcal{S}) } \nonumber \\
+&= \frac{468}{468+81} \nonumber \\
+&= \frac{468}{549} \nonumber
+\end{align}
+
+\begin{exercise}
+Apply the formulas to determine the probabilities of $\mathcal{Y}$ and $C$ given $\mathcal{S}$.  Here are the relevant counts.
+
+\bi
+\item $\mbox{xcount}(\mathcal{Y}|  \mathcal{S}) = 27$,  $\mbox{xcount}(\neg \mathcal{Y}|  \mathcal{S}) = 315$
+\item $\mbox{xcount}(\mathcal{Y}| \neg \mathcal{S}) = 13$,  $\mbox{xcount}(\neg \mathcal{Y}| \neg \mathcal{S}) = 536$
+\item $\mbox{xcount}(C=1 | \mathcal{S}) = 136$, $\mbox{xcount}(C=2 | \mathcal{S}) = 87$, $\mbox{xcount}(C=3 | \mathcal{S}) = 119$
+\item $\mbox{xcount}(C=1 | \neg \mathcal{S}) = 80$, $\mbox{xcount}(C=2 | \neg \mathcal{S}) = 97$, $\mbox{xcount}(C=3 | \neg \mathcal{S}) = 372$
+\ei
+
+\end{exercise}
+
+\ei
+
+
+
+\section{N-Grams}
+This was primarily coding based, so for now we don't have anything here.  Let us know if there are parts you want explained and we'll update this document.
 
 \section{Are we missing anything?}
 Keep in mind that this document's scope is within the math / algorithms part of this class (not on the context and ethics or programming side).  Comment on NB here to request stuff to add. 
