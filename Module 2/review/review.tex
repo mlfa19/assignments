@@ -35,18 +35,17 @@ By creating this document we are not trying to elevate the importance of the mat
 
 \section{Probability}
 
-Probability gives us a formal language to express various forms of uncertainty.  This is hugely valuable when doing machine learning, which often involves many forms of uncertainty (e.g., missing data, model uncertainty, noise in training data, etc.).
+\textbf{Probability gives us a formal language to express various forms of uncertainty.}  This is hugely valuable when doing machine learning, which often involves many forms of uncertainty (e.g., missing data, model uncertainty, noise in training data, etc.).
 
 \subsection{Probability Space}
-Suppose we want to describe some random process in terms of probability.  In order to do so, we define a \emph{probability space}.
+Suppose we want to describe some random process in terms of probability.  To do so, we \textbf{define a probability space}.
 
 A probability space consists of two things.
 \bi
 \item \textbf{Events:} these are things that may or may not occur as a result a random process.  For example, the event $\mathcal{H}$ might represent the event that when a coin is flipped it comes up heads.
 \item \textbf{Probability measure:} this is a function, often called $p$, that assigns a probability to any event.
-\ei
 
-In order for $p$ to be a valid probability measure, it must satisfy these three properties.
+\noindent In order for $p$ to be a valid probability measure, it must satisfy these three properties.
 \be
 \item For any event $\mathcal{E}$, $0 \leq p(\mathcal{E}) \leq 1$ (probabilities range from 0, for an impossible event, to 1, for a certain event).
 \item For any set of disjoint events, $\mathcal{E}_1, \mathcal{E}_2, \ldots \mathcal{E}_n$ (disjoint events are those that cannot co-occur),
@@ -57,33 +56,47 @@ p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2 \ldots ~\mbox{or}~\mathcal{E}_n) = \sum_
 \begin{align}
 p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2 \ldots ~\mbox{or}~\mathcal{E}_n) = 1 \enspace .
 \end{align}
-
 \ee
-
-\subsection{Random Variables}
-A random variable is a generalization of an event.  A random variable is an entity that takes on a value as a result of a random process.  For instance, one might define a random variable $D$ that captures rolling a 6-sided die ($D$ would take on a value from the set $\{1, 2, 3, 4, 5, 6\}$).  A random variable consists of two things.
-\bi
-\item A mapping from each possible outcome of the random process to a value for the random variable (e.g., our random variable $D$ takes on the value 1 when die roll comes up 1, value 2 when the die roll comes up 2, etc.).
-\item A probability mass function (PMF), which provides the probability that a random variable takes on a particular value.  For example, $p(D = 1)$ is the probability that our 6-sided die comes up 1.  Further, if our die is fair, $p(D=1)=\frac{1}{6}$.
 \ei
 
-Similar to the conditions outlined for a probability measure, a PMF must satisfy the following conditions.
+\begin{exercise}
+TODO: describe a random process and ask students to convert it into a probability space.
+\end{exercise}
+
+\subsection{Random Variables}
+A random variable is a generalization of an event.  \textbf{A random variable is an entity that takes on a value as a result of a random process.}  For instance, one might define a random variable $D$ that captures rolling a 6-sided die ($D$ would take on a value from the set $\{1, 2, 3, 4, 5, 6\}$).  A random variable consists of two things.
+\bi
+\item \textbf{A mapping from each possible outcome of the random process to a value for the random variable} (e.g., our random variable $D$ takes on the value 1 when die roll comes up 1, value 2 when the die roll comes up 2, etc.).
+\item \textbf{A probability mass function (PMF), which gives the probability that a random variable takes on a particular value.}  For example, $p(D = 1)$ is the probability the 6-sided die comes up 1.  If the die is fair, $p(D=1)=\frac{1}{6}$.
+
+\noindent Similar to the conditions outlined for a probability measure, a PMF must satisfy the following conditions.
 \be
 \item If $V$ is the set of all possible values that the random variable $X$ can take on, then $0 \leq p(X = x) \leq 1$ for any value $x$ in the set $V$.
 \item If we add the probability of all possible values that $X$ can take on, we should get $1$.  That is, $\sum_{x \in V} p(X = x) = 1$.
 \ee
 
+\ei
+
+\begin{exercise}
+TODO: Describe a random process that includes a random quantity.  Ask students to convert this to a random variable and a PMF.
+\end{exercise}
+
+
+\subsection{Complement Rule}
+
 \begin{notice}
 In pretty much all of the content in this module any rule that works for events will also work for random variables.  For instance, Bayes' rule for events $\mathcal{A}$ and $\mathcal{B}$ is $p(\mathcal{A} | \mathcal{B}) = \frac{p(\mathcal{B}|\mathcal{A}) p(\mathcal{A})}{p(\mathcal{B})}$.  This equation looks the same as Bayes' rule for two random variables $X$ and $Y$, $p(X=x | Y=y) = \frac{p(Y=y|X=x) p(X=x)}{p(Y=y)}$.  As a result, when we present a rule for manipulating the probability of various events, you can also assume that it will work with little modification for random variables.  In order to make this document simpler, we won't explicitly give the analogous formula for random variables, but if you have any questions on what it would look like, please post on NB.
 \end{notice}
 
-\subsection{Complement Rule}
-
-If we know the probability of an event $\mathcal{E}$ occurring, then the probability of it not occurring $p(\neg \mathcal{E})$ is given by the formula
+\noindent If we know the probability of an event $\mathcal{E}$ occurring, then the probability of it not occurring $p(\neg \mathcal{E})$ is given by the formula
 
 \begin{align}
 p(\neg \mathcal{E}) = 1 - p(\mathcal{E}) \enspace .
 \end{align}
+
+\begin{exercise}
+TODO: give things that are easy to compute using complement rule, but hard to compute directly.
+\end{exercise}
 
 \subsection{Conditional Probability}
 A conditional probability tells us the probability of some event occurring assuming (or conditioned on) another event having occurred.  For instance, we could say ``what is the probability that we observe a particular symptom given that a person has a disease?''  Conditional probability is defined using the following equation.
@@ -137,6 +150,9 @@ It's worth giving the translation of this to random variables explicitly.  If $X
 p(Y=y) &= \sum_{x \in V} p(Y=y, X=x) \enspace .
 \end{align}
 
+\begin{exercise}
+TODO: something along \href{https://www.khanacademy.org/math/ap-statistics/probability-ap/probability-multiplication-rule/e/dependent_probability}{these lines} that focuses on a marginal probability
+\end{exercise}
 
 \subsection{Product Rule}
 
@@ -176,9 +192,13 @@ p(\mathcal{A}|\mathcal{B},\mathcal{C}) &= \frac{p(\mathcal{B} | \mathcal{A}, \ma
 \paragraph{What's the big deal about Bayes?}
 Here are two potential answers to this.
 \bi
-\item It helps us compute probabilities of interest.  Sometimes it is much more natural to compute $p(\mathcal{B} | \mathcal{A})$, then $p(\mathcal{A} | \mathcal{B})$.  For example, if $\mathcal{A}$ represents the event that someone has a particular disease and $\mathcal{B}$ represents someone exhibiting a particular symptom, since we think of the disease as causing the symptom it may be easier to model the probability of the symptom given the disease.  It is less natural to think of the probability of the disease given the symptom since we don't typically think of a symptom as causing a disease.
+\item \textbf{It helps us compute probabilities of interest.}  Sometimes it is much more natural to compute $p(\mathcal{B} | \mathcal{A})$, then $p(\mathcal{A} | \mathcal{B})$.  For example, if $\mathcal{A}$ represents the event that someone has a particular disease and $\mathcal{B}$ represents someone exhibiting a particular symptom, since we think of the disease as causing the symptom it may be easier to model the probability of the symptom given the disease.  It is less natural to think of the probability of the disease given the symptom since we don't typically think of a symptom as causing a disease.
 \item Consider watching Julia Galef's \href{https://www.youtube.com/watch?v=za7RqnT7CM0}{Bayes: How one equation changed the way I think}.
 \ei
+
+\begin{exercise}
+TODO link to Sanjoy's practice problems.
+\end{exercise}
 
 
 \subsection{Independence}
@@ -193,6 +213,9 @@ p(\mathcal{A} | \mathcal{B}) = p(\mathcal{A}) \enspace .
 \end{align}
 Intuitively, we can drop $\mathcal{B}$ from the right side of the conditioning bar since knowing that $\mathcal{B}$ occurred doesn't change the probability of $\mathcal{A}$.
 
+\begin{exercise}
+TODO: give one example that is just applying the formulas.  TODO give one where we must map some situation to the formulas (possibly giving an argument as to whys two events are independent).
+\end{exercise}
 
 \subsection{Conditional Independence}
 
@@ -208,12 +231,16 @@ p(\mathcal{A} | \mathcal{B}, \mathcal{C}) = p(\mathcal{A} | \mathcal{C}) \enspac
 The intuition is that we can drop $\mathcal{B}$ from the right side of the conditioning bar since knowing that $\mathcal{B}$ occurred doesn't change the probability of $\mathcal{A}$ if we already know that $\mathcal{C}$ occurred.
 
 
+\begin{exercise}
+TODO: give one example that is just applying the formulas.  TODO give one where we must map some situation to the formulas (possibly giving an argument as to whys two events are conditionally independent given a third).
+\end{exercise}
+
 \section{Bayesian Networks}
 
 A Bayesian Network (BN) defines a model consisting of one or more events or random variables.  A BN consists of the following components.
 \bi
-\item A graph, that encodes the dependencies between the random variables and events.  This graph contains nodes and directed edges.  We can think of an edge that goes from node $A$ to node $B$ as indicating that $A$ causes $B$.
-\item A conditional probability table that indicates the probability that a node takes on a particular value given the values of its parents.  Note: in the next assignment when we generalize these networks to contain continuous values, these probability tables will need to be generalized as well.
+\item A \textbf{graph, that encodes the dependencies between one or more random variables and events.}  This graph contains nodes that represent random variables or events and directed edges that indicate causal relationships between nodes (e.g., an edge from from node $A$ to node $B$ indicates that $A$ causes $B$).
+\item A \textbf{conditional probability table that indicates the probability that a node takes on a particular value given the values of its parents.}  Note: in the next assignment when we generalize these networks to contain continuous values, these probability tables will need to be generalized as well.
 \ei
 
 Here is an example of a BN that represents how two people, Mary and John, respond to an alarm in their apartment complex.  The alarm is triggered by earthquakes and burglaries.
@@ -232,6 +259,10 @@ p(X_1, X_2, \ldots, X_n) &= p(X_1 | Pa(X_1)) p(X_2 | Pa(X_2)) \ldots p(X_n | Pa(
 
 \begin{exercise}
 For practice, use Equation~\ref{eq:bnparents} to factor $p(\mathcal{B}, \mathcal{E}, \mathcal{A}, \mathcal{J}, \mathcal{M})$ for the alarm network.
+\end{exercise}
+
+\begin{exercise}
+TODO: Give some other network (maybe a medical diagnosis one?)
 \end{exercise}
 
 \subsection{D-Separation}
@@ -320,7 +351,7 @@ You'll notice that one of the nodes in this graph is a random variables (\emph{f
 
 \section{Maximum Likelihood Estimation}
 
-In assignment 4, we derived the maximum likelihood estimates for the parameters of the Na\"ive Bayes model.  Rather than redo the derivation here, we're going to do two things.  First, we're going to derive maximum likelihood estimates for a simpler problem.  Next, we're going to apply the maximum likelihood technique to data from the Titanic network.  We hope that by these two strategies provide new ways for you to understand MLE.
+In assignment 4 we derived the maximum likelihood estimates for the parameters of the Na\"ive Bayes model.  Rather than redo the derivation here, we're going to do two things.  First, we're going to derive maximum likelihood estimates for a simpler problem.  Next, we're going to apply the maximum likelihood technique to data from the Titanic network.  We hope that by these two strategies provide new ways for you to understand MLE.
 
 \subsection{Flipping Coins}
 
