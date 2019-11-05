@@ -126,12 +126,12 @@ p(\neg \mathcal{E}) = 1 - p(\mathcal{E}) \enspace .
 \end{align}
 
 \begin{exercise}
-If you flip a fair coin 100 times, the probability of getting all 100 heads is $\frac{1}{2^100}$.  What's the probability of getting at least one tails.
+If you flip a fair coin 100 times, the probability of getting all 100 heads is $\left ( \frac{1}{2} \right)^{100}$.  What's the probability of getting at least one tails.
 \begin{boxedsolution}
 \begin{align}
 p(\mbox{at least 1 tails}) = p(\neg \mbox{100 heads}) \nonumber \\
 &= 1 - p(\mbox{100 heads}) \nonumber \\
-&= 1 - \frac{1}{2^100} \nonumber
+&= 1 - \left ( \frac{1}{2} \right)^{100}\nonumber
 \end{align}
 \end{boxedsolution}
 
@@ -190,8 +190,21 @@ p(Y=y) &= \sum_{x \in V} p(Y=y, X=x) \enspace .
 \end{align}
 
 \begin{exercise}
-TODO: something along \href{https://www.khanacademy.org/math/ap-statistics/probability-ap/probability-multiplication-rule/e/dependent_probability}{these lines} that focuses on a marginal probability
+Let's define the event $\mathcal{D}$ as the two flips in the coin problem above having different outcomes (i.e., one is heads and one is tails).  Using the technique of marginalization, what is $p(\mathcal{D})$.  If it helps, consider augmenting the tree of the coin problem to list either $\mathcal{D}$ or $\neg \mathcal{D}$ at the bottom of the tree.  Here is what it might look like.
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{figures/twocoins_with_diff}
+\end{center}
+\begin{boxedsolution}
+We can find the probability by summing the probability of all of the paths that lead to $\mathcal{D}$.
+\begin{align}
+p(\mathcal{D}) &= p(\mathcal{C}_1, \mathcal{H}_1, \neg \mathcal{H}_2) + p(\mathcal{C}_1,\neg \mathcal{H}_1, \mathcal{H}_2) + p(\mathcal{C}_2, \mathcal{H}_1, \neg \mathcal{H}_2) + p(\mathcal{C}_2,\neg \mathcal{H}_1, \mathcal{H}_2) \nonumber \\
+&= \left ( \frac{1}{2} \times \frac{1}{2} \times \frac{1}{2} \right) +  \left ( \frac{1}{2} \times \frac{1}{2} \times \frac{1}{2} \right) +  \left ( \frac{1}{2} \times \frac{4}{5} \times \frac{1}{5} \right) +  \left ( \frac{1}{2} \times \frac{1}{5} \times \frac{4}{5} \right) \nonumber \\
+&= \frac{41}{100} \nonumber
+\end{align}
+\end{boxedsolution}
 \end{exercise}
+
 
 \subsection{Product Rule}
 
@@ -206,6 +219,24 @@ p(\mathcal{E}_1, \mathcal{E}_2, \mathcal{E}_3) &= p(\mathcal{E}_1) p(\mathcal{E}
 &= p(\mathcal{E}_3) p(\mathcal{E}_2|\mathcal{E}_3)p(\mathcal{E}_1|\mathcal{E}_3, \mathcal{E}_2) \nonumber \\
 &\mbox{... there are three more potential orderings that we won't give explicitly} \nonumber
 \end{align}
+
+\begin{exercise}
+Here is a \href{https://www.khanacademy.org/math/ap-statistics/probability-ap/probability-multiplication-rule/e/dependent\_probability}{review problem from Khan academy} that can be solved most straightforwardly using the product rule.
+
+\begin{quote}
+A goblet contains 3 red balls, 2 green balls, and 6 blue balls.
+
+If we choose a ball, then another ball without putting the first one back in the goblet, what is the probability that the first ball will be red and the second will be blue?
+\end{quote}
+\begin{boxedsolution}
+Let's define the event the first ball is red as $\mathcal{R}_1$ and the event that the second ball is blue as $\mathcal{B}_2$.
+\begin{align}
+p(\mathcal{R}_1, \mathcal{B}_2) &= p(\mathcal{R}_1) p(\mathcal{B}_2 \mid \mathcal{R}_1) \nonumber \\
+&= \frac{3}{11} \times \frac{6}{10} \nonumber \\
+&= \frac{48}{55} \nonumber
+\end{align}
+\end{boxedsolution}
+\end{exercise}
 
 \subsection{Bayes' Rule}
 
@@ -236,7 +267,11 @@ Here are two potential answers to this.
 \ei
 
 \begin{exercise}
-TODO link to Sanjoy's practice problems.
+There are lots of practice problems on the web for Bayes' rule.  Here are some suggestions.
+\bes
+\item Former Olin Professor Sanjoy Mahajan has a bunch of practice problems on Bayes' rule available on his website.  Each problem allows you to submit your answer and have it checked automatically.  He ayoulso has a solution for each problem.  Some of the problems are more standalone than others (e.g., some rely on material communicated in class).  We'll suggest some that seem to be standalone here.  First, visit the \href{https://tutor.sanjoymahajan.org/bayes/hw02}{HW02 page on Sanjoy's website} (if you get a privacy error from your browser, go ahead an allow your browser to access the site.  What could go wrong?).  On this page, consider doing \textbf{problem 2} (this one is using Bayes' rule in reverse, so it is a bit of a twist), \textbf{problem 3} (part a is really a question about marginalization), \textbf{problem 4}, and \textbf{problem 5}.
+\item Here are \href{http://www2.stat.duke.edu/~jerry/sta101/extraproblems/bayesian.htm}{some more practice problems} from a class on Bayesian statistics.  Solutions available upon request.
+\ees
 \end{exercise}
 
 
@@ -253,7 +288,20 @@ p(\mathcal{A} | \mathcal{B}) = p(\mathcal{A}) \enspace .
 Intuitively, we can drop $\mathcal{B}$ from the right side of the conditioning bar since knowing that $\mathcal{B}$ occurred doesn't change the probability of $\mathcal{A}$.
 
 \begin{exercise}
-TODO: give one example that is just applying the formulas.  TODO give one where we must map some situation to the formulas (possibly giving an argument as to whys two events are independent).
+Simplify each expression using the fact that $\mathcal{A} \condindep \mathcal{B}$ and $\mathcal{C} \condindep \mathcal{D}$ (don't worry about doing anything fancy, just apply the product rule and the basic definitions of independence above).
+\bes
+\item $p(\mathcal{A} | \mathcal{B}, \mathcal{C})$
+\begin{boxedsolution}
+\begin{align}
+p(\mathcal{A} | \mathcal{B}, \mathcal{C}) &= p(\mathcal{A} | \mathcal{C})
+\end{align}
+\end{boxedsolution}
+\item $p(\mathcal{A}, \mathcal{B}, \mathcal{C})$
+\begin{align}
+p(\mathcal{A}, \mathcal{B}, \mathcal{C}) &= p(\mathcal{A}) p(\mathcal{B}| \mathcal{A}) p(\mathcal{C} \mid \mathcal{A}, \mathcal{B}) \nonumber \\
+&= p(\mathcal{A}) p(\mathcal{B}) p(\mathcal{C} | \mathcal{A}, \mathcal{B}) \nonumber
+\end{align}
+\ees
 \end{exercise}
 
 \subsection{Conditional Independence}
@@ -271,7 +319,25 @@ The intuition is that we can drop $\mathcal{B}$ from the right side of the condi
 
 
 \begin{exercise}
-TODO: give one example that is just applying the formulas.  TODO give one where we must map some situation to the formulas (possibly giving an argument as to whys two events are conditionally independent given a third).
+Suppose we know the following facts about some events $\mathcal{A}, \mathcal{B}, \mathcal{C}, \mathcal{D}$.
+\bi
+\item $\mathcal{A} \condindep \mathcal{B}$
+\item $\mathcal{A} \condindep \mathcal{C} \mid \mathcal{B}$
+\item $\mathcal{A} \condindep \mathcal{D} \mid \mathcal{C}$
+\ei
+
+\noindent Simplify the following expression as much as possible (again, don't worry about doing anything fancy, just apply the product rule and the basic definitions of independence and conditional independence abve).
+
+$p(\mathcal{A}, \mathcal{B}, \mathcal{C}, \mathcal{D})$
+
+\begin{boxedsolution}
+\begin{align}
+p(\mathcal{A}, \mathcal{B}, \mathcal{C}, \mathcal{D}) &= p(\mathcal{A}) p(\mathcal{B}|\mathcal{A}) p(\mathcal{C} | \mathcal{A}, \mathcal{B}) p(\mathcal{D}|\mathcal{A}, \mathcal{B}, \mathcal{C}) & \mbox{product rule} \nonumber \\
+&= p(\mathcal{A}) p(\mathcal{B})p(\mathcal{C} | \mathcal{A}, \mathcal{B}) p(\mathcal{D}|\mathcal{A}, \mathcal{B}, \mathcal{C}) & A \condindep B \nonumber \\
+&= p(\mathcal{A}) p(\mathcal{B})p(\mathcal{C} |\mathcal{B}) p(\mathcal{D}|\mathcal{A}, \mathcal{B}, \mathcal{C}) & \mathcal{A} \condindep \mathcal{C} \mid \mathcal{B} \nonumber \\
+&=  p(\mathcal{A}) p(\mathcal{B})p(\mathcal{C} |\mathcal{B}) p(\mathcal{D}| \mathcal{B}, \mathcal{C}) & \mathcal{A} \condindep \mathcal{D} \mid \mathcal{C}\nonumber
+\end{align}
+\end{boxedsolution}
 \end{exercise}
 
 \section{Bayesian Networks}
@@ -300,9 +366,7 @@ p(X_1, X_2, \ldots, X_n) &= p(X_1 | Pa(X_1)) p(X_2 | Pa(X_2)) \ldots p(X_n | Pa(
 For practice, use Equation~\ref{eq:bnparents} to factor $p(\mathcal{B}, \mathcal{E}, \mathcal{A}, \mathcal{J}, \mathcal{M})$ for the alarm network.
 \end{exercise}
 
-\begin{exercise}
-TODO: Give some other network (maybe a medical diagnosis one?)
-\end{exercise}
+
 
 \subsection{D-Separation}
 One of the beautiful things about BNs is that they allow us to infer independence relationships from the graph structure.  In assignment 2 we gave some resources to learn about d-separation.  We encourage you to take a second look at those if you are having trouble (one was a video and one was a document).  If you find any other good resources on d-separation, please share them here.  Next, we'll try to state the rules of d-separation as clearly and concisely as possible.
@@ -323,6 +387,30 @@ Two nodes, $\mathcal{A}$ and $\mathcal{B}$, in a BN are d-separated when conditi
 
 \begin{exercise}
 Choose two nodes in the alarm network.  Are they independent?  How would this change if you conditioned on each of the other three nodes in the network?  Repeat this exercise for other pairs of nodes in the network.
+\end{exercise}
+
+
+\begin{exercise}
+Slide 20 is pretty good in \href{http://idm-lab.org/intro-to-ai/slides/Bayesian\_Networks.pdf}{this document}.
+TODO: ask D-separation questions
+\begin{boxedsolution}
+TODO
+\end{boxedsolution}
+\end{exercise}
+
+\begin{exercise}
+Consider the following BN.
+\includegraphics[width=0.6\linewidth]{figures/medicaldiagnosis}
+\bes
+\item Determine $p(\mathcal{D}_2|\mathcal{S})$?
+\begin{boxedsolution}
+TODO
+\end{boxedsolution}
+\item Determine $p(\mathcal{D}_2|\mathcal{S}, \mathcal{D}_1)$?  Why is the effect on conditioning on $\mathcal{D}_1$ known as \emph{explaining away}?
+\begin{boxedsolution}
+TODO
+\end{boxedsolution}
+\ees
 \end{exercise}
 
 \section{Fairness Criteria for ML}
@@ -498,6 +586,9 @@ Apply the formulas to determine the probabilities of $\mathcal{Y}$ and $C$ given
 \item $\mbox{xcount}(C=1 | \mathcal{S}) = 136$, $\mbox{xcount}(C=2 | \mathcal{S}) = 87$, $\mbox{xcount}(C=3 | \mathcal{S}) = 119$
 \item $\mbox{xcount}(C=1 | \neg \mathcal{S}) = 80$, $\mbox{xcount}(C=2 | \neg \mathcal{S}) = 97$, $\mbox{xcount}(C=3 | \neg \mathcal{S}) = 372$
 \ei
+\begin{boxedsolution}
+TODO
+\end{boxedsolution}
 
 \end{exercise}
 
