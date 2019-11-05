@@ -1,6 +1,8 @@
 
 \documentclass{tufte-handout}
+
 \usepackage{../../CommonLatexPackages/machine_learning_preamble_1.0}
+\toggletrue{solutions}
 
 \fancypagestyle{firstpage}
 
@@ -33,6 +35,18 @@ Some folks have expressed that they are having a hard time remembering all of th
 By creating this document we are not trying to elevate the importance of the math / algorithms portion of this class over the context and ethics or programming parts.  We are creating this resource in response to specific requests from students who wanted more opportunities to reinforce the math and algorithms content.
 \end{notice}
 
+\section{What this Document Is and Is Not}
+
+ \paragraph{\textbf{This document is not:}} a standalone resource for learning all of these topics (the explanations provided here are complementary to those given in previous assignments on these same topics), representative of all three streams of the class, a resource for learning new material / concepts not covered in other assignments, something you need to engage with in any particular way (see the next section for some suggestions on how to engage).
+
+
+ \paragraph{\textbf{This document is:}} a place to assess your understanding of the math and algorithms parts of this module, a place to practice these concepts, a place to ask clarifying / enriching questions (via NB).
+
+\section{How to Engage}
+
+You should use this document as a way to solidify concepts which you feel a bit shaky about.  As a result, if you feel good about a topic, there is no need for you to engage with a particular section.  For instance, if you have the basic idea of probability spaces down, don't even worry about reading that section.  If you would like reinforcement on a topic, read the appropriate section and try some of the practice problems.  You may find it useful to consult the original assignment that introduced these concepts.  Additionally, \textbf{you should consider posting on NB if you have a question or would just like more detail on a particular topic in this document.}
+
+
 \section{Probability}
 
 \textbf{Probability gives us a formal language to express various forms of uncertainty.}  This is hugely valuable when doing machine learning, which often involves many forms of uncertainty (e.g., missing data, model uncertainty, noise in training data, etc.).
@@ -60,7 +74,21 @@ p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2 \ldots ~\mbox{or}~\mathcal{E}_n) = 1 \en
 \ei
 
 \begin{exercise}
-TODO: describe a random process and ask students to convert it into a probability space.
+Consider the random process of rolling a fair, 6-sided die.  Define a probability space (events and a probability measure) to represent this random process.  You can define your own set of events, but an easy default is to define an event for each possible outcome of the roll (e.g., $\mathcal{E}_1$ is the die came out as a 1, $\mathcal{E}_2$ is the die came out as 2, etc.).
+\begin{boxedsolution}
+Let's define $\mathcal{E}_1, \mathcal{E}_2, \ldots, \mathcal{E_6}$ to be our events.  $\mathcal{E}_i$ represents the event that the die roll comes out with value $i$ (e.g., $\mathcal{E}_3$ means we rolled a 3).  Our probability measure in this case is $p(\mathcal{E}_i) = \frac{1}{6}$ for each of our events.  This function $p$ satisfies the conditions for a probability measure since all events have probability between 0 and 1 and the probability of an exhaustive set of events $p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2~\ldots~\mbox{or}~\mathcal{E}_6) = \sum_{i=1}^6 p(\mathcal{E}_i) = 1$.
+\end{boxedsolution}
+\end{exercise}
+
+\begin{exercise}
+Construct a probability space to model the 2020 U.S. Congressional Elections.  Define some events of interest (e.g., a particular party controlling one of the houses of congress) and define a valid probability measure over these events (just use your intuition to pick reasonable values, but do adhere to the rules for probability measure specified above).
+\begin{boxedsolution}
+Let's define the following events and their associated probabilities.
+\bi
+\item $\mathcal{D_H, R_S}$ is the event that the Democrats control the house and the republicans control the senate (note in this case we've chosen to make this is a single event that entails both of these things happening).  $\mathcal{D_H,D_S}$ is the event that the Democrats control both the house and the senate.  $\mathcal{R_H,R_S}$ is the event that the Republicans control both the house and the senate.  $\mathcal{R_H,D_S}$ is the event that the Republicans control the house and the democrats control the senate.
+\item Using the current data on \href{https://www.predictit.org/markets/2/Congress}{predictit} (we didn't expect you to do this, but it is one way to come up with probabilities) $p(\mathcal{D_H, R_S}) = 0.45, p(\mathcal{D_H, D_S}) = 0.29, p(\mathcal{R_H, R_S}) = 0.24, p(\mathcal{D_H, R_S}) = 0.02$.  Notice that these probabilities add to 1 indicating that we are not allowing for any other outcome (since they are disjoint we can add them to get the probability of at least one of them occurring). This gets at the idea that when describing an event like an election using a probability space, we are essentially making modeling decisions about what we deem as the space of possibilities.  In this model we do not allow for a third party to control one of the houses of Congress).
+\ei
+\end{boxedsolution}
 \end{exercise}
 
 \subsection{Random Variables}
@@ -78,7 +106,10 @@ A random variable is a generalization of an event.  \textbf{A random variable is
 \ei
 
 \begin{exercise}
-TODO: Describe a random process that includes a random quantity.  Ask students to convert this to a random variable and a PMF.
+Choose a random process and a quantity that would result from that random process.  Define that quantity as a random variable (that is, what values can it take on, what would be a reasonable PMF).  If you pick a pretty simple system you may be able to specify the PMF exactly (e.g., for rolling a die), but for a more complicated problem you specify what the PMF looks like at a qualitative level.
+\begin{boxedsolution}
+Here's one possibility.  Let $W$ be a random variable that represents the number of games that Paul's favorite football team (the San Francisco 49ers) will win over the last 8 games of the season.  $W$ can take on any integer in the range $0$ to $8$ (inclusive on both sides).  Since the 49ers are doing well this year (they have each of their first 8 games), the PMF might peak at $W=6$ (meaning it would be most likely that they will win 6 more games).   Additionally, we know that $p(W=0) + p(W=1) + \ldots + p(W=8) = 1$ since these represent all of the possible values that $W$ can take.
+\end{boxedsolution}
 \end{exercise}
 
 
@@ -95,7 +126,15 @@ p(\neg \mathcal{E}) = 1 - p(\mathcal{E}) \enspace .
 \end{align}
 
 \begin{exercise}
-TODO: give things that are easy to compute using complement rule, but hard to compute directly.
+If you flip a fair coin 100 times, the probability of getting all 100 heads is $\frac{1}{2^100}$.  What's the probability of getting at least one tails.
+\begin{boxedsolution}
+\begin{align}
+p(\mbox{at least 1 tails}) = p(\neg \mbox{100 heads}) \nonumber \\
+&= 1 - p(\mbox{100 heads}) \nonumber \\
+&= 1 - \frac{1}{2^100} \nonumber
+\end{align}
+\end{boxedsolution}
+
 \end{exercise}
 
 \subsection{Conditional Probability}
@@ -468,6 +507,8 @@ Apply the formulas to determine the probabilities of $\mathcal{Y}$ and $C$ given
 
 \section{N-Grams}
 This was primarily coding based, so for now we don't have anything here.  Let us know if there are parts you want explained and we'll update this document.
+
+TODO: this is the definition of n-grams and what you might use them for.  E.g., classification by using them as features.  Understanding conditional probabilities (e.g., fake versus real coin flips).  Could test how the prevalence of various n-grams differs across corpora.
 
 \section{Are we missing anything?}
 Keep in mind that this document's scope is within the math / algorithms part of this class (not on the context and ethics or programming side).  Comment on NB here to request stuff to add. 
