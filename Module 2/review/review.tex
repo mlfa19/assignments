@@ -1,8 +1,6 @@
+\documentclass[review_Solutions]{subfiles}
 
-\documentclass{tufte-handout}
-
-\usepackage{../../CommonLatexPackages/machine_learning_preamble_1.0}
-\toggletrue{solutions}
+\IfSubStr{\jobname}{\detokenize{Solutions}}{\toggletrue{solutions}}{\togglefalse{solutions}}
 
 \fancypagestyle{firstpage}
 
@@ -374,6 +372,11 @@ p(X_1, X_2, \ldots, X_n) &= p(X_1 | Pa(X_1)) p(X_2 | Pa(X_2)) \ldots p(X_n | Pa(
 
 \begin{exercise}
 For practice, use Equation~\ref{eq:bnparents} to factor $p(\mathcal{B}, \mathcal{E}, \mathcal{A}, \mathcal{J}, \mathcal{M})$ for the alarm network.
+\begin{boxedsolution}
+\begin{align}
+p(\mathcal{B}, \mathcal{E}, \mathcal{A}, \mathcal{J}, \mathcal{M}) &= p(\mathcal{B}) p(\mathcal{E}) p(\mathcal{A} | \mathcal{B}, \mathcal{E}) p(\mathcal{J} | \mathcal{A}) p(\mathcal{M} | \mathcal{A})   \nonumber
+\end{align}
+\end{boxedsolution}
 \end{exercise}
 
 
