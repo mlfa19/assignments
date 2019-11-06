@@ -84,15 +84,15 @@ Construct a probability space to model the 2020 U.S. Congressional Elections.  D
 Let's define the following events and their associated probabilities.
 \bi
 \item $\mathcal{D_H, R_S}$ is the event that the Democrats control the house and the republicans control the senate (note in this case we've chosen to make this is a single event that entails both of these things happening).  $\mathcal{D_H,D_S}$ is the event that the Democrats control both the house and the senate.  $\mathcal{R_H,R_S}$ is the event that the Republicans control both the house and the senate.  $\mathcal{R_H,D_S}$ is the event that the Republicans control the house and the democrats control the senate.
-\item Using the current data on \href{https://www.predictit.org/markets/2/Congress}{predictit} (we didn't expect you to do this, but it is one way to come up with probabilities) $p(\mathcal{D_H, R_S}) = 0.45, p(\mathcal{D_H, D_S}) = 0.29, p(\mathcal{R_H, R_S}) = 0.24, p(\mathcal{D_H, R_S}) = 0.02$.  Notice that these probabilities add to 1 indicating that we are not allowing for any other outcome (since they are disjoint we can add them to get the probability of at least one of them occurring). This gets at the idea that when describing a random process like an election using a probability space, we are essentially making modeling decisions about what we deem as the space of possibilities.  In this model we do not allow for a third party to control one of the houses of Congress.
+\item Using the current data on \href{https://www.predictit.org/markets/2/Congress}{predictit} (we didn't expect you to do this, but it is one way to come up with probabilities) $p(\mathcal{D_H, R_S}) = 0.45, p(\mathcal{D_H, D_S}) = 0.29, p(\mathcal{R_H, R_S}) = 0.24, p(\mathcal{D_H, R_S}) = 0.02$.  Notice that these probabilities add to 1 indicating that we are not allowing for any other outcome (since they are disjoint we can add them to get the probability of at least one of them occurring). This gets at the idea that when describing a random process, like an election, using a probability space, we are essentially making modeling decisions about what we consider to be the space of possibilities. For example, In this model we do not allow for a third party to control one of the houses of Congress.
 \ei
 \end{boxedsolution}
 \end{exercise}
 
 \subsection{Random Variables}
-A random variable is a generalization of an event.  \textbf{A random variable is an entity that takes on a value as a result of a random process.}  For instance, one might define a random variable $D$ that captures rolling a 6-sided die ($D$ would take on a value from the set $\{1, 2, 3, 4, 5, 6\}$).  A random variable consists of two things.
+A random variable is a generalization of an event.  \textbf{A random variable is an entity that takes on a value as a result of a random process.}  For instance, one might define a random variable $D$ that captures rolling a 6-sided die ($D$ would take on a value from the set $\{1, 2, 3, 4, 5, 6\}$).  (Note: we can also express this random process using events (as we did in the exercise above); both formulations are valid).  A random variable consists of two things.
 \bi
-\item \textbf{A mapping from each possible outcome of the random process to a value for the random variable} (e.g., our random variable $D$ takes on the value 1 when die roll comes up 1, value 2 when the die roll comes up 2, etc.).
+\item \textbf{A mapping from each possible outcome of the random process to a value for the random variable} (e.g., our random variable $D$ takes on the value 1 when the die roll comes up 1, value 2 when the die roll comes up 2, etc.).
 \item \textbf{A probability mass function (PMF), which gives the probability that a random variable takes on a particular value.}  For example, $p(D = 1)$ is the probability the 6-sided die comes up 1.  If the die is fair, $p(D=1)=\frac{1}{6}$.
 
 \noindent Similar to the conditions outlined for a probability measure, a PMF must satisfy the following conditions.
@@ -104,18 +104,17 @@ A random variable is a generalization of an event.  \textbf{A random variable is
 \ei
 
 \begin{exercise}
-Choose a random process and a quantity that would result from that random process.  Define that quantity as a random variable (that is, what values can it take on, what would be a reasonable PMF).  If you pick a pretty simple system you may be able to specify the PMF exactly (e.g., for rolling a die), but for a more complicated problem you specify what the PMF looks like at a qualitative level.
+Choose a random process and a quantity that would result from that random process.  Define that quantity as a random variable (that is, what values can it take on, what would be a reasonable PMF).  If you pick a pretty simple system you may be able to specify the PMF exactly (e.g., for rolling a die), but for a more complicated problem consider specifying what the PMF looks like at a qualitative level (the solution has an example like this).
 \begin{boxedsolution}
-Here's one possibility.  Let $W$ be a random variable that represents the number of games that Paul's favorite football team (the San Francisco 49ers) will win over the last 8 games of the season.  $W$ can take on any integer in the range $0$ to $8$ (inclusive on both sides).  Since the 49ers are doing well this year (they have each of their first 8 games), the PMF might peak at $W=6$ (meaning it would be most likely that they will win 6 more games).   Additionally, we know that $p(W=0) + p(W=1) + \ldots + p(W=8) = 1$ since these represent all of the possible values that $W$ can take.
+Here's one possibility.  Let $W$ be a random variable that represents the number of games that Paul's favorite football team (the San Francisco 49ers) will win over the last 8 games of the regular season.  $W$ can take on any integer in the range $0$ to $8$ (inclusive on both sides).  Since the 49ers are doing well this year (they have won each of their first 8 games), the PMF might peak at $W=6$ (meaning it would be most likely that they will win 6 more games).   Additionally, we know that $p(W=0) + p(W=1) + \ldots + p(W=8) = 1$ since these represent all of the possible values that $W$ can take.
 \end{boxedsolution}
 \end{exercise}
-
-
-\subsection{Complement Rule}
 
 \begin{notice}
 In pretty much all of the content in this module any rule that works for events will also work for random variables.  For instance, Bayes' rule for events $\mathcal{A}$ and $\mathcal{B}$ is $p(\mathcal{A} | \mathcal{B}) = \frac{p(\mathcal{B}|\mathcal{A}) p(\mathcal{A})}{p(\mathcal{B})}$.  This equation looks the same as Bayes' rule for two random variables $X$ and $Y$, $p(X=x | Y=y) = \frac{p(Y=y|X=x) p(X=x)}{p(Y=y)}$.  As a result, when we present a rule for manipulating the probability of various events, you can also assume that it will work with little modification for random variables.  In order to make this document simpler, we won't explicitly give the analogous formula for random variables, but if you have any questions on what it would look like, please post on NB.
 \end{notice}
+
+\subsection{Complement Rule}
 
 \noindent If we know the probability of an event $\mathcal{E}$ occurring, then the probability of it not occurring $p(\neg \mathcal{E})$ is given by the formula
 
@@ -127,7 +126,7 @@ p(\neg \mathcal{E}) = 1 - p(\mathcal{E}) \enspace .
 If you flip a fair coin 100 times, the probability of getting all 100 heads is $\left ( \frac{1}{2} \right)^{100}$.  What's the probability of getting at least one tails.
 \begin{boxedsolution}
 \begin{align}
-p(\mbox{at least 1 tails}) = p(\neg \mbox{100 heads}) \nonumber \\
+p(\mbox{at least 1 tails}) &= p(\neg \mbox{100 heads}) \nonumber \\
 &= 1 - p(\mbox{100 heads}) \nonumber \\
 &= 1 - \left ( \frac{1}{2} \right)^{100}\nonumber
 \end{align}
@@ -165,7 +164,7 @@ p(\mathcal{A}) &= p(\mathcal{A}, \mathcal{B}) + p(\mathcal{A}, \neg \mathcal{B})
 \end{align}
 
 
-Another way to think about marginalization is to draw a tree.
+Another way to think about marginalization is to draw a tree.  For example, this is tree from a previous assignment that described the process of choosing between two coins ($\mathcal{C}_1$ and $\mathcal{C}_2$) and flipping the chosen coin twice.  The first coin is fair and the second coin is biased (probability of heads is 4/5).
 
 \begin{center}
 \includegraphics[width=0.8\linewidth]{../02/figures/twocoins}
@@ -188,7 +187,7 @@ p(Y=y) &= \sum_{x \in V} p(Y=y, X=x) \enspace .
 \end{align}
 
 \begin{exercise}
-Let's define the event $\mathcal{D}$ as the two flips in the coin problem above having different outcomes (i.e., one is heads and one is tails).  Using the technique of marginalization, what is $p(\mathcal{D})$.  If it helps, consider augmenting the tree of the coin problem to list either $\mathcal{D}$ or $\neg \mathcal{D}$ at the bottom of the tree.  Here is what it might look like.
+Let's define the event $\mathcal{D}$ as the two flips in the coin problem above having different outcomes (e.g., one is heads and one is tails).  Using the technique of marginalization, what is $p(\mathcal{D})$?  If it helps, consider augmenting the tree of the coin problem to list either $\mathcal{D}$ or $\neg \mathcal{D}$ at the end of each path.  Here is what it might look like.
 
 \begin{center}
 \includegraphics[width=0.8\linewidth]{figures/twocoins_with_diff}
@@ -267,7 +266,7 @@ Here are two potential answers to this.
 \begin{exercise}
 There are lots of practice problems on the web for Bayes' rule.  Here are some suggestions.
 \bes
-\item Former Olin Professor Sanjoy Mahajan has a bunch of practice problems on Bayes' rule available on his website.  Each problem allows you to submit your answer and have it checked automatically.  He ayoulso has a solution for each problem.  Some of the problems are more standalone than others (e.g., some rely on material communicated in class).  We'll suggest some that seem to be standalone here.  First, visit the \href{https://tutor.sanjoymahajan.org/bayes/hw02}{HW02 page on Sanjoy's website} (if you get a privacy error from your browser, go ahead an allow your browser to access the site.  What could go wrong?).  On this page, consider doing \textbf{problem 2} (this one is using Bayes' rule in reverse, so it is a bit of a twist), \textbf{problem 3} (part a is really a question about marginalization), \textbf{problem 4}, and \textbf{problem 5}.
+\item Former Olin Professor Sanjoy Mahajan has a bunch of practice problems on Bayes' rule available on his website.  Each problem allows you to submit your answer and have it checked automatically.  He also has the solution for each problem posted.  Some of the problems are more standalone than others (e.g., some rely on material communicated in class).  We'll suggest some that seem to be standalone here.  First, visit the \href{https://tutor.sanjoymahajan.org/bayes/hw02}{HW02 page on Sanjoy's website} (if you get a privacy error from your browser, go ahead and allow your browser to access the site.  What could go wrong?).  On this page, consider doing \textbf{problem 2} (this one is using Bayes' rule in reverse, so it is a bit of a twist), \textbf{problem 3} (part (a) is really a question about marginalization), \textbf{problem 4}, and \textbf{problem 5}.
 \begin{boxedsolution}
 The solutions are already on Sanjoy's website.
 \end{boxedsolution}
@@ -292,7 +291,7 @@ p(\mathcal{A} | \mathcal{B}) = p(\mathcal{A}) \enspace .
 Intuitively, we can drop $\mathcal{B}$ from the right side of the conditioning bar since knowing that $\mathcal{B}$ occurred doesn't change the probability of $\mathcal{A}$.
 
 \begin{exercise}
-Simplify each expression using the fact that $\mathcal{A} \condindep \mathcal{B}$ and $\mathcal{C} \condindep \mathcal{D}$ (don't worry about doing anything fancy, just apply the product rule and the basic definitions of independence above).
+Simplify each expression using the fact that $\mathcal{A} \condindep \mathcal{B}$ and $\mathcal{C} \condindep \mathcal{D}$ (don't worry about doing anything fancy, just apply the product rule and the basic definitions of independence above).  To make things simpler, assume that these independence relationships hold no matter what events you condition on.
 \bes
 \item $p(\mathcal{A} | \mathcal{B}, \mathcal{C})$
 \begin{boxedsolution}
@@ -334,9 +333,7 @@ Suppose we know the following facts about some events $\mathcal{A}, \mathcal{B},
 \item $\mathcal{A} \condindep \mathcal{D} \mid \mathcal{C}$
 \ei
 
-\noindent Simplify the following expression as much as possible (again, don't worry about doing anything fancy, just apply the product rule and the basic definitions of independence and conditional independence abve).
-
-$p(\mathcal{A}, \mathcal{B}, \mathcal{C}, \mathcal{D})$
+\noindent Simplify the expression $p(\mathcal{A}, \mathcal{B}, \mathcal{C}, \mathcal{D})$ as much as possible (again, don't worry about doing anything fancy, just apply the product rule and the basic definitions of independence and conditional independence above).
 
 \begin{boxedsolution}
 \begin{align}
@@ -353,7 +350,7 @@ p(\mathcal{A}, \mathcal{B}, \mathcal{C}, \mathcal{D}) &= p(\mathcal{A}) p(\mathc
 A Bayesian Network (BN) defines a model consisting of one or more events or random variables.  A BN consists of the following components.
 \bi
 \item A \textbf{graph, that encodes the dependencies between one or more random variables and events.}  This graph contains nodes that represent random variables or events and directed edges that indicate causal relationships between nodes (e.g., an edge from from node $A$ to node $B$ indicates that $A$ causes $B$).
-\item A \textbf{conditional probability table that indicates the probability that a node takes on a particular value given the values of its parents.}  Note: in the next assignment when we generalize these networks to contain continuous values, these probability tables will need to be generalized as well.
+\item A \textbf{conditional probability table that indicates the probability that a node takes on a particular value given the values of its parents.}
 \ei
 
 Here is an example of a BN that represents how two people, Mary and John, respond to an alarm in their apartment complex.  The alarm is triggered by earthquakes and burglaries.
@@ -383,7 +380,7 @@ p(\mathcal{B}, \mathcal{E}, \mathcal{A}, \mathcal{J}, \mathcal{M}) &= p(\mathcal
 
 \subsection{D-Separation}
 One of the beautiful things about BNs is that they allow us to infer independence relationships from the graph structure.  In assignment 2 we gave some resources to learn about d-separation.  We encourage you to take a second look at those if you are having trouble (one was a video and one was a document).  If you find any other good resources on d-separation, please share them here.  Next, we'll try to state the rules of d-separation as clearly and concisely as possible.
-
+\vspace{1em}
 \begin{recall}[Definition of D-Separation]
 Two nodes, $\mathcal{A}$ and $\mathcal{B}$, in a BN are d-separated when conditioning on a set of nodes, $\mathcal{C}$, if and only if \emph{all} paths between  $\mathcal{A}$ and $\mathcal{B}$ are blocked when conditioning on $\mathcal{C}$ (the concept of \emph{blocked} will be defined below).  Note that a path consists of traversing one or more edges, in sequence, of a BN (irrespective of the direction of the edge).  A path between $\mathcal{A}$ and $\mathcal{B}$ conditioned on nodes $\mathcal{C}$ \textbf{is blocked if any of the following conditions are met}.
 \be
@@ -404,9 +401,9 @@ Choose two nodes in the alarm network.  Are they independent?  How would this ch
 As an example, let's pick $\mathcal{E}$ and $\mathcal{B}$.  We can use d-separation to determine the independence and conditional independence relationships.
 \bi
 \item $\mathcal{E} \condindep \mathcal{B}$ ($\mathcal{A}$ is a collider and blocks the only path between $\mathcal{E}$ and $\mathcal{B}$).
-\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{A}$ (the slash through $\condindep$ means that the two nodes are not conditionally independent given $\mathcal{A}$).  Since we are conditioning on $\mathcal{A}$, the fact that it is a collider no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$).
-\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{J}$.  Since we are conditioning on $\mathcal{J}$, which is a descendant of $\mathcal{A}$, even though $\mathcal{A}$ is a collider it no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$).
-\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{M}$.  Since we are conditioning on $\mathcal{M}$, which is a descendant of $\mathcal{A}$, even though $\mathcal{A}$ is a collider it no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$).
+\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{A}$ (the slash through $\condindep$ means that the two nodes are not conditionally independent given $\mathcal{A}$).  Since we are conditioning on $\mathcal{A}$, the fact that it is a collider no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$.
+\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{J}$.  Since we are conditioning on $\mathcal{J}$, which is a descendant of $\mathcal{A}$, even though $\mathcal{A}$ is a collider it no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$.
+\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{M}$.  Since we are conditioning on $\mathcal{M}$, which is a descendant of $\mathcal{A}$, even though $\mathcal{A}$ is a collider it no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$.
 \ei
 \end{boxedsolution}
 \end{exercise}
@@ -435,7 +432,7 @@ True.  The path between is blocked by the collider $\mathcal{CAR STARTS}$.
 \end{boxedsolution}
 \item $\mathcal{RADIO} \condindep \mathcal{GAS}\mid\mathcal{CAR MOVES}$?
 \begin{boxedsolution}
-False.  The path is no longer blocked by the collider $\mathcal{CAR STARTS}$ because we are conditioning $\mathcal{CAR MOVES}$, which is a descendent of $\mathcal{CAR STARTS}$.
+False.  The path is no longer blocked by the collider $\mathcal{CAR STARTS}$ because we are conditioning on $\mathcal{CAR MOVES}$, which is a descendent of $\mathcal{CAR STARTS}$.
 \end{boxedsolution}
 \item This one is a pretty rich network.  You could keep going to create new practice problems.
 \ei
@@ -469,7 +466,7 @@ p(\mathcal{C}, \mathcal{F}) &= p(\mathcal{C}, \mathcal{F}, \mathcal{M})  + p(\ma
 p(\mathcal{C}|\mathcal{F}) &=  0.1667 &\mbox{use the first equation in this box} \nonumber
 \end{align}
 \end{boxedsolution}
-\item Determine $p(\mathcal{C}|\mathcal{F}, \mathcal{M})$.  Why does the effect that conditioning on $\mathcal{M}$ has known as \emph{explaining away}?
+\item Determine $p(\mathcal{C}|\mathcal{F}, \mathcal{M})$.  Why is the effect that conditioning on $\mathcal{M}$ known as \emph{explaining away}?
 \begin{boxedsolution}
 You can also do this by applying Bayes' Rule first as we did in assignment 2.
 \begin{align}
@@ -481,7 +478,7 @@ p(\mathcal{F}, \mathcal{M}) &= p(\mathcal{C}, \mathcal{F}, \mathcal{M}) + p(\neg
  &= 9.9 \times 10^{-7} \nonumber \\
  p(\mathcal{C}|\mathcal{F}, \mathcal{M}) &= \frac{1}{100} &\mbox{use the first equation in this box} \nonumber
 \end{align}
-The fact that the probability of the patient having a cold dropped by a factor of 16 is the phenomenon of explaining away.  We call this phenomenon explaining away since knowing that the patient had meningitis explains away the evidence of a fever, rendering it less likely to be caused by a cold.
+The fact that the probability of the patient having a cold dropped by a factor of 16 when we found out they had meningitis is the phenomenon of explaining away.  We call this phenomenon explaining away since knowing that the patient had meningitis explains away the evidence of a fever, rendering it less likely to be caused by a cold.
 
 \end{boxedsolution}
 \ees
@@ -551,22 +548,22 @@ As a motivating example, let's look back at the Titanic dataset from the last mo
 \includegraphics[width=0.8\linewidth]{../02/figures/titanicbn}
 \end{center}
 
-You'll notice that one of the nodes in this graph is a random variables (\emph{fare class}) and the rest are events (\emph{survived}, \emph{male}, and \emph{young}).  The conditional probabilities were determined using the technique of maximum likelihood estimation (MLE) (which we will describe later).  In this case, MLE simply consists of counting the number of times one of the nodes takes on a particular value when the parent also takes a particular value and normalizing over all possible values the node can take on (more on this in the next section).
+You'll notice that one of the nodes in this graph is a random variable (\emph{fare class}) and the rest are events (\emph{survived}, \emph{male}, and \emph{young}).  The conditional probabilities were determined using the technique of maximum likelihood estimation (MLE) (which we will describe later).  In this case, MLE simply consists of counting the number of times one of the nodes takes on a particular value when the parent also takes a particular value and normalizing over all possible values the node can take on (more on this in the next section).
 
 \section{Maximum Likelihood Estimation}
 
-In assignment 4 we derived the maximum likelihood estimates for the parameters of the Na\"ive Bayes model.  Rather than redo the derivation here, we're going to do two things.  First, we're going to derive maximum likelihood estimates for a simpler problem.  Next, we're going to apply the maximum likelihood technique to data from the Titanic network.  We hope that by these two strategies provide new ways for you to understand MLE.
+In assignment 4, we derived the maximum likelihood estimates for the parameters of the Na\"ive Bayes model.  Rather than redo the derivation here, we're going to do two things.  First, we're going to derive maximum likelihood estimates for a simpler problem.  Next, we're going to apply the maximum likelihood technique to data from the Titanic network.  We hope that these two things will help you wrap your minds around MLE.
 
 \subsection{Flipping Coins}
 
-Suppose we have a coin and we want to know what the probability of it coming up heads is.  Let's call the probability that the coin comes up heads $\Theta$.  Suppose we flip the coin $n$ times.  Let's define a random variable $X_i$ that takes on value $1$ when the coin comes up heads and value $0$ when the coin comes up tails.  We'll use lower case $x_i$'s to reference the specific values that we observed for the $n$ flips.  We'd like to determine the maximum likelihood estimate of $\Theta$.  We can write this goal formally using the following equation.
+Suppose we have a coin and we want to know what the probability of it coming up heads is.  Let's call the probability that the coin comes up heads $\Theta$.  Suppose we flip the coin $n$ times.  Let's define a random variable $X_i$ that takes on value $1$ when the coin comes up heads and value $0$ when the coin comes up tails.  We'll use lower case $x_i$ to reference the specific value that we observed for the $i$th flip.  We'd like to determine the maximum likelihood estimate of $\Theta$.  We can write this goal formally using the following equation.
 
 
 \begin{align}
 \Theta^\star &= \argmax_{\Theta} p(X_1 = x_1, X_2 = x_2, \ldots, X_n = x_n | \Theta)
 \end{align} 
 
-We can simplify the equation above by making the \href{https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables}{independently and identically distributed (i.i.d.) assumption}.  That is, we'll assume that once we know our model parameter, $\Theta$, each of the random variables $X_i$ is conditionally independent of any other random variable $X_j$.  More formally, we have $X_i \condindep X_j~|~\Theta$ for all $i \neq j$.  Applying that assumption gives us
+We can simplify the equation above by making the \href{https://en.wikipedia.org/wiki/Independent_and_identically_distributed_random_variables}{independently and identically distributed (i.i.d.) assumption}.  That is, we'll assume that once we know our model parameter, $\Theta$, each of the random variables $X_i$ is conditionally independent of any other random variable $X_j$.  More formally, we have $X_i \condindep X_j~|~\Theta$ for all $i \neq j$.  Intuitively this means that once we know the bias of the coin, the outcome of each flip has no bearing on the outcome of any other flips.  Applying the i.i.d. assumption gives us
 
 \begin{align}
 \Theta^\star &= \argmax_{\Theta} p(X_1 = x_1 | \Theta) p(X_2 = x_2 | \Theta) \ldots p(X_n = x_n | \Theta) \enspace .
@@ -580,24 +577,24 @@ We can now take the log of the expression inside of our $\argmax$ without affect
 &= \argmax_{\Theta} \sum_{i=1}^n \log  p(X_i = x_i | \Theta)
 \end{align}
 
-The term $p(X_i = x_i | \Theta)$ will either be $\Theta$ if $x_i$ is 1 or $1-\Theta$ if $x_i$ is 0.
+The term $p(X_i = x_i | \Theta)$ will either be $\Theta$ if $x_i$ is 1 or $1-\Theta$ if $x_i$ is 0.  We can indicate this in our equation by using the indicator function, $\mathbb{I}$, that takes on value 1 when the condition inside is true and 0 when the condition inside is false.
 
 \begin{align}
 \Theta^\star &= \argmax_{\Theta} \sum_{i=1}^n \left ( \mathbb{I} [ x_i =1] \log \Theta  + \mathbb{I}[x_i = 0]  \log\left (1-  \Theta \right) \right) \label{eq:mlecoin}
 \end{align}
 
-Examining Equation~\ref{eq:mlecoin}, we can see that the value inside the summation only depends on whether $x_i$ is 1 or 0.  Therefore, if $n_{H}$ is the number of heads we observed ($x_i = 1$) and $n_{T}$ is the number of tails we observed ($x_i = 0$), we can rewrite Equation~\ref{eq:mlecoin} as
+Examining Equation~\ref{eq:mlecoin}, we can see that the value inside the summation only depends on whether $x_i$ is 1 or 0.  Therefore, if $n_{H}$ is the number of heads we observed (heads corresponds to $x_i = 1$) and $n_{T}$ is the number of tails we observed (tails corresponds to $x_i = 0$), we can rewrite Equation~\ref{eq:mlecoin} as
 
 
 \begin{align}
 \Theta^\star &= \argmax_{\Theta} n_H \log \Theta  + n_T  \log\left (1-  \Theta \right) \label{eq:mlecoincount} \enspace .
 \end{align}
 
-We can solve this equation by taking the derivative with respect to $\Theta$ and setting it to 0 (in Exercise 1 on assignment 4 we had to use Lagrange multipliers since it was a harder problem; we don't need to do that here).
+We can solve this equation by taking the derivative with respect to $\Theta$ and setting it to 0 (in Exercise 1 on Assignment 4 we had to use Lagrange multipliers since it was a harder problem; we don't need to do that here).
 
 \begin{align}
 \frac{d}{d\Theta} \left ( n_H \log \Theta  + n_T  \log\left (1-  \Theta \right) \right) &=  \frac{n_H}{\Theta} - \frac{n_T}{1-\Theta} \nonumber \\
-0 &= \frac{n_H}{\Theta^\star} - \frac{n_T}{1-\Theta^\star} \nonumber & \mbox{$\Theta^\star$ occurs at a critical point}\\
+0 &= \frac{n_H}{\Theta^\star} - \frac{n_T}{1-\Theta^\star} \nonumber & \mbox{$\Theta^\star$ occurs at a critical point, i.e., the derivative is $0$}\\
 0 &=  n_H(1-\Theta^\star) - n_T \Theta^\star &\mbox{assuming $\Theta^\star$ is not 0 or 1, we can multiply by $\Theta^\star(1-\Theta^\star)$} \nonumber \\
 0&= n_H - n_H \Theta^\star -  n_T \Theta^\star \nonumber \\
 (n_H + n_T) \Theta^\star &= n_H \nonumber \\
@@ -606,17 +603,17 @@ We can solve this equation by taking the derivative with respect to $\Theta$ and
 
 While there's a lot of math to get to this final answer (which, tells us to estimate $\Theta^\star$ as the fraction of heads observed in the training data... pretty reasonable!) the steps are very formulaic.
 \be
-\item Write down likelihood of data given parameters.
-\item Simplify likelihood and substitute in parameters (the parameters will be symbolic at this point, e.g., $\Theta$).
+\item Write down the likelihood of the data given the parameters.
+\item Simplify the likelihood and substitute in the parameters (the parameters will be symbolic at this point, e.g., $\Theta$).
 \item Solve for the optimal value of the parameters (e.g., using Lagrange multipliers or setting derivative to 0 to find a critical point).
 \ee
 
 \subsection{MLE and the Titanic}
 
-Some of you requested an example of applying the equations that we worked out in assignment 4 to an actual example of Na\"ive Bayes.  In that spirit, we will use training data to fit the parameters of our Titanic BN.
+Some of you requested an example of applying the equations that we worked out in Assignment 4 to an actual example of Na\"ive Bayes.  In that spirit, we will use training data to fit the parameters of our Titanic BN.
 
 
-The MLE equations that we derived in assignment 4 are as follows.
+The MLE equations that we derived in Assignment 4 are as follows.
 
 \bi
 \item To fit the parameters for the outcome variables $Y$, we can use this equation.
@@ -640,7 +637,7 @@ p(\mathcal{S}) &= \frac{\mbox{ycount}(\mathcal{S})}{\mbox{ycount}(\mathcal{S}) +
 \end{align}
 $p(\neg \mathcal{S})$ could be determined similarly, or you could just use $1-p(\mathcal{S})$.
 
-\item In order to determine $p(\mathcal{M} | \mathcal{S})$, we need to know four counts: $\mbox{xcount}(\mathcal{M}| \mathcal{S}), \mbox{xcount}(\neg \mathcal{M}| \mathcal{S}), \mbox{xcount}(\mathcal{M}|\neg \mathcal{S})$, and $\mbox{xcount}(\neg \mathcal{M}|\neg \mathcal{S})$ (note: we dropped the subscripts on $\mbox{xcount}$ since it is clear from the arguments which node in the BN we're talking about).
+\item In order to determine $p(\mathcal{M} | \mathcal{S})$ and $p(\mathcal{M}|\neg \mathcal{S})$, we need to know four counts: $\mbox{xcount}(\mathcal{M}| \mathcal{S}), \mbox{xcount}(\neg \mathcal{M}| \mathcal{S}), \mbox{xcount}(\mathcal{M}|\neg \mathcal{S})$, and $\mbox{xcount}(\neg \mathcal{M}|\neg \mathcal{S})$ (note: we dropped the subscripts on $\mbox{xcount}$ since it is clear from the arguments which node in the BN we're talking about).
 
 \begin{align}
 \Theta^\star(\mathcal{M}|  \mathcal{S}) &= \frac{\mbox{xcount}(\mathcal{M}| \mathcal{S})}{\mbox{xcount}(\mathcal{M}| \mathcal{S}) + \mbox{xcount}(\neg \mathcal{M}|  \mathcal{S}) } \nonumber \\
