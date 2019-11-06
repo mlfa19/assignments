@@ -44,7 +44,7 @@ By creating this document we are not trying to elevate the importance of the mat
 
 \section{How to Engage}
 
-You should use this document as a way to solidify concepts which you feel a bit shaky about.  As a result, if you feel good about a topic, there is no need for you to engage with a particular section.  For instance, if you have the basic idea of probability spaces down, don't even worry about reading that section.  If you would like reinforcement on a topic, read the appropriate section and try some of the practice problems.  You may find it useful to consult the original assignment that introduced these concepts.  Additionally, \textbf{you should consider posting on NB if you have a question or would just like more detail on a particular topic in this document.}
+\textbf{You should use this document as a way to solidify concepts which you feel a bit shaky about.}  As a result, if you feel good about a topic, there is no need for you to engage with a particular section.  For instance, if you have the basic idea of probability spaces down, don't even worry about reading that section.  If you would like reinforcement on a topic, read the appropriate section and try some of the practice problems.  You may find it useful to consult the original assignment that introduced these concepts.  Additionally, \textbf{you should post on NB if you have a question or would just like more detail on a particular topic in this document.}
 
 
 \section{Probability}
@@ -76,7 +76,7 @@ p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2 \ldots ~\mbox{or}~\mathcal{E}_n) = 1 \en
 \begin{exercise}
 Consider the random process of rolling a fair, 6-sided die.  Define a probability space (events and a probability measure) to represent this random process.  You can define your own set of events, but an easy default is to define an event for each possible outcome of the roll (e.g., $\mathcal{E}_1$ is the die came out as a 1, $\mathcal{E}_2$ is the die came out as 2, etc.).
 \begin{boxedsolution}
-Let's define $\mathcal{E}_1, \mathcal{E}_2, \ldots, \mathcal{E_6}$ to be our events.  $\mathcal{E}_i$ represents the event that the die roll comes out with value $i$ (e.g., $\mathcal{E}_3$ means we rolled a 3).  Our probability measure in this case is $p(\mathcal{E}_i) = \frac{1}{6}$ for each of our events.  This function $p$ satisfies the conditions for a probability measure since all events have probability between 0 and 1 and the probability of an exhaustive set of events $p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2~\ldots~\mbox{or}~\mathcal{E}_6) = \sum_{i=1}^6 p(\mathcal{E}_i) = 1$.
+Let's define $\mathcal{E}_1, \mathcal{E}_2, \ldots, \mathcal{E}_6$ to be our events.  $\mathcal{E}_i$ represents the event that the die roll comes out with value $i$ (e.g., $\mathcal{E}_3$ means we rolled a 3).  Our probability measure in this case is $p(\mathcal{E}_i) = \frac{1}{6}$ for each of our events.  This function $p$ satisfies the conditions for a probability measure since all events have probability between 0 and 1 and the probability of an exhaustive set of events $p(\mathcal{E}_1~\mbox{or}~\mathcal{E}_2~\ldots~\mbox{or}~\mathcal{E}_6) = \sum_{i=1}^6 p(\mathcal{E}_i) = 1$.
 \end{boxedsolution}
 \end{exercise}
 
@@ -86,7 +86,7 @@ Construct a probability space to model the 2020 U.S. Congressional Elections.  D
 Let's define the following events and their associated probabilities.
 \bi
 \item $\mathcal{D_H, R_S}$ is the event that the Democrats control the house and the republicans control the senate (note in this case we've chosen to make this is a single event that entails both of these things happening).  $\mathcal{D_H,D_S}$ is the event that the Democrats control both the house and the senate.  $\mathcal{R_H,R_S}$ is the event that the Republicans control both the house and the senate.  $\mathcal{R_H,D_S}$ is the event that the Republicans control the house and the democrats control the senate.
-\item Using the current data on \href{https://www.predictit.org/markets/2/Congress}{predictit} (we didn't expect you to do this, but it is one way to come up with probabilities) $p(\mathcal{D_H, R_S}) = 0.45, p(\mathcal{D_H, D_S}) = 0.29, p(\mathcal{R_H, R_S}) = 0.24, p(\mathcal{D_H, R_S}) = 0.02$.  Notice that these probabilities add to 1 indicating that we are not allowing for any other outcome (since they are disjoint we can add them to get the probability of at least one of them occurring). This gets at the idea that when describing an event like an election using a probability space, we are essentially making modeling decisions about what we deem as the space of possibilities.  In this model we do not allow for a third party to control one of the houses of Congress).
+\item Using the current data on \href{https://www.predictit.org/markets/2/Congress}{predictit} (we didn't expect you to do this, but it is one way to come up with probabilities) $p(\mathcal{D_H, R_S}) = 0.45, p(\mathcal{D_H, D_S}) = 0.29, p(\mathcal{R_H, R_S}) = 0.24, p(\mathcal{D_H, R_S}) = 0.02$.  Notice that these probabilities add to 1 indicating that we are not allowing for any other outcome (since they are disjoint we can add them to get the probability of at least one of them occurring). This gets at the idea that when describing a random process like an election using a probability space, we are essentially making modeling decisions about what we deem as the space of possibilities.  In this model we do not allow for a third party to control one of the houses of Congress.
 \ei
 \end{boxedsolution}
 \end{exercise}
@@ -270,7 +270,13 @@ Here are two potential answers to this.
 There are lots of practice problems on the web for Bayes' rule.  Here are some suggestions.
 \bes
 \item Former Olin Professor Sanjoy Mahajan has a bunch of practice problems on Bayes' rule available on his website.  Each problem allows you to submit your answer and have it checked automatically.  He ayoulso has a solution for each problem.  Some of the problems are more standalone than others (e.g., some rely on material communicated in class).  We'll suggest some that seem to be standalone here.  First, visit the \href{https://tutor.sanjoymahajan.org/bayes/hw02}{HW02 page on Sanjoy's website} (if you get a privacy error from your browser, go ahead an allow your browser to access the site.  What could go wrong?).  On this page, consider doing \textbf{problem 2} (this one is using Bayes' rule in reverse, so it is a bit of a twist), \textbf{problem 3} (part a is really a question about marginalization), \textbf{problem 4}, and \textbf{problem 5}.
-\item Here are \href{http://www2.stat.duke.edu/~jerry/sta101/extraproblems/bayesian.htm}{some more practice problems} from a class on Bayesian statistics.  Solutions available upon request.
+\begin{boxedsolution}
+The solutions are already on Sanjoy's website.
+\end{boxedsolution}
+\item Here are \href{http://www2.stat.duke.edu/~jerry/sta101/extraproblems/bayesian.htm}{some more practice problems} from a class on Bayesian statistics.
+\begin{boxedsolution}
+Solutions available upon request.
+\end{boxedsolution}
 \ees
 \end{exercise}
 
@@ -292,15 +298,19 @@ Simplify each expression using the fact that $\mathcal{A} \condindep \mathcal{B}
 \bes
 \item $p(\mathcal{A} | \mathcal{B}, \mathcal{C})$
 \begin{boxedsolution}
+This one is an application of the fact that you can drop an event from the right side of the conditioning bar if it is conditionally independent of the events on the left side of the conditioning bar.
 \begin{align}
 p(\mathcal{A} | \mathcal{B}, \mathcal{C}) &= p(\mathcal{A} | \mathcal{C})
 \end{align}
 \end{boxedsolution}
 \item $p(\mathcal{A}, \mathcal{B}, \mathcal{C})$
+\begin{boxedsolution}
+Use the product rule to expand.  Depending on the order you chooses to expand, you will get a slightly different, but equivalent, answer.
 \begin{align}
-p(\mathcal{A}, \mathcal{B}, \mathcal{C}) &= p(\mathcal{A}) p(\mathcal{B}| \mathcal{A}) p(\mathcal{C} \mid \mathcal{A}, \mathcal{B}) \nonumber \\
+p(\mathcal{A}, \mathcal{B}, \mathcal{C}) &= p(\mathcal{A}) p(\mathcal{B}| \mathcal{A}) p(\mathcal{C} | \mathcal{A}, \mathcal{B}) \nonumber \\
 &= p(\mathcal{A}) p(\mathcal{B}) p(\mathcal{C} | \mathcal{A}, \mathcal{B}) \nonumber
 \end{align}
+\end{boxedsolution}
 \ees
 \end{exercise}
 
@@ -387,15 +397,45 @@ Two nodes, $\mathcal{A}$ and $\mathcal{B}$, in a BN are d-separated when conditi
 
 \begin{exercise}
 Choose two nodes in the alarm network.  Are they independent?  How would this change if you conditioned on each of the other three nodes in the network?  Repeat this exercise for other pairs of nodes in the network.
+\begin{boxedsolution}
+As an example, let's pick $\mathcal{E}$ and $\mathcal{B}$.  We can use d-separation to determine the independence and conditional independence relationships.
+\bi
+\item $\mathcal{E} \condindep \mathcal{B}$ ($\mathcal{A}$ is a collider and blocks the only path between $\mathcal{E}$ and $\mathcal{B}$).
+\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{A}$ (the slash through $\condindep$ means that the two nodes are not conditionally independent given $\mathcal{A}$).  Since we are conditioning on $\mathcal{A}$, the fact that it is a collider no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$).
+\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{J}$.  Since we are conditioning on $\mathcal{J}$, which is a descendant of $\mathcal{A}$, even though $\mathcal{A}$ is a collider it no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$).
+\item $\mathcal{E} \notcondindep \mathcal{B}~|~\mathcal{M}$.  Since we are conditioning on $\mathcal{M}$, which is a descendant of $\mathcal{A}$, even though $\mathcal{A}$ is a collider it no longer blocks the path between $\mathcal{E}$ and $\mathcal{B}$).
+\ei
+\end{boxedsolution}
 \end{exercise}
 
 
 \begin{exercise}
-Slide 20 is pretty good in \href{http://idm-lab.org/intro-to-ai/slides/Bayesian\_Networks.pdf}{this document}.
-TODO: ask D-separation questions
+Consider this network that describes the operation of various parts of a car (this is from \href{http://idm-lab.org/intro-to-ai/slides/Bayesian\_Networks.pdf}{Slide 20 of Sven Koenig's lecture on Bayesian Networks}).
+
+\begin{center}
+\includegraphics[width=0.6\linewidth]{figures/carnetwork}
+\end{center}
+
+Using the rules of d-separation, determine whether the following conditional independence relationships are true or false (excuse the upper case letters, the cool calligraphic math font doesn't support lowercase letters).
+\bi
+\item $\mathcal{RADIO} \condindep \mathcal{IGNITION}$?
 \begin{boxedsolution}
-TODO
+False.  The path between them doesn't contain a collider or a node that we are conditioning on that would block the path. 
 \end{boxedsolution}
+\item $\mathcal{RADIO} \condindep \mathcal{IGNITION}\mid\mathcal{BATTERY}$?
+\begin{boxedsolution}
+True.  The path between is blocked by conditioning on $\mathcal{BATTERY}$.
+\end{boxedsolution}
+\item $\mathcal{RADIO} \condindep \mathcal{GAS}$?
+\begin{boxedsolution}
+True.  The path between is blocked by the collider $\mathcal{CAR STARTS}$.
+\end{boxedsolution}
+\item $\mathcal{RADIO} \condindep \mathcal{GAS}\mid\mathcal{CAR MOVES}$?
+\begin{boxedsolution}
+False.  The path is no longer blocked by the collider $\mathcal{CAR STARTS}$ because we are conditioning $\mathcal{CAR MOVES}$, which is a descendent of $\mathcal{CAR STARTS}$.
+\end{boxedsolution}
+\item This one is a pretty rich network.  You could keep going to create new practice problems.
+\ei
 \end{exercise}
 
 \begin{exercise}
@@ -411,8 +451,9 @@ Note: these are not real numbers, but display some of the correct trends.
 \includegraphics[width=0.6\linewidth]{figures/medicaldiagnosis}
 \end{center}
 \bes
-\item Determine $p(\mathcal{C}|\mathcal{F})$?
+\item Determine $p(\mathcal{C}|\mathcal{F})$
 \begin{boxedsolution}
+You can also do this by applying Bayes' Rule first as we did in assignment 2.
 \begin{align}
 p(\mathcal{C}|\mathcal{F}) &= \frac{p(\mathcal{C}, \mathcal{F})}{p(\mathcal{F})} & \mbox{law of conditional probability} \nonumber \\
 p(\mathcal{F}) &= p(\mathcal{F}, \mathcal{C}, \mathcal{M}) + p(\mathcal{F}, \mathcal{C}, \neg \mathcal{M}) + p(\mathcal{F}, \neg \mathcal{C}, \mathcal{M}) + p(\mathcal{F}, \neg \mathcal{C}, \neg \mathcal{M}) &\mbox{marginalize over $\mathcal{M}$ and $\mathcal{C}$}\nonumber \\
@@ -422,11 +463,12 @@ p(\mathcal{F}) &= p(\mathcal{F}, \mathcal{C}, \mathcal{M}) + p(\mathcal{F}, \mat
 p(\mathcal{C}, \mathcal{F}) &= p(\mathcal{C}, \mathcal{F}, \mathcal{M})  + p(\mathcal{C}, \mathcal{F}, \neg \mathcal{M}) &\mbox{marginalize over $\mathcal{M}$} \nonumber \\
 &= p(\mathcal{C})p(\mathcal{M}) p(\mathcal{F}|\mathcal{M}, \mathcal{C}) + p(\mathcal{C})p(\neg \mathcal{M}) p(\mathcal{F}| \neg \mathcal{M}, \mathcal{C})& \mbox{factorize: children given parents} \nonumber \\
 &= 0.002 \nonumber \\
-p(\mathcal{C}|\mathcal{F}) &=  0.1667~~\mbox{TODO: double check} &\mbox{use the first equation} \nonumber
+p(\mathcal{C}|\mathcal{F}) &=  0.1667 &\mbox{use the first equation in this box} \nonumber
 \end{align}
 \end{boxedsolution}
-\item Determine $p(\mathcal{C}|\mathcal{F}, \mathcal{M})$?  Why is the effect on conditioning on $\mathcal{D}_1$ known as \emph{explaining away}?
+\item Determine $p(\mathcal{C}|\mathcal{F}, \mathcal{M})$.  Why does the effect that conditioning on $\mathcal{M}$ has known as \emph{explaining away}?
 \begin{boxedsolution}
+You can also do this by applying Bayes' Rule first as we did in assignment 2.
 \begin{align}
 p(\mathcal{C}|\mathcal{F}, \mathcal{M}) &= \frac{p(\mathcal{C}, \mathcal{F}, \mathcal{M})}{p(\mathcal{F}, \mathcal{M})}& \mbox{law of conditional probability} \nonumber \\
 p(\mathcal{F}, \mathcal{M}) &= p(\mathcal{C}, \mathcal{F}, \mathcal{M}) + p(\neg \mathcal{C}, \mathcal{F}, \mathcal{M})&\mbox{marginalize over $\mathcal{C}$} \nonumber \\
@@ -434,8 +476,10 @@ p(\mathcal{F}, \mathcal{M}) &= p(\mathcal{C}, \mathcal{F}, \mathcal{M}) + p(\neg
 &= 9.9 \times 10^{-5} \nonumber \\
  p(\mathcal{C}, \mathcal{F}, \mathcal{M}) &= p(\mathcal{C}) p(\mathcal{M}) p(\mathcal{F}|\mathcal{C}, \mathcal{M})  & \mbox{factorize: children given parents}\nonumber \\
  &= 9.9 \times 10^{-7} \nonumber \\
- p(\mathcal{C}|\mathcal{F}, \mathcal{M}) &= \frac{1}{100}~~\mbox{TODO: double check} \nonumber
+ p(\mathcal{C}|\mathcal{F}, \mathcal{M}) &= \frac{1}{100} &\mbox{use the first equation in this box} \nonumber
 \end{align}
+The fact that the probability of the patient having a cold dropped by a factor of 16 is the phenomenon of explaining away.  We call this phenomenon explaining away since knowing that the patient had meningitis explains away the evidence of a fever, rendering it less likely to be caused by a cold.
+
 \end{boxedsolution}
 \ees
 
@@ -617,7 +661,42 @@ Apply the formulas to determine the probabilities of $\mathcal{Y}$ and $C$ given
 \item $\mbox{xcount}(C=1 | \neg \mathcal{S}) = 80$, $\mbox{xcount}(C=2 | \neg \mathcal{S}) = 97$, $\mbox{xcount}(C=3 | \neg \mathcal{S}) = 372$
 \ei
 \begin{boxedsolution}
-TODO
+We can apply the same steps for $\mathcal{Y}$ as we did for $\mathcal{M}$.
+\begin{align}
+\Theta^\star(\mathcal{Y}| \mathcal{S}) &= \frac{\mbox{xcount}(\mathcal{Y}| \mathcal{S})}{\mbox{xcount}(\mathcal{Y}| \mathcal{S}) + \mbox{xcount}(\neg \mathcal{Y}|  \mathcal{S}) } \nonumber \\
+&= \frac{27}{27+315} \nonumber \\
+&= \frac{27}{342} \nonumber \\
+\Theta^\star(\mathcal{Y}| \neg \mathcal{S}) &= \frac{\mbox{xcount}(\mathcal{Y}| \neg \mathcal{S})}{\mbox{xcount}(\mathcal{Y}| \neg\mathcal{S}) + \mbox{xcount}(\neg \mathcal{Y}| \neg \mathcal{S}) } \nonumber \\
+&= \frac{13}{13+536} \nonumber \\
+&= \frac{13}{549}
+\end{align}
+Due to weird formatting when we didn't do this, the solution will be continued in a second green box.
+\end{boxedsolution}
+
+\begin{boxedsolution}
+Computing the parameters for $C$ is a little bit harder since we have to consider the 3 different values that C could take on.
+
+\begin{align}
+\Theta^\star(C=1 | \mathcal{S}) &= \frac{\mbox{xcount}(C=1| \mathcal{S})}{\mbox{xcount}(C=1| \mathcal{S}) + \mbox{xcount}(C=2| \mathcal{S})  + \mbox{xcount}(C=3 | \mathcal{S}) } \nonumber \\
+&= \frac{136}{136+87+119} \nonumber \\
+&= \frac{136}{342} \nonumber \\
+\Theta^\star(C=2 | \mathcal{S}) &= \frac{\mbox{xcount}(C=2| \mathcal{S})}{\mbox{xcount}(C=1| \mathcal{S}) + \mbox{xcount}(C=2| \mathcal{S})  + \mbox{xcount}(C=3|  \mathcal{S}) } \nonumber \\
+&= \frac{87}{136+87+119} \nonumber \\
+&= \frac{87}{342} \nonumber \\
+\Theta^\star(C=3 | \mathcal{S}) &= \frac{\mbox{xcount}(C=3| \mathcal{S})}{\mbox{xcount}(C=1| \mathcal{S}) + \mbox{xcount}(C=2| \mathcal{S})  + \mbox{xcount}(C=3 | \mathcal{S}) } \nonumber \\
+&= \frac{119}{136+87+119} \nonumber \\
+&= \frac{119}{342} \nonumber \\
+\Theta^\star(C=1 | \neg \mathcal{S}) &= \frac{\mbox{xcount}(C=1| \neg\mathcal{S})}{\mbox{xcount}(C=1|\neg \mathcal{S}) + \mbox{xcount}(C=2| \neg\mathcal{S})  + \mbox{xcount}(C=3|\neg  \mathcal{S}) } \nonumber \\
+&= \frac{80}{80 + 97 + 372} \nonumber \\
+&= \frac{80}{549} \nonumber \\
+\Theta^\star(C=2 | \neg \mathcal{S}) &= \frac{\mbox{xcount}(C=2| \neg\mathcal{S})}{\mbox{xcount}(C=1| \neg\mathcal{S}) + \mbox{xcount}(C=2| \neg\mathcal{S})  + \mbox{xcount}(C=3 |\neg \mathcal{S}) } \nonumber \\
+&= \frac{97}{80 + 97 + 372} \nonumber \\
+&= \frac{27}{549} \nonumber \\
+\Theta^\star(C=3 | \neg \mathcal{S}) &= \frac{\mbox{xcount}(C=3| \neg\mathcal{S})}{\mbox{xcount}(C=1| \neg\mathcal{S}) + \mbox{xcount}(C=2| \neg\mathcal{S})  + \mbox{xcount}(C=3 | \neg\mathcal{S}) } \nonumber \\
+&= \frac{372}{80 + 97 + 372} \nonumber \\
+&= \frac{27}{549} \nonumber 
+\end{align}
+
 \end{boxedsolution}
 
 \end{exercise}
@@ -627,9 +706,13 @@ TODO
 
 
 \section{N-Grams}
-This was primarily coding based, so for now we don't have anything here.  Let us know if there are parts you want explained and we'll update this document.
+This was primarily coding based, so we don't have too much here.  Here are some basic ideas to remember about n-grams.
 
-TODO: this is the definition of n-grams and what you might use them for.  E.g., classification by using them as features.  Understanding conditional probabilities (e.g., fake versus real coin flips).  Could test how the prevalence of various n-grams differs across corpora.
+\bi
+\item N-Grams consist of N continuous symbols from a sequence.  A common example of a sequence is text where the symbols are words.  $N=2$ gives us, as a special case, the bigram model and $N=1$ gives us, as a special case, the unigram model.
+\item N-Grams can be used as features to represent a sequence (e.g., encoding the presence or absence of a particular N-Gram to summarize a document).
+\item These features can be used to classify the document or to compute various conditional probabilities (e.g., the probability that some symbol follows another).
+\ei
 
 \section{Are we missing anything?}
 Keep in mind that this document's scope is within the math / algorithms part of this class (not on the context and ethics or programming side).  Comment on NB here to request stuff to add. 

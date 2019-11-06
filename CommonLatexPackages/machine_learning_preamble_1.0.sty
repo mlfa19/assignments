@@ -27,6 +27,7 @@
 \usepackage{lipsum}
 \usepackage{bm}
 \usepackage[many]{tcolorbox}
+\usepackage{cancel}
 
 \usepackage{environ}
 
@@ -47,6 +48,8 @@
 \newcommand{\mlmat}[1]{\mathbf{#1}}
 
 \newcommand{\condindep}{\perp\!\!\!\perp}
+\newcommand{\notcondindep}{~\cancel{\perp\!\!\!\perp}~}
+
 
 \newcommand{\twobytwo}[4]{\ensuremath{\begin{bmatrix} #1 & #2 \\ #3 & #4\end{bmatrix}}}
 \newcommand{\threebythree}[9]{\ensuremath{\begin{bmatrix} #1 & #2 & #3 \\ #4 & #5 & #6 \\ #7 & #8 & #9 \end{bmatrix}}}
