@@ -399,18 +399,48 @@ TODO
 \end{exercise}
 
 \begin{exercise}
-Consider the following BN.
+Consider the following BN that represents a situation facing a doctor trying to diagnose a newborn that comes into the hospital with a fever.  In this scenario there are two possible underlying diagnoses that could cause this symptom of having a fever (represented by the event $\mathcal{F}$): a common cold virus (represented by the event $\mathcal{C}$) or meningitis (represented by the event $\mathcal{M}$).
+
+% another idea from Kaitlyn
+% (Rank most to least prevalent for a 7 year old): 1, 2, 4, 3
+% Common cold (URI) (1), Pneumonia (2), Bronchitis (3), Asthma (4)
+% Cough (1, 2, 3, less of 4), Chest pain (rank high to low: 2, 4, 3, 1), Wheezing (high to low 4, 3, 2, 1), shortness of breath (high to low 4, 2, 3, 1)
+Note: these are not real numbers, but display some of the correct trends.
+
+\begin{center}
 \includegraphics[width=0.6\linewidth]{figures/medicaldiagnosis}
+\end{center}
 \bes
-\item Determine $p(\mathcal{D}_2|\mathcal{S})$?
+\item Determine $p(\mathcal{C}|\mathcal{F})$?
 \begin{boxedsolution}
-TODO
+\begin{align}
+p(\mathcal{C}|\mathcal{F}) &= \frac{p(\mathcal{C}, \mathcal{F})}{p(\mathcal{F})} & \mbox{law of conditional probability} \nonumber \\
+p(\mathcal{F}) &= p(\mathcal{F}, \mathcal{C}, \mathcal{M}) + p(\mathcal{F}, \mathcal{C}, \neg \mathcal{M}) + p(\mathcal{F}, \neg \mathcal{C}, \mathcal{M}) + p(\mathcal{F}, \neg \mathcal{C}, \neg \mathcal{M}) &\mbox{marginalize over $\mathcal{M}$ and $\mathcal{C}$}\nonumber \\
+&= p(\mathcal{C})p(\mathcal{M})p(\mathcal{F}|\mathcal{M},\mathcal{C}) + p(\mathcal{C})p(\neg \mathcal{M})p(\mathcal{F}|\neg \mathcal{M},\mathcal{C}) \nonumber \\
+&\hspace{0.5in}+p(\neg \mathcal{C})p(\mathcal{M})p(\mathcal{F}|\mathcal{M},\neg \mathcal{C}) +p(\neg \mathcal{C})p(\neg \mathcal{M})p(\mathcal{F}|\neg \mathcal{M},\neg \mathcal{C}) & \mbox{factorize: children given parents} \nonumber \\
+&= 0.012 \nonumber \\
+p(\mathcal{C}, \mathcal{F}) &= p(\mathcal{C}, \mathcal{F}, \mathcal{M})  + p(\mathcal{C}, \mathcal{F}, \neg \mathcal{M}) &\mbox{marginalize over $\mathcal{M}$} \nonumber \\
+&= p(\mathcal{C})p(\mathcal{M}) p(\mathcal{F}|\mathcal{M}, \mathcal{C}) + p(\mathcal{C})p(\neg \mathcal{M}) p(\mathcal{F}| \neg \mathcal{M}, \mathcal{C})& \mbox{factorize: children given parents} \nonumber \\
+&= 0.002 \nonumber \\
+p(\mathcal{C}|\mathcal{F}) &=  0.1667~~\mbox{TODO: double check} &\mbox{use the first equation} \nonumber
+\end{align}
 \end{boxedsolution}
-\item Determine $p(\mathcal{D}_2|\mathcal{S}, \mathcal{D}_1)$?  Why is the effect on conditioning on $\mathcal{D}_1$ known as \emph{explaining away}?
+\item Determine $p(\mathcal{C}|\mathcal{F}, \mathcal{M})$?  Why is the effect on conditioning on $\mathcal{D}_1$ known as \emph{explaining away}?
 \begin{boxedsolution}
-TODO
+\begin{align}
+p(\mathcal{C}|\mathcal{F}, \mathcal{M}) &= \frac{p(\mathcal{C}, \mathcal{F}, \mathcal{M})}{p(\mathcal{F}, \mathcal{M})}& \mbox{law of conditional probability} \nonumber \\
+p(\mathcal{F}, \mathcal{M}) &= p(\mathcal{C}, \mathcal{F}, \mathcal{M}) + p(\neg \mathcal{C}, \mathcal{F}, \mathcal{M})&\mbox{marginalize over $\mathcal{C}$} \nonumber \\
+&= p(\mathcal{C}) p(\mathcal{M}) p(\mathcal{F}|\mathcal{C}, \mathcal{M}) + p(\neg \mathcal{C}) p(\mathcal{M}) p(\mathcal{F}|\neg\mathcal{C}, \mathcal{M}) & \mbox{factorize: children given parents}\nonumber \\
+&= 9.9 \times 10^{-5} \nonumber \\
+ p(\mathcal{C}, \mathcal{F}, \mathcal{M}) &= p(\mathcal{C}) p(\mathcal{M}) p(\mathcal{F}|\mathcal{C}, \mathcal{M})  & \mbox{factorize: children given parents}\nonumber \\
+ &= 9.9 \times 10^{-7} \nonumber \\
+ p(\mathcal{C}|\mathcal{F}, \mathcal{M}) &= \frac{1}{100}~~\mbox{TODO: double check} \nonumber
+\end{align}
 \end{boxedsolution}
 \ees
+
+\noindent If you're interested in exploring this idea further (e.g., in the final project), you can visit a symptom checker (like the \href{https://www.mayoclinic.org/symptom-checker/select-symptom/itt-20009075}{Mayo Clinic symptom checker} or the \href{https://symptoms.webmd.com/default.htm\#/info}{WebMD Symptom Checker}).  Also, consider reading (well probably skimming, it's pretty dense) \href{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4389712/}{Screening tests: a review with examples}.
+
 \end{exercise}
 
 \section{Fairness Criteria for ML}
